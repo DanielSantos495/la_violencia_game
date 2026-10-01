@@ -15,15 +15,25 @@ Juego narrativo-documental **2D lateral estilo novela gráfica** sobre La Violen
 - **Sin voces:** solo texto en globos.
 - **Resolución:** base 1920×1080 con escalado; 60 fps en equipos modestos.
 
-**Documentos de diseño (en el repo):**
-- `planeacion/produccion/tomo1/00_plan_implementacion.md`: fases y backlog del Sprint 0.
-- `planeacion/historia/tomo1/01_biblia_nomenclatura.md`: nombres ficticios y reales.
-- `planeacion/historia/tomo1/02_guion_narrativa.md`: guion.
-- `planeacion/arte/tomo1/03_direccion_arte.md`: estilo y referencias de época.
-- `planeacion/tecnico/tomo1/04_documento_tecnico.md`: stack, arquitectura y esquema del Archivo.
-- Contexto general: `planeacion/historia/esquema_tomos_conflicto_armado.md` y `planeacion/historia/tomo1/tomo1_la_violencia.md` (guion base, corregido por el doc 02).
+**Documentos de diseño: carpeta `planeacion/`**
 
-Son la fuente de verdad. Si falta alguno, **detente y pídemelo**. **No edites** estos documentos durante el setup; si encuentras una contradicción, repórtala.
+`planeacion/` es la única fuente de diseño del proyecto: historia, producción, arte y técnica. Todo lo que este prompt llama "doc 00…04" se lee desde ahí:
+
+| Referencia | Ruta | Contenido |
+|---|---|---|
+| doc 00 | `planeacion/produccion/tomo1/00_plan_implementacion.md` | Fases y backlog del Sprint 0 |
+| doc 01 | `planeacion/historia/tomo1/01_biblia_nomenclatura.md` | Nombres ficticios y reales |
+| doc 02 | `planeacion/historia/tomo1/02_guion_narrativa.md` | Guion |
+| doc 03 | `planeacion/arte/tomo1/03_direccion_arte.md` | Estilo y referencias de época |
+| doc 04 | `planeacion/tecnico/tomo1/04_documento_tecnico.md` | Stack, arquitectura y esquema del Archivo |
+| Contexto | `planeacion/historia/esquema_tomos_conflicto_armado.md` · `planeacion/historia/tomo1/tomo1_la_violencia.md` | Esquema de los 8 tomos y guion base (corregido por el doc 02) |
+
+Reglas sobre estos documentos:
+- **Inventario primero.** Antes de empezar, lista todos los `.md` de `planeacion/`. Si hay archivos nuevos, renombrados o faltantes respecto a esta tabla, **la carpeta manda**: avísame de la diferencia antes de seguir.
+- **Si falta alguno de la tabla, detente y pídemelo.**
+- **Solo lectura.** Durante el setup no edites nada en `planeacion/`. Si encuentras una contradicción, repórtala.
+- **Sin duplicar.** Ni el código, ni `CLAUDE.md`, ni las skills copian el contenido de estos documentos: los citan por ruta y sección (p. ej. "doc 04 §7") y resumen solo las reglas. Si un doc cambia, lo que lo cita debe seguir siendo válido.
+- **Nada de diseño en `game/`.** La documentación de diseño nueva va en `planeacion/`, nunca dentro de `game/`.
 
 El código anterior se borró a propósito para reconstruir desde cero. **No intentes recuperarlo.** Las tareas técnicas marcadas `[x]` en el doc 00 corresponden a ese código borrado: trátalas como pendientes.
 
@@ -31,7 +41,7 @@ El código anterior se borró a propósito para reconstruir desde cero. **No int
 
 ## Reglas de trabajo (obligatorias)
 
-1. **Contexto antes de código.** Lee los 5 documentos (al menos el 04 completo y las secciones de Sprint 0 del 00) antes de crear cualquier archivo.
+1. **Contexto antes de código.** Lee los documentos de `planeacion/` de la tabla (al menos el doc 04 completo y las secciones de Sprint 0 del doc 00) antes de crear cualquier archivo.
 2. **No adivines.**
    - Versiones, comandos, flags, nombres de paquetes, plantillas, tags y SHAs se verifican en la documentación o el registro oficial (npm, GitHub, sitio del proyecto) en el momento de usarlos.
    - Lo que no puedas verificar va marcado **[P]**, y me preguntas.
@@ -49,8 +59,8 @@ El código anterior se borró a propósito para reconstruir desde cero. **No int
 
 ## Bloque 0 — Reconocimiento y decisiones (esperar aprobación)
 
-1. Inspecciona el repo: contenido, `git log`, la versión de Node/npm disponible y que existan los documentos listados arriba.
-2. Lee los documentos.
+1. Inspecciona el repo: contenido, `git log` y la versión de Node/npm disponible.
+2. Haz el inventario de `planeacion/` y lee los documentos de la tabla.
 3. Pregúntame en **una sola tanda** lo que sea mi decisión:
    - **Estructura de `src/`:** el doc 04 §4 usa `scenes/ narrative/ mechanics/ archivo/ ui/`, mientras que el doc 00 menciona capas `src/core`, `src/game`, `src/ui`. Propón una estructura que reconcilie ambas (lógica pura sin Phaser vs. escenas/render vs. DOM) y espera mi elección.
    - **Gestor de paquetes:** npm, pnpm u otro. Recomienda uno.
@@ -149,6 +159,8 @@ Fija cada skill a un tag o SHA. Audítala (regla 6) y verifica su licencia antes
 
 Créalas con `skill-creator` (si no está disponible, usa el formato estándar de `SKILL.md`).
 
+Cada skill **apunta a los documentos de `planeacion/`** en vez de copiarlos: el `SKILL.md` resume las reglas y le indica a Claude qué doc y sección leer antes de actuar (p. ej. la tabla de referencias del doc 03 o la biblia del doc 01). Las tablas largas no se copian, para que no queden desactualizadas.
+
 **`la-violencia-art`** (desde el doc 03):
 - **Estilo:** tinta negra sobre papel hueso; grises por trama, sin degradados; rojo liberal y azul conservador como únicos acentos; plano lateral con 2–3 capas de paralaje.
 - **Personajes por piezas:** cabeza, torso, brazos, piernas, ruana, sombrero. Convención de IDs y grupos estable para el cut-out. Rostros simplificados.
@@ -170,6 +182,7 @@ Créalas con `skill-creator` (si no está disponible, usa el formato estándar d
 1. **`CLAUDE.md` en la raíz** (corto):
    - Propósito del proyecto y reglas no negociables (resumen de las skills propias).
    - Mapa del repo: `planeacion/` (documentación: `historia/`, `produccion/`, `arte/`, `tecnico/`) y `game/` (desarrollo).
+   - Regla: ante cualquier duda de diseño, historia o arte, leer el doc correspondiente en `planeacion/` antes de escribir código. `planeacion/` es solo lectura desde Claude Code salvo que Daniel pida editarla.
    - Comandos (se ejecutan en `game/`).
    - Cuándo usar cada skill (las propias tienen prioridad en arte e historia).
 2. **`.claude/SKILLS.md`:** tabla por skill con nombre, fuente, tag/SHA, licencia, fecha, motivo y resultado de la auditoría.
