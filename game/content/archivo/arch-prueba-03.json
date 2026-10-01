@@ -1,0 +1,23 @@
+{
+  "id": "arch-prueba-03",
+  "titulo": "[PRUEBA] Entrada verificada con licencia solicitada",
+  "fecha": "1900",
+  "lugar": "Lugar de prueba",
+  "nombre_en_juego": null,
+  "nombre_real": null,
+  "texto": "Entrada de prueba cuya licencia aún no está concedida. No contiene datos históricos.",
+  "estado_verificacion": "verificado",
+  "fuentes": [
+    {
+      "titulo": "Fuente de prueba",
+      "url": "https://example.org/",
+      "tipo": "fotografia"
+    }
+  ],
+  "licencia": { "titular": "Titular de prueba", "estado": "solicitada" },
+  "desbloqueo": {
+    "episodio": 2,
+    "mision": "PRUEBA",
+    "condicion": "escena_prueba"
+  }
+}

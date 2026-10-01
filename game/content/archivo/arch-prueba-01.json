@@ -1,0 +1,23 @@
+{
+  "id": "arch-prueba-01",
+  "titulo": "[PRUEBA] Entrada verificada de ejemplo",
+  "fecha": "1900-01-01",
+  "lugar": "Lugar de prueba",
+  "nombre_en_juego": "Personaje de prueba",
+  "nombre_real": "Nombre real de prueba",
+  "texto": "Entrada de prueba del sistema de Archivo. No contiene datos históricos.",
+  "estado_verificacion": "verificado",
+  "fuentes": [
+    {
+      "titulo": "Fuente de prueba",
+      "url": "https://example.org/",
+      "tipo": "documento"
+    }
+  ],
+  "licencia": { "titular": "Titular de prueba", "estado": "no_aplica" },
+  "desbloqueo": {
+    "episodio": 1,
+    "mision": "PRUEBA",
+    "condicion": "escena_prueba"
+  }
+}

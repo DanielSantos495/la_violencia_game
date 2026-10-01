@@ -24,3 +24,25 @@
 .globo--opcion {
   font-style: italic;
 }
+.visor-archivo {
+  position: absolute;
+  top: 5%;
+  right: 3%;
+  width: min(28rem, 40%);
+  padding: 1rem 1.25rem;
+  background: #f2ead8;
+  color: #000;
+  border: 2px solid #000;
+  font:
+    1rem / 1.4 Georgia,
+    serif;
+  pointer-events: auto;
+}
+.visor-archivo h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.2rem;
+}
+.visor-archivo__meta {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}

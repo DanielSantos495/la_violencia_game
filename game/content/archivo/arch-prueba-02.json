@@ -1,0 +1,17 @@
+{
+  "id": "arch-prueba-02",
+  "titulo": "[PRUEBA] Entrada pendiente de verificación",
+  "fecha": "1900-01",
+  "lugar": "Lugar de prueba",
+  "nombre_en_juego": null,
+  "nombre_real": null,
+  "texto": "Entrada de prueba con verificación pendiente. No contiene datos históricos.",
+  "estado_verificacion": "pendiente",
+  "fuentes": [],
+  "licencia": { "titular": "Titular de prueba", "estado": "solicitada" },
+  "desbloqueo": {
+    "episodio": 1,
+    "mision": "PRUEBA",
+    "condicion": "escena_prueba"
+  }
+}
