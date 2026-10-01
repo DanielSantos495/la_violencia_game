@@ -4,19 +4,21 @@ Narrativa jugable en 8 tomos cronológicos sobre el conflicto armado en Colombia
 
 ## Estructura
 
+Dos partes:
+
 | Carpeta | Contenido |
 |---|---|
-| `historia/` | Esquema general de los 8 tomos, guion base, biblia de nomenclatura y guion por tomo |
-| `planeacion/` | Plan de implementación, backlog y prompts de configuración |
-| `arte/` | Dirección de arte, referencias de época y audio |
-| `tecnico/` | Plataforma, stack, arquitectura y esquema del Archivo |
-| `game/` | Proyecto del juego (Phaser 4 + TypeScript + Ink). Se configura con `planeacion/tomo1/05_prompt_setup_desde_cero.md` |
+| `planeacion/historia/` | Esquema general de los 8 tomos, guion base, biblia de nomenclatura y guion por tomo |
+| `planeacion/produccion/` | Plan de implementación, backlog y prompts de configuración |
+| `planeacion/arte/` | Dirección de arte, referencias de época y audio |
+| `planeacion/tecnico/` | Plataforma, stack, arquitectura y esquema del Archivo |
+| `game/` | Desarrollo: proyecto del juego (Phaser 4 + TypeScript + Ink). Se configura con `planeacion/produccion/tomo1/05_prompt_setup_desde_cero.md` |
 
-Cada carpeta de documentación se organiza por tomo (`tomo1/`, `tomo2/`, …).
+Cada carpeta de planeación se organiza por tomo (`tomo1/`, `tomo2/`, …).
 
 ## Fuente única
 
-Los documentos de este repo son la versión oficial. Se editan aquí (o desde Claude con acceso al repo) y se sincronizan al Proyecto de claude.ai con la integración de GitHub. No mantener copias editables en otro lugar.
+La fuente principal es la carpeta local `la_violencia_game` en el computador de Daniel, versionada en git y conectada a GitHub (`DanielSantos495/la_violencia_game`). Los documentos se editan aquí; GitHub es la copia remota y el Proyecto de claude.ai los lee desde GitHub. No mantener copias editables en otro lugar.
 
 ## Reglas no negociables
 

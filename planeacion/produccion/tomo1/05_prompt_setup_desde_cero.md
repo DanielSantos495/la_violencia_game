@@ -1,7 +1,7 @@
 # Prompt — Configuración desde cero: Tomo I "La Violencia"
 
-> Pegar todo lo que sigue en un chat nuevo de **Claude Code abierto en la raíz del repo `la_violencia_game`** (clon de `danielSantos495/la_violencia_game`).
-> El repo ya contiene la documentación (`historia/`, `planeacion/`, `arte/`, `tecnico/`). El juego se construye **solo dentro de `game/`**.
+> Pegar todo lo que sigue en un chat nuevo de **Claude Code abierto en la raíz de `la_violencia_game`** (carpeta local en el Mac de Daniel, conectada a `DanielSantos495/la_violencia_game`).
+> El repo tiene dos partes: `planeacion/` (documentación) y `game/` (desarrollo). El juego se construye **solo dentro de `game/`**.
 
 ---
 
@@ -16,12 +16,12 @@ Juego narrativo-documental **2D lateral estilo novela gráfica** sobre La Violen
 - **Resolución:** base 1920×1080 con escalado; 60 fps en equipos modestos.
 
 **Documentos de diseño (en el repo):**
-- `planeacion/tomo1/00_plan_implementacion.md`: fases y backlog del Sprint 0.
-- `historia/tomo1/01_biblia_nomenclatura.md`: nombres ficticios y reales.
-- `historia/tomo1/02_guion_narrativa.md`: guion.
-- `arte/tomo1/03_direccion_arte.md`: estilo y referencias de época.
-- `tecnico/tomo1/04_documento_tecnico.md`: stack, arquitectura y esquema del Archivo.
-- Contexto general: `historia/esquema_tomos_conflicto_armado.md` y `historia/tomo1/tomo1_la_violencia.md` (guion base, corregido por el doc 02).
+- `planeacion/produccion/tomo1/00_plan_implementacion.md`: fases y backlog del Sprint 0.
+- `planeacion/historia/tomo1/01_biblia_nomenclatura.md`: nombres ficticios y reales.
+- `planeacion/historia/tomo1/02_guion_narrativa.md`: guion.
+- `planeacion/arte/tomo1/03_direccion_arte.md`: estilo y referencias de época.
+- `planeacion/tecnico/tomo1/04_documento_tecnico.md`: stack, arquitectura y esquema del Archivo.
+- Contexto general: `planeacion/historia/esquema_tomos_conflicto_armado.md` y `planeacion/historia/tomo1/tomo1_la_violencia.md` (guion base, corregido por el doc 02).
 
 Son la fuente de verdad. Si falta alguno, **detente y pídemelo**. **No edites** estos documentos durante el setup; si encuentras una contradicción, repórtala.
 
@@ -59,7 +59,7 @@ El código anterior se borró a propósito para reconstruir desde cero. **No int
 
 ## Bloque 1 — Proyecto base (todo dentro de `game/`)
 
-1. El repo ya existe; no lo reinicialices. Todo el proyecto del juego (`package.json`, lockfile, config, código) vive en `game/`. La raíz queda solo para documentación, `CLAUDE.md`, `.claude/` y `.github/`.
+1. El repo ya existe; no lo reinicialices. Todo el proyecto del juego (`package.json`, lockfile, config, código) vive en `game/`. La raíz queda solo para `planeacion/`, `CLAUDE.md`, `README.md`, `.claude/` y `.github/`.
 2. Verifica si hay una plantilla oficial de Phaser 4 + Vite + TypeScript vigente.
    - Si existe y es limpia, úsala.
    - Si no, crea el proyecto Vite + TS a mano y añade Phaser.
@@ -169,7 +169,7 @@ Créalas con `skill-creator` (si no está disponible, usa el formato estándar d
 
 1. **`CLAUDE.md` en la raíz** (corto):
    - Propósito del proyecto y reglas no negociables (resumen de las skills propias).
-   - Mapa del repo: `historia/`, `planeacion/`, `arte/`, `tecnico/` (documentación) y `game/` (juego).
+   - Mapa del repo: `planeacion/` (documentación: `historia/`, `produccion/`, `arte/`, `tecnico/`) y `game/` (desarrollo).
    - Comandos (se ejecutan en `game/`).
    - Cuándo usar cada skill (las propias tienen prioridad en arte e historia).
 2. **`.claude/SKILLS.md`:** tabla por skill con nombre, fuente, tag/SHA, licencia, fecha, motivo y resultado de la auditoría.
