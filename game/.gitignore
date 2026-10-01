@@ -1,0 +1,7 @@
+node_modules/
+dist/
+art/build/
+audio/build/
+content/ink/**/*.json
+*.local
+.DS_Store
