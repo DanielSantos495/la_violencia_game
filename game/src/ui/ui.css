@@ -1,0 +1,26 @@
+/* Estilos provisionales de la capa DOM. Paleta definitiva: hoja de estilo (doc 03 §6) [P]. */
+.globos {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  pointer-events: auto;
+}
+.globo {
+  max-width: 32rem;
+  padding: 0.75rem 1rem;
+  border: 3px solid #000;
+  border-radius: 1.25rem;
+  background: #fff;
+  color: #000;
+  font:
+    1.1rem / 1.4 Georgia,
+    serif;
+  text-align: left;
+  cursor: pointer;
+}
+.globo--opcion {
+  font-style: italic;
+}
