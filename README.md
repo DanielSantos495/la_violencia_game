@@ -12,7 +12,7 @@ Dos partes:
 | `planeacion/produccion/` | Plan de implementación, backlog y prompts de configuración |
 | `planeacion/arte/` | Dirección de arte, referencias de época y audio |
 | `planeacion/tecnico/` | Plataforma, stack, arquitectura y esquema del Archivo |
-| `game/` | Desarrollo: proyecto del juego (Phaser 4 + TypeScript + Ink). Se configura con `planeacion/produccion/tomo1/05_prompt_setup_desde_cero.md` |
+| `game/` | Desarrollo: proyecto del juego (Phaser 4 + TypeScript + Ink). Se configura con `planeacion/produccion/tomo1/05_prompt_setup_desde_cero.md`; requisitos y scripts en `game/README.md` |
 
 Cada carpeta de planeación se organiza por tomo (`tomo1/`, `tomo2/`, …).
 
