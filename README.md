@@ -18,7 +18,7 @@ Cada carpeta de planeación se organiza por tomo (`tomo1/`, `tomo2/`, …).
 
 ## Fuente única
 
-La fuente principal es la carpeta local `la_violencia_game` en el computador de Daniel, versionada en git y conectada a GitHub (`DanielSantos495/la_violencia_game`). Los documentos se editan aquí; GitHub es la copia remota y el Proyecto de claude.ai los lee desde GitHub. No mantener copias editables en otro lugar.
+La fuente principal es la carpeta local `la_violencia_game` en el computador de Daniel, versionada en git y conectada a GitHub (`DanielSantos495/la_violencia_game`). Los documentos se editan aquí; GitHub es la copia remota y el Proyecto de claude.ai la tiene enlazada como contexto. No mantener copias editables en otro lugar.
 
 ## Reglas no negociables
 
