@@ -8,6 +8,7 @@
 | 02 | Guion y narrativa | Arcos, sistema de decisiones, beats y diálogos clave del prólogo, 9 misiones y epílogo, finales |
 | 03 | Dirección de arte | Estilo visual recomendado, referencias verificadas por región, fuentes a licenciar |
 | 04 | Documento técnico | Plataforma web + escritorio, Phaser 4, stack, arquitectura, combate, episodios, esquema del Archivo |
+| 05 | Prompt de setup desde cero | Bloques de configuración del proyecto en `game/` con Claude Code y decisiones del Bloque 0 |
 
 ---
 
@@ -63,16 +64,18 @@ Por qué: cubre las mecánicas núcleo (movimiento lateral, cámara de Custodia,
 - [ ] Verificar que ningún nombre ficticio de la biblia coincida con personas vivas conocidas.
 
 **Técnica**
-- [x] Verificar versión vigente de Phaser 4.x y crear proyecto (Phaser 4.2.1, Vite 8, TypeScript 7) — carpeta `la_violencia_game`.
-- [x] Repo Git con estructura por capas (`src/core`, `src/game`, `src/ui`, `content/`, `art/src`, `tools/`, `tests/`).
-- [x] Integrar inkjs 2.4.0: prólogo de prueba con decisión, globos en DOM.
-- [x] Validador del Archivo (modo release excluye pendientes) + GitHub Actions.
-- [x] Script SVG → PNG con @resvg/resvg-js. Pendiente: empaquetador de atlas.
+> El código anterior se borró para reconstruir desde cero con el doc 05 (rama `setup/tomo1-base`, 1-oct-2026). Las tareas técnicas vuelven a estar pendientes.
+
+- [x] Verificar versiones vigentes (1-oct-2026): Phaser 4.2.1, Vite 8, TypeScript 7, inkjs 2.4.0, Node 24 LTS, pnpm 11. Detalle en doc 04 §3.
+- [ ] Crear proyecto en `game/` con estructura por capas (`src/core`, `src/game`, `src/ui`, `content/`, `art/src`, `tools/`, `tests/`; ver doc 04 §4).
+- [ ] Integrar inkjs: prólogo de prueba con decisión, globos en DOM.
+- [ ] Validador del Archivo (modo release excluye pendientes) + GitHub Actions.
+- [ ] Pipeline de arte: SVGO → SVG → PNG → atlas (empaquetador por elegir).
 
 **Arte (Claude)**
 - [ ] Hoja de estilo con paleta en hex, grosores y tramas.
 - [ ] Hoja de personaje de Rosalba (piezas de recorte).
-- [x] Fondo de prueba: plaza de Puente Alto en 3 capas de paralaje (provisional).
+- [ ] Fondo de prueba: plaza de Puente Alto en 3 capas de paralaje (provisional; se perdió con el código borrado).
 - [ ] Prueba de audio: tema de Puente Alto (torbellino) + 5 efectos + 2 expresiones no verbales, para validar calidad antes de producir en masa.
 
 ### Sprint 1 — Primer jugable del slice

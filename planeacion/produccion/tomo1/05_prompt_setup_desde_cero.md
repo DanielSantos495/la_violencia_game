@@ -27,15 +27,29 @@ Juego narrativo-documental **2D lateral estilo novela gráfica** sobre La Violen
 | doc 03 | `planeacion/arte/tomo1/03_direccion_arte.md` | Estilo y referencias de época |
 | doc 04 | `planeacion/tecnico/tomo1/04_documento_tecnico.md` | Stack, arquitectura y esquema del Archivo |
 | Contexto | `planeacion/historia/esquema_tomos_conflicto_armado.md` · `planeacion/historia/tomo1/tomo1_la_violencia.md` | Esquema de los 8 tomos y guion base (corregido por el doc 02) |
+| doc 05 | `planeacion/produccion/tomo1/05_prompt_setup_desde_cero.md` | Este prompt (no es documento de diseño) |
 
 Reglas sobre estos documentos:
 - **Inventario primero.** Antes de empezar, lista todos los `.md` de `planeacion/`. Si hay archivos nuevos, renombrados o faltantes respecto a esta tabla, **la carpeta manda**: avísame de la diferencia antes de seguir.
 - **Si falta alguno de la tabla, detente y pídemelo.**
-- **Solo lectura.** Durante el setup no edites nada en `planeacion/`. Si encuentras una contradicción, repórtala.
+- **Solo lectura.** Durante el setup no edites nada en `planeacion/` salvo que yo lo pida. Si encuentras una contradicción, repórtala.
 - **Sin duplicar.** Ni el código, ni `CLAUDE.md`, ni las skills copian el contenido de estos documentos: los citan por ruta y sección (p. ej. "doc 04 §7") y resumen solo las reglas. Si un doc cambia, lo que lo cita debe seguir siendo válido.
 - **Nada de diseño en `game/`.** La documentación de diseño nueva va en `planeacion/`, nunca dentro de `game/`.
 
 El código anterior se borró a propósito para reconstruir desde cero. **No intentes recuperarlo.** Las tareas técnicas marcadas `[x]` en el doc 00 corresponden a ese código borrado: trátalas como pendientes.
+
+### Decisiones del Bloque 0 (aprobadas por Daniel, 1-oct-2026)
+
+| Tema | Decisión | Motivo |
+|---|---|---|
+| Estructura de `src/` | `core/` (lógica pura sin Phaser ni DOM: `narrative/`, `archivo/`, `mechanics/`) · `game/` (Phaser: `scenes/`, `mechanics/` adaptadores) · `ui/` (DOM) | Reconcilia las capas del doc 00 con los módulos del doc 04 §4; `core/` se testea en Node |
+| Gestor de paquetes | **pnpm** (fijado con `packageManager`) | `ignore-scripts` y `minimumReleaseAge` (24 h) por defecto contra ataques de supply chain |
+| Node | **24.x LTS** (`.nvmrc` + `engines`) | LTS activa; ejecuta `.ts` nativo en `tools/` sin `tsx` |
+| TypeScript + calidad | **TypeScript 7** (compilador nativo) + **Biome** (linter y formateador) | TS 7 no expone la API JS que exige `typescript-eslint` (requiere TS < 6.1) |
+| Plantilla | **Sin plantilla**: Vite + TS a mano | `phaserjs/template-vite-ts` está desactualizada (Phaser 4.0.0, Vite 6, TS 5.7) y su `log.js` hace una petición de red (telemetría) en `dev`/`build` |
+| Ramas | Trabajo en la rama **`setup/tomo1-base`** desde el inicio; `main` no se toca. Sin push | — |
+
+Si vuelves a ejecutar este prompt, estas decisiones ya están tomadas: en el Bloque 0 solo reverifica versiones.
 
 ---
 
@@ -46,7 +60,7 @@ El código anterior se borró a propósito para reconstruir desde cero. **No int
    - Versiones, comandos, flags, nombres de paquetes, plantillas, tags y SHAs se verifican en la documentación o el registro oficial (npm, GitHub, sitio del proyecto) en el momento de usarlos.
    - Lo que no puedas verificar va marcado **[P]**, y me preguntas.
    - Los números de versión que aparecen en los docs (p. ej. Phaser 4.2.1, Vite 8, TypeScript 7, inkjs 2.4.0) son **referencia, no instrucción**: confirma cuál es la versión estable vigente.
-3. **Versiones exactas.** Sin `^` ni `~` en `package.json`. Commitea el lockfile. Fija la versión de Node (`.nvmrc` y `engines`).
+3. **Versiones exactas.** Sin `^` ni `~` en `package.json`. Commitea el lockfile (`pnpm-lock.yaml`). Fija la versión de Node (`.nvmrc` y `engines`) y la de pnpm (`packageManager`).
 4. **Nivel proyecto.** Skills en `.claude/skills/` versionadas en git. Nada en `~/.claude` sin mi aprobación.
 5. **Licencias.** El juego se venderá (Steam/itch). Descarta toda dependencia o skill con licencia no comercial y reporta la licencia de cada una.
 6. **Seguridad de skills de terceros.** Antes de activarlas, lee cada `SKILL.md` y cada script incluido. Reporta comandos de red, escritura fuera del repo, credenciales o ejecución remota.
@@ -61,19 +75,13 @@ El código anterior se borró a propósito para reconstruir desde cero. **No int
 
 1. Inspecciona el repo: contenido, `git log` y la versión de Node/npm disponible.
 2. Haz el inventario de `planeacion/` y lee los documentos de la tabla.
-3. Pregúntame en **una sola tanda** lo que sea mi decisión:
-   - **Estructura de `src/`:** el doc 04 §4 usa `scenes/ narrative/ mechanics/ archivo/ ui/`, mientras que el doc 00 menciona capas `src/core`, `src/game`, `src/ui`. Propón una estructura que reconcilie ambas (lógica pura sin Phaser vs. escenas/render vs. DOM) y espera mi elección.
-   - **Gestor de paquetes:** npm, pnpm u otro. Recomienda uno.
-   - **Ramas:** ¿se trabaja directo en `main` o en una rama de setup con PR?
+3. Las decisiones de estructura, gestor de paquetes, Node, TypeScript/linter y ramas ya están tomadas (ver "Decisiones del Bloque 0"). Pregúntame en **una sola tanda** solo lo nuevo que surja (p. ej. una versión que rompa compatibilidad).
 4. Presenta un **plan corto** por bloques con las versiones verificadas de cada dependencia y su fuente. **Espera mi aprobación.**
 
 ## Bloque 1 — Proyecto base (todo dentro de `game/`)
 
-1. El repo ya existe; no lo reinicialices. Todo el proyecto del juego (`package.json`, lockfile, config, código) vive en `game/`. La raíz queda solo para `planeacion/`, `CLAUDE.md`, `README.md`, `.claude/` y `.github/`.
-2. Verifica si hay una plantilla oficial de Phaser 4 + Vite + TypeScript vigente.
-   - Si existe y es limpia, úsala.
-   - Si no, crea el proyecto Vite + TS a mano y añade Phaser.
-   - Elimina cualquier demo de la plantilla.
+1. El repo ya existe; no lo reinicialices. Trabaja en la rama `setup/tomo1-base`. Todo el proyecto del juego (`package.json`, lockfile, config, código) vive en `game/`. La raíz queda solo para `planeacion/`, `CLAUDE.md`, `README.md`, `.claude/` y `.github/`.
+2. Crea el proyecto Vite + TS a mano y añade Phaser (la plantilla oficial se descartó en el Bloque 0). Si una plantilla oficial nueva aparece, revísala antes, sin telemetría ni demos.
 3. Configura TypeScript en modo `strict`, con alias de rutas solo si hacen falta.
 4. Crea dentro de `game/` la estructura completa de carpetas acordada, más:
    - `content/ink/`
@@ -89,7 +97,7 @@ El código anterior se borró a propósito para reconstruir desde cero. **No int
 
 ## Bloque 2 — Calidad
 
-1. Linter y formateador, en versiones verificadas y con configuración mínima.
+1. Biome como linter y formateador (versión verificada, configuración mínima); `typecheck` con `tsc --noEmit` de TypeScript 7.
 2. Tests con un runner compatible con Vite (verifica cuál es el recomendado vigente).
 3. Scripts en `package.json`: `dev`, `build`, `preview`, `lint`, `typecheck`, `test`, `validate:archivo`, `art:build`, `ink:build`.
 4. **Validación:** todos los scripts corren en verde (los que aún no tienen contenido terminan sin error).
@@ -138,7 +146,8 @@ Fija cada skill a un tag o SHA. Audítala (regla 6) y verifica su licencia antes
    - Usa el tag igual a la versión de Phaser instalada; si no existe, el más cercano, y avísame.
    - Excluye `v3-to-v4-migration`.
    - **No** instales `phaserjs/phaser-game-agent` (MCP con login).
-2. **`gamedev-skills/awesome-gamedev-agent-skills`** (Apache-2.0). Verifica en su `docs/INSTALLATION.md` cómo instalar un subconjunto **sin `-g`**.
+2. **`gamedev-skills/awesome-gamedev-agent-skills`** (Apache-2.0). Verifica en su `docs/INSTALLATION.md` cómo instalar un subconjunto **sin `-g`**; preferir copia manual de las carpetas desde un tag/SHA (sin `npx skills`).
+   - **[P]** Su `INSTALLATION.md` (tag v1.1.0) cita `AbhishekBarali/awesome-gamedev-agent-skills`: confirmar si es renombre o fork antes de copiar.
    - Instala **solo:** `router`, `phaser-core`, `phaser-arcade-physics`, `create-game-assets`, `game-feel`, `audio-design`, `dialogue-systems`, `save-systems`, `camera-systems`, `game-ui-ux`, `input-systems`, `performance-optimization`, `prototype-fast`.
    - Comprueba que el router detecte Phaser en este repo.
    - Si el router entra en conflicto con las skills oficiales de Phaser, prevalecen las oficiales para la API del motor.
@@ -195,7 +204,8 @@ Cada skill **apunta a los documentos de `planeacion/`** en vez de copiarlos: el 
 3. Las skills aparecen como disponibles. Prompts de prueba:
    - "crea un tween de caminata para Rosalba" → Phaser + `la-violencia-art`.
    - "añade una entrada al Archivo" → `la-violencia-historia`.
-4. Commit final. Sin push.
+4. Commit final en `setup/tomo1-base`. Sin push.
+5. Toda la implementación queda en la rama `setup/tomo1-base` (creada en el Bloque 1); `main` no recibe estos commits hasta que Daniel apruebe el PR.
 
 ## Reporte final (breve)
 

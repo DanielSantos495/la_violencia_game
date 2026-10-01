@@ -1,7 +1,7 @@
 # Tomo I — Documento técnico (plataforma y stack)
 
 **Contexto que define el stack:** juego 2D lateral estilo novela gráfica · desarrollador único con perfil JavaScript/frontend · web como plataforma principal y escritorio como segunda · lanzamiento por episodios · assets SVG, música y efectos producidos por Claude · sin voces (solo texto).
-Versiones verificadas a septiembre de 2026; lo no verificado va marcado **[P]**.
+Versiones verificadas al 1 de octubre de 2026; lo no verificado va marcado **[P]**.
 
 ---
 
@@ -14,18 +14,20 @@ Versiones verificadas a septiembre de 2026; lo no verificado va marcado **[P]**.
 
 | Opción | Estado verificado | Ajuste |
 |---|---|---|
-| **Phaser 4 + TypeScript** | Phaser 4 lanzado; ya hay versiones 4.x posteriores (4.1.0) | **Recomendado.** JavaScript/TypeScript nativo, pensado para web 2D, el mismo ecosistema que ya dominas (npm, Vite) |
+| **Phaser 4 + TypeScript** | Phaser 4 lanzado; vigente 4.2.1 (verificado en npm, 1-oct-2026) | **Recomendado.** JavaScript/TypeScript nativo, pensado para web 2D, el mismo ecosistema que ya dominas (npm, Vite) |
 | Godot 4.6 | Estable (ene-2026), exporta a web | Buena alternativa, pero implica aprender GDScript y su editor; la exportación web es más pesada |
 | Unreal / Unity | — | Descartados: sobredimensionados para 2D cómic |
 
-**Política de versión:** fijar la versión de Phaser 4.x vigente al iniciar (verificar número exacto en phaser.io antes del `npm install`) y no actualizar de versión menor en mitad de un episodio.
+**Política de versión:** fijar la versión de Phaser 4.x vigente al iniciar (verificar número exacto en phaser.io/npm antes de instalar con `pnpm`) y no actualizar de versión menor en mitad de un episodio.
 
 ## 3. Stack
 
 | Área | Tecnología | Nota |
 |---|---|---|
-| Lenguaje | TypeScript | Tipado de estados narrativos y del Archivo |
-| Build | Vite | |
+| Lenguaje | TypeScript 7 (compilador nativo) | Tipado de estados narrativos y del Archivo |
+| Entorno | Node 24 LTS + **pnpm** | Versiones fijadas (`.nvmrc`, `engines`, `packageManager`); pnpm por sus protecciones de supply chain |
+| Build | Vite | Proyecto creado a mano (sin la plantilla oficial: desactualizada y con telemetría) |
+| Calidad | Biome (lint + formato) · Vitest (tests) | `typescript-eslint` no soporta TS 7 |
 | Motor 2D | Phaser 4 | Escenas, cámara con paralaje, físicas arcade simples, tweens |
 | Narrativa | **Ink** (lenguaje de inkle) + **inkjs** (runtime oficial en JavaScript) | Guion en texto plano (`.ink`), compilado a JSON; variables del guion viven en Ink |
 | Arte | SVG fuente → PNG + atlas en build | Script Node (librería de rasterizado SVG **[P: elegir y verificar]**) + empaquetador de atlas **[P]** |
@@ -40,22 +42,26 @@ Versiones verificadas a septiembre de 2026; lo no verificado va marcado **[P]**.
 | CI | GitHub Actions: lint, tests, validación del Archivo, build web | |
 
 ## 4. Arquitectura del código
+Todo el proyecto vive en `game/`. Tres capas (decidido el 1-oct-2026): `core/` es lógica pura sin Phaser ni DOM (se testea en Node); `game/` es todo lo que usa Phaser; `ui/` es DOM.
 ```
 src/
   main.ts                 arranque de Phaser
-  scenes/                 Boot, Menu, Episodio, Mision (base), PaginaComic, Archivo
-  narrative/
-    InkRunner.ts          carga el JSON de Ink, expone diálogos y decisiones
-    NarrativeState.ts     puente entre variables de Ink y el guardado
-  mechanics/
-    Movimiento.ts         caminar, correr, agacharse, ocultarse (lateral)
-    Sigilo.ts             conos de visión, ruido, escondites
-    Camara.ts             rollo de 12 exposiciones, encuadre, viñeta de foto (Custodia)
-    Libreta.ts            notas y testimonios
-    Combate.ts            enfrentamientos breves (ver §5)
-    Ordenes.ts            órdenes y conciencia (Aurelio)
-  archivo/
-    ArchivoStore.ts       carga entradas validadas
+  core/                   lógica pura (sin Phaser ni DOM)
+    narrative/
+      InkRunner.ts        carga el JSON de Ink, expone diálogos y decisiones
+      NarrativeState.ts   puente entre variables de Ink y el guardado
+    archivo/
+      ArchivoStore.ts     carga entradas validadas (esquema §7)
+    mechanics/            reglas puras: rollo de 12 exposiciones, conciencia, munición…
+  game/                   Phaser
+    scenes/               Boot, Menu, Episodio, Mision (base), PaginaComic, Archivo
+    mechanics/
+      Movimiento.ts       caminar, correr, agacharse, ocultarse (lateral)
+      Sigilo.ts           conos de visión, ruido, escondites
+      Camara.ts           encuadre y viñeta de foto (Custodia)
+      Libreta.ts          notas y testimonios
+      Combate.ts          enfrentamientos breves (ver §5)
+      Ordenes.ts          órdenes y conciencia (Aurelio)
   ui/                     componentes DOM (globos, libreta, visor de Archivo)
 content/
   ink/                    guion por episodio (.ink)
