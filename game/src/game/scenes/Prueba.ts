@@ -3,6 +3,7 @@ import { ArchivoStore } from '../../core/archivo/ArchivoStore.ts';
 import { InkRunner } from '../../core/narrative/InkRunner.ts';
 import { Globos } from '../../ui/Globos.ts';
 import { VisorArchivo } from '../../ui/VisorArchivo.ts';
+import { caminar } from '../Caminata.ts';
 import { armarRecorte } from '../Recorte.ts';
 
 /** Escena de prueba del setup: figura SVG por piezas con tween, diálogo Ink en globos DOM y visor del Archivo. No es contenido del juego. */
@@ -46,6 +47,36 @@ export class Prueba extends Scene {
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut',
+    });
+
+    // Rosalba caminando de izquierda a derecha (piezas en orden de dibujo del SVG).
+    const rosalba = armarRecorte(
+      this,
+      -320,
+      420,
+      'arte',
+      'personajes/rosalba',
+      [
+        'brazo-izq',
+        'pierna-izq',
+        'pierna-der',
+        'falda',
+        'torso',
+        'cabeza',
+        'ruana',
+        'trenza',
+        'brazo-der',
+        'ruana-doblez',
+        'panuelo',
+        'sombrero',
+      ],
+    );
+    caminar(this, rosalba.contenedor, rosalba.piezas);
+    this.tweens.add({
+      targets: rosalba.contenedor,
+      x: 1940,
+      duration: 16000,
+      repeat: -1,
     });
 
     const archivo = new ArchivoStore(this.cache.json.get('archivo'));

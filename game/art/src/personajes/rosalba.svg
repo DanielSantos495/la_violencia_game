@@ -1,0 +1,204 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="500" viewBox="0 0 300 500">
+  <!--
+    Rosalba Insuasty — perfil lateral mirando a la derecha (sprite de juego, cut-out).
+    Personaje ficticio (doc 01). 19 años, campesina liberal de Puente Alto (doc 02 §3).
+    Vestuario según doc 03 §3.1 "Vestido mujer" [V]: falda de paño, blusa, ruana,
+    sombrero de paño negro, alpargatas blancas.
+    Mira a la derecha → el lado visible es su lado DERECHO: piezas "-der" delante, "-izq" detrás.
+    Colores: solo tinta (#000) y papel (#fff) como placeholders; paleta en hex [P] (doc 03 §6.1).
+  -->
+  <defs>
+    <!-- Tramas: los grises solo existen como trama (doc 03 §1). -->
+    <pattern id="trama-fina" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="5" stroke="#000" stroke-width="0.8"/>
+    </pattern>
+    <pattern id="trama-media" width="3.4" height="3.4" patternUnits="userSpaceOnUse" patternTransform="rotate(60)">
+      <line x1="0" y1="0" x2="0" y2="3.4" stroke="#000" stroke-width="1.1"/>
+    </pattern>
+    <pattern id="trama-lana" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="5" stroke="#000" stroke-width="0.9"/>
+      <line x1="0" y1="2.5" x2="5" y2="2.5" stroke="#000" stroke-width="0.6"/>
+    </pattern>
+    <pattern id="trama-cruzada" width="3.2" height="3.2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="3.2" stroke="#000" stroke-width="1.1"/>
+      <line x1="0" y1="0" x2="3.2" y2="0" stroke="#000" stroke-width="1.1"/>
+    </pattern>
+    <pattern id="semitono" width="4" height="4" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.85" fill="#000"/>
+    </pattern>
+    <pattern id="fique" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(-50)">
+      <line x1="0" y1="0" x2="0" y2="3" stroke="#000" stroke-width="0.9"/>
+    </pattern>
+  </defs>
+
+  <!-- ===== Brazo izquierdo (lado lejano, detrás del cuerpo y de la ruana) ===== -->
+  <g id="brazo-izq" data-pieza="" data-pivote="140 146">
+    <path d="M131,141 C138,136 149,138 150,148 L151,210 C151,217 138,218 136,210 Z" fill="#fff" stroke="#000" stroke-width="2.4"/>
+    <path d="M131,141 C138,136 149,138 150,148 L151,210 C151,217 138,218 136,210 Z" fill="url(#trama-media)"/>
+    <path d="M137,214 L150,214 C153,240 155,258 155,268 L144,270 C142,256 140,238 137,214 Z" fill="#fff" stroke="#000" stroke-width="2.2"/>
+    <path d="M143,268 C142,277 145,286 150,289 C156,291 159,286 158,280 C158,274 157,270 155,266 Z" fill="#fff" stroke="#000" stroke-width="2"/>
+    <path d="M137,214 L150,214 C153,240 155,258 155,268 L144,270 C142,256 140,238 137,214 Z" fill="url(#trama-fina)"/>
+  </g>
+
+  <!-- ===== Pierna izquierda (lejana): solo asoma la canilla bajo la falda ===== -->
+  <g id="pierna-izq" data-pieza="" data-pivote="138 252">
+    <path d="M129,330 C124,355 124,385 129,415 C130,430 130,442 130,452 L140,452 C140,440 141,425 142,410 C144,385 144,355 142,330 Z" fill="#fff" stroke="#000" stroke-width="2.4"/>
+    <path d="M129,330 C124,355 124,385 129,415 C130,430 130,442 130,452 L140,452 C140,440 141,425 142,410 C144,385 144,355 142,330 Z" fill="url(#trama-fina)"/>
+    <!-- alpargata lejana -->
+    <path d="M127,452 C129,446 141,446 145,452 C151,455 158,458 160,465 L124,463 C124,458 125,455 127,452 Z" fill="#fff" stroke="#000" stroke-width="2"/>
+    <path d="M123,462 C128,468 150,469 161,465 L161,470 C149,474 129,474 123,469 Z" fill="#fff" stroke="#000" stroke-width="2"/>
+    <path d="M123,462 C128,468 150,469 161,465 L161,470 C149,474 129,474 123,469 Z" fill="url(#fique)"/>
+    <path d="M129,450 L141,444 M129,444 L141,450" stroke="#000" stroke-width="1.8" fill="none"/>
+    <path d="M127,452 C129,446 141,446 145,452 C151,455 158,458 160,465 L124,463 C124,458 125,455 127,452 Z" fill="url(#trama-fina)"/>
+  </g>
+
+  <!-- ===== Pierna derecha (cercana) ===== -->
+  <g id="pierna-der" data-pieza="" data-pivote="148 252">
+    <path d="M151,330 C146,355 146,385 151,415 C152,430 152,442 152,452 L162,452 C162,440 163,425 164,410 C166,385 166,355 164,330 Z" fill="#fff" stroke="#000" stroke-width="2.6"/>
+    <!-- sombra de la pantorrilla -->
+    <path d="M150,365 C149,385 150,400 153,414 L157,414 C154,400 153,384 154,365 Z" fill="url(#semitono)"/>
+    <!-- alpargata cercana: capellada de lona y suela de fique -->
+    <path d="M148,452 C150,445 163,445 167,452 C174,455 182,458 184,465 L145,463 C145,458 146,455 148,452 Z" fill="#fff" stroke="#000" stroke-width="2.4"/>
+    <path d="M151,455 C160,454 172,457 180,462" stroke="#000" stroke-width="0.9" stroke-dasharray="2 2" fill="none"/>
+    <path d="M144,462 C150,468 172,469 185,465 L185,471 C172,475 150,475 144,470 Z" fill="#fff" stroke="#000" stroke-width="2.4"/>
+    <path d="M144,462 C150,468 172,469 185,465 L185,471 C172,475 150,475 144,470 Z" fill="url(#fique)"/>
+    <!-- cintas negras cruzadas al tobillo -->
+    <path d="M150,451 L163,443 M150,443 L163,451 M149,447 L164,447" stroke="#000" stroke-width="2" fill="none"/>
+  </g>
+
+  <!-- ===== Falda de paño (doc 03 §3.1 [V]) ===== -->
+  <g id="falda" data-pieza="" data-pivote="145 240">
+    <path d="M126,238 L165,238 C171,282 183,350 191,404 Q182,413 172,406 Q162,414 150,407 Q138,415 126,407 Q114,414 101,404 C108,350 118,282 126,238 Z" fill="#fff" stroke="#000" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M126,238 L165,238 C171,282 183,350 191,404 Q182,413 172,406 Q162,414 150,407 Q138,415 126,407 Q114,414 101,404 C108,350 118,282 126,238 Z" fill="url(#trama-media)"/>
+    <!-- lado de sombra (detrás) más denso -->
+    <path d="M126,238 C118,282 108,350 101,404 Q114,414 126,407 C126,350 128,290 134,240 Z" fill="url(#trama-cruzada)"/>
+    <!-- pliegues -->
+    <path d="M136,244 C134,300 129,360 126,405 M151,244 C153,300 157,360 161,408 M144,256 C144,320 143,370 145,407 M158,250 C163,300 170,360 176,405 M131,260 C127,310 120,360 114,408" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- ruedo con doble pespunte -->
+    <path d="M104,398 Q115,406 126,401 Q138,408 150,401 Q162,407 172,400 Q182,406 189,398" stroke="#fff" stroke-width="2.2" fill="none"/>
+    <path d="M104,398 Q115,406 126,401 Q138,408 150,401 Q162,407 172,400 Q182,406 189,398" stroke="#000" stroke-width="1" fill="none"/>
+    <!-- pretina -->
+    <path d="M124,234 L166,234 L167,244 L123,244 Z" fill="#000"/>
+  </g>
+
+  <!-- ===== Torso: blusa de algodón (casi siempre bajo la ruana) ===== -->
+  <g id="torso" data-pieza="" data-pivote="145 240">
+    <path d="M136,128 C150,124 162,126 166,134 C172,148 174,166 170,182 C167,200 165,220 164,238 L126,238 C124,215 121,190 123,165 C124,148 127,136 136,128 Z" fill="#fff" stroke="#000" stroke-width="3"/>
+    <path d="M150,132 C152,150 152,170 150,190 M162,150 C164,160 165,172 162,182" stroke="#000" stroke-width="1.2" fill="none"/>
+    <path d="M124,165 C124,190 125,215 127,236 L134,236 C131,210 130,186 131,160 Z" fill="url(#trama-fina)"/>
+    <!-- botones -->
+    <circle cx="164" cy="150" r="1.4" fill="#000"/>
+    <circle cx="166" cy="166" r="1.4" fill="#000"/>
+    <circle cx="164" cy="182" r="1.4" fill="#000"/>
+  </g>
+
+  <!-- ===== Cabeza (perfil) con cuello ===== -->
+  <g id="cabeza" data-pieza="" data-pivote="148 128">
+    <!-- cuello -->
+    <path d="M139,104 L160,116 C160,124 160,130 162,136 L137,136 C138,126 138,114 139,104 Z" fill="#fff" stroke="#000" stroke-width="2.4"/>
+    <path d="M140,112 C141,122 141,130 140,135 L147,135 C146,128 146,120 147,114 Z" fill="url(#trama-fina)"/>
+    <!-- rostro -->
+    <path d="M150,48 C160,48 168,54 170,64 C171,69 172,73 173,76 C173,79 172,81 173,84 C176,88 180,91 181,93 C181,95 178,96 175,96 C175,98 177,99 176,101 C174,102 173,102 174,104 C176,106 175,108 173,110 C172,114 170,117 166,119 C160,121 152,119 146,114 C134,106 124,92 124,76 C124,58 136,48 150,48 Z" fill="#fff" stroke="#000" stroke-width="3" stroke-linejoin="round"/>
+    <!-- sombra bajo el pómulo: trama fina, no puntos (los puntos se leían como barba) -->
+    <path d="M147,104 C152,110 158,114 164,116 C158,118 152,117 148,113 C146,111 145,108 147,104 Z" fill="url(#trama-fina)"/>
+    <!-- ojo: almendra con iris oscuro, pestañas marcadas -->
+    <path d="M158,80 C161,76 166,76 169,79 C166,82 162,83 158,80 Z" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <circle cx="165" cy="79.4" r="2" fill="#000"/>
+    <path d="M157,79 C160,74.5 166,74.5 170,78" stroke="#000" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M160,84 C163,85 166,85 168,84" stroke="#000" stroke-width="0.8" fill="none"/>
+    <!-- ceja firme, levemente fruncida: decisión -->
+    <path id="ceja-der" d="M155,71 C160,68 166,68 171,71.5" stroke="#000" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <!-- nariz y boca -->
+    <path d="M175,92 C176,93 177,93 178,92" stroke="#000" stroke-width="1.2" fill="none"/>
+    <path d="M168,102 L174,101.5" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M166,110 C168,111 170,111 171,110" stroke="#000" stroke-width="0.9" fill="none"/>
+    <!-- pelo: masa negra peinada hacia atrás, raya al medio, recogido en la nuca -->
+    <path d="M168,58 C162,50 148,46 136,52 C124,58 119,74 121,90 C122,100 127,108 136,112 L142,108 C138,102 137,96 139,90 C141,84 145,82 147,76 C150,68 158,62 168,58 Z" fill="#000"/>
+    <path d="M160,56 C150,56 140,62 134,72 M154,54 C144,58 132,70 128,86 M148,54 C138,60 126,76 125,94" stroke="#fff" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+    <!-- oreja delante del pelo -->
+    <path d="M140,82 C146,80 149,85 148,90 C147,95 143,97 140,95 C141,91 141,86 140,82 Z" fill="#fff" stroke="#000" stroke-width="1.8"/>
+    <path d="M142,86 C145,86 145,91 143,92" stroke="#000" stroke-width="0.9" fill="none"/>
+  </g>
+
+  <!-- ===== Ruana de lana oscura (doc 03 §3.1 [V]). El valor oscuro es decisión de diseño, no dato ===== -->
+  <g id="ruana" data-pieza="" data-pivote="145 128">
+    <path d="M146,121 C134,119 124,126 119,140 C108,172 100,232 96,290 C110,297 126,300 142,299 C158,298 174,302 188,295 C186,250 182,196 174,156 C171,140 162,126 146,121 Z" fill="#fff" stroke="#000" stroke-width="3.6" stroke-linejoin="round"/>
+    <path d="M146,121 C134,119 124,126 119,140 C108,172 100,232 96,290 C110,297 126,300 142,299 C158,298 174,302 188,295 C186,250 182,196 174,156 C171,140 162,126 146,121 Z" fill="url(#trama-cruzada)"/>
+    <!-- luz que viene de adelante: franja con trama más abierta -->
+    <path d="M162,142 C172,175 180,235 184,296 C176,299 168,300 160,299 C160,240 158,190 152,152 Z" fill="#fff"/>
+    <path d="M162,142 C172,175 180,235 184,296 C176,299 168,300 160,299 C160,240 158,190 152,152 Z" fill="url(#trama-lana)"/>
+    <!-- espalda en sombra plena -->
+    <path d="M119,140 C108,172 100,232 96,290 C101,293 105,295 109,296 C110,240 114,182 123,144 Z" fill="#000"/>
+    <!-- pliegues como reflejos blancos sobre la lana oscura -->
+    <path d="M131,150 C126,200 122,250 122,296 M142,142 C140,200 139,252 141,298 M117,190 C114,230 112,262 111,296" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M150,160 C151,210 150,255 151,297" stroke="#000" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <!-- orilla tejida en el ruedo -->
+    <path d="M98,284 C114,291 130,293 142,292 C158,291 172,294 186,288" stroke="#fff" stroke-width="2.2" fill="none" stroke-dasharray="3 2"/>
+    <!-- cuello de la ruana: rollo grueso -->
+    <path d="M136,124 C146,131 159,133 168,128" stroke="#000" stroke-width="4.4" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- ===== Trenza [P]: el peinado no está en el doc 03 §3.1; confirmar con fotos de época ===== -->
+  <g id="trenza" data-pieza="" data-pivote="131 108" data-p="peinado sin referencia de época en doc 03">
+    <ellipse cx="130" cy="114" rx="5.6" ry="8" transform="rotate(20 130 114)" fill="#000" stroke="#fff" stroke-width="0.9"/>
+    <ellipse cx="129" cy="126" rx="5.6" ry="8" transform="rotate(-20 129 126)" fill="#000" stroke="#fff" stroke-width="0.9"/>
+    <ellipse cx="128" cy="138" rx="5.4" ry="8" transform="rotate(20 128 138)" fill="#000" stroke="#fff" stroke-width="0.9"/>
+    <ellipse cx="127" cy="150" rx="5.2" ry="7.8" transform="rotate(-20 127 150)" fill="#000" stroke="#fff" stroke-width="0.9"/>
+    <ellipse cx="126" cy="162" rx="5" ry="7.6" transform="rotate(20 126 162)" fill="#000" stroke="#fff" stroke-width="0.9"/>
+    <ellipse cx="125" cy="174" rx="4.6" ry="7.4" transform="rotate(-20 125 174)" fill="#000" stroke="#fff" stroke-width="0.9"/>
+    <ellipse cx="124" cy="185" rx="4.2" ry="7" transform="rotate(20 124 185)" fill="#000" stroke="#fff" stroke-width="0.9"/>
+    <!-- amarre y punta -->
+    <rect x="119.5" y="192" width="8" height="4" rx="1" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <path d="M120,196 C118,202 119,207 121,210 M123,196 C123,203 123,207 124,211 M126,196 C127,202 127,206 126,210" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  </g>
+
+
+  <!-- ===== Brazo derecho (cercano), manga de blusa arremangada ===== -->
+  <g id="brazo-der" data-pieza="" data-pivote="152 142">
+    <!-- manga -->
+    <path d="M140,140 C150,132 166,136 166,150 C166,170 166,190 166,206 C163,213 151,213 148,206 C146,186 143,164 140,140 Z" fill="#fff" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>
+    <path d="M143,156 C145,174 147,192 149,204 L153,204 C151,190 149,172 148,154 Z" fill="url(#trama-fina)"/>
+    <path d="M157,166 C159,178 160,190 160,200 M152,170 C153,182 154,192 155,200" stroke="#000" stroke-width="1" fill="none"/>
+    <!-- remango en el codo -->
+    <path d="M146,200 C152,206 162,206 168,200 L169,212 C163,216 153,216 147,212 Z" fill="#fff" stroke="#000" stroke-width="2.2"/>
+    <path d="M147,206 C153,210 162,210 168,206" stroke="#000" stroke-width="1" fill="none"/>
+    <!-- antebrazo, levemente adelantado -->
+    <path d="M150,214 L166,213 C170,236 173,252 174,264 L161,268 C159,252 154,236 150,214 Z" fill="#fff" stroke="#000" stroke-width="2.6"/>
+    <path d="M152,222 C155,238 158,252 161,264 L164,263 C161,250 158,236 155,222 Z" fill="url(#semitono)"/>
+    <!-- mano de trabajo, dedos recogidos -->
+    <path d="M160,265 C159,275 161,285 167,289 C173,292 178,288 178,282 C178,276 176,269 173,264 Z" fill="#fff" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M170,278 C173,279 175,281 176,284 M167,282 C170,283 172,286 172,289 M173,266 C175,271 174,275 170,277" stroke="#000" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- ===== Doblez de la ruana echado sobre el hombro derecho: tapa el arranque del brazo ===== -->
+  <g id="ruana-doblez" data-pieza="" data-pivote="145 128">
+    <path d="M138,124 C152,122 167,129 171,140 C170,154 162,163 151,165 C147,156 143,142 138,130 Z" fill="#fff" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>
+    <path d="M138,124 C152,122 167,129 171,140 C170,154 162,163 151,165 C147,156 143,142 138,130 Z" fill="url(#trama-cruzada)"/>
+    <path d="M145,132 C151,140 155,150 156,160 M154,130 C160,137 164,146 165,153" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <path d="M151,165 C160,163 168,156 171,146" stroke="#fff" stroke-width="2" fill="none" stroke-dasharray="3 2"/>
+  </g>
+
+  <!-- ===== Pañuelo al cuello: acento rojo liberal (doc 03 §1). Color provisional [P] ===== -->
+  <g id="panuelo" data-pieza="" data-pivote="155 128" data-p="hex del rojo liberal pendiente de la hoja de estilo (doc 03 §6.1)">
+    <path d="M139,121 C149,128 160,128 167,123 L169,130 C159,136 146,135 137,128 Z" fill="#c1121f" stroke="#000" stroke-width="2"/>
+    <path d="M164,129 L177,153 C172,153 168,151 165,148 Z" fill="#c1121f" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M167,129 L171,158 C167,156 163,153 161,150 Z" fill="#c1121f" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/>
+    <circle cx="166" cy="129" r="3.2" fill="#c1121f" stroke="#000" stroke-width="1.8"/>
+    <path d="M139,121 C149,128 160,128 167,123 L169,130 C159,136 146,135 137,128 Z" fill="url(#trama-fina)"/>
+  </g>
+
+  <!-- ===== Sombrero de paño negro (doc 03 §3.1 [V]) ===== -->
+  <g id="sombrero" data-pieza="" data-pivote="148 128">
+    <path d="M129,57 C127,38 135,27 150,26 C165,26 173,36 171,57 Z" fill="#000"/>
+    <!-- abolladura de la copa -->
+    <path d="M141,31 C146,36 154,36 160,31" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <!-- cinta -->
+    <path d="M129,50 C142,47 158,47 171,50 L171,55 C158,52 142,52 129,55 Z" fill="#fff"/>
+    <path d="M129,50 C142,47 158,47 171,50 L171,55 C158,52 142,52 129,55 Z" fill="url(#trama-cruzada)"/>
+    <!-- ala, levemente caída adelante -->
+    <path d="M104,59 C120,52 178,50 198,56 C193,62 178,64 150,63 C130,63 113,64 104,59 Z" fill="#000"/>
+    <!-- brillos de tinta -->
+    <path d="M136,40 C138,34 143,31 148,30" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <path d="M118,57 C140,54 166,53 186,56" stroke="#fff" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
