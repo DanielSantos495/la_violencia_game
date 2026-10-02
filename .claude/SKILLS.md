@@ -20,6 +20,8 @@ auditoría: **2026-10-01**. Licencias de redistribución en `.claude/licencias/`
 | `create-game-assets` | ídem | ídem | Apache-2.0 | Flujo de producción/QA de assets | 2 scripts Python locales (`asset_report.py`, `build_preview_sheet.py`): leen imágenes y escriben en `--out`; sin red. **Riesgo:** el SKILL.md sugiere `python -m pip install` (Pillow) — no ejecutar sin aprobación. Subordinada a `la-violencia-art` |
 | `algorithmic-art` | `anthropics/skills` | `8a1541c4a3ffa5a20a5a91de0dcf3f0bab1d1ef4` | Apache-2.0 (LICENSE.txt de la skill) | Arte generativo de apoyo | La plantilla `viewer.html` carga p5.js de cdnjs y Google Fonts en el navegador (red al abrir el HTML) |
 | `canvas-design` | ídem | ídem | Apache-2.0; fuentes OFL-1.1 | Piezas gráficas de apoyo | 81 archivos de fuentes (5,5 MB). IBM Plex Serif e Instrument Serif venían sin licencia: se añadieron sus OFL desde `IBM/plex` e `Instrument/instrument-serif` |
+| 12 skills de narrativa: `story-sense`, `character-arc`, `dialogue`, `interactive-fiction`, `perspectival-constellation`, `moral-parallax`, `key-moments`, `scene-sequencing`, `endings`, `cliche-transcendence`, `sensitivity-check`, `oblique-worldbuilding` | `jwynia/agent-skills` `skills/creative/fiction/` | `e02ec7e226a6e4f8419fd3b88a1d8e472d421b32` (2026-02-24; sin tags) | MIT **declarada solo en el frontmatter**, sin archivo LICENSE (ver `.claude/licencias/jwynia-agent-skills-MIT-declarada.md`) | Diagnóstico y pulido narrativo del guion (doc 06). Subordinadas a `la-violencia-historia` y `la-violencia-narrativa` | Markdown + scripts Deno de solo lectura local (`Deno.readTextFile`); sin red, escritura ni credenciales. Deno no está instalado: los scripts quedan inactivos. **Adaptación:** `description` acortada a ≤200 caracteres (límite de claude.ai) en 11 de 12; original y procedencia en el `ADAPTACION.md` de cada una. También subidas a la cuenta de claude.ai |
+| `ink-syntax`, `ink-style`, `ink-testing` | `spaceninja/narrative-ink-skills` `plugins/narrative-ink/skills/` | `v1.0.0` = `afe2a0926e90bdeaa231d329f2459a373ec6bd6d` | MIT (LICENSE copiado en cada skill y en `.claude/licencias/narrative-ink-skills-MIT.txt`) | Escribir, formatear y probar `.ink` (inkjs + vitest) | `ink-style/format-ink.py` (Python 3, sin dependencias): reescribe el `.ink` indicado; con `--verify-blocks` ejecuta `inkjs-compiler` (variable `INKJS_COMPILER`; está en `game/node_modules/.bin`). Sin red ni credenciales. Fixture de prueba tomado del tutorial MIT de inkle |
 
 Notas:
 - `create-game-assets` no existe en el tag `v1.1.0` de gamedev-skills; por eso todo ese
@@ -33,6 +35,10 @@ Notas:
 | Skill | Estado | Motivo |
 |---|---|---|
 | `phaserjs/phaser-game-agent` | Descartada | MCP con login |
+| jwynia `character-naming` | Descartada | Su script importa código remoto (`deno.land/std@0.208.0`) al ejecutarse; los nombres ya están aprobados en el doc 01 |
+| jwynia `story-analysis`, `revision` | No instaladas | Solapan con `story-sense`; `revision` se reevalúa tras el diagnóstico |
+| `howells/fiction` | Descartada | Sistema completo de novela (portadas, publicación, críticos-persona); MIT solo en el README, sin LICENSE |
+| `danjdewhurst/story-skills` (MIT) | Descartada por ahora | Su motor de continuidad exige una story bible propia que duplicaría `planeacion/`; se reevalúa si el diagnóstico pide control de continuidad |
 | `v3-to-v4-migration` | Excluida | El proyecto nace en Phaser 4 |
 | Plugins `document-skills` / `example-skills` | Descartados | Instalan las 17 skills duplicadas |
 | Spine Animation AI | Descartada | Licencia no comercial |
