@@ -37,7 +37,7 @@ Ante cualquier duda de diseño, historia o arte, lee el doc correspondiente en `
 ```
 pnpm install --frozen-lockfile
 pnpm dev | build | preview | lint | format | typecheck | test
-pnpm validate:archivo [--release] | ink:build | art:build | art:review <svg|atlas.json>
+pnpm validate:archivo [--release] | ink:build | art:build | art:review <svg|atlas.json> | art:escena
 ```
 
 Antes de dar algo por hecho: `lint`, `typecheck`, `test` y `build` en verde.

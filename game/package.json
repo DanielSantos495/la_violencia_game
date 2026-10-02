@@ -19,7 +19,8 @@
     "art:build": "node tools/art-build.ts",
     "ink:build": "node tools/ink-build.ts",
     "art:review": "node tools/art-review.ts",
-    "art:walk": "node tools/art-walk.ts"
+    "art:walk": "node tools/art-walk.ts",
+    "art:escena": "node tools/art-escena.ts"
   },
   "dependencies": {
     "inkjs": "2.4.0",
