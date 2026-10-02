@@ -183,11 +183,22 @@ export function rasterizar(frame: FrameFuente, escala: number): FrameRaster {
   });
   const bbox = resvg.getBBox();
   if (!bbox) throw new Error(`${frame.nombre}: sin contenido visible`);
-  // Alinear el recorte a la rejilla de píxeles de la escala para que no haya medio píxel.
-  const x = Math.floor(bbox.x * escala) / escala;
-  const y = Math.floor(bbox.y * escala) / escala;
-  const w = Math.ceil((bbox.x + bbox.width) * escala) / escala - x;
-  const h = Math.ceil((bbox.y + bbox.height) * escala) / escala - y;
+  // Alinear el recorte a la rejilla de píxeles de la escala para que no haya medio píxel, sin
+  // salir del viewBox: lo de fuera no se ve (getBBox no descuenta los clipPath).
+  const x = Math.max(0, Math.floor(bbox.x * escala) / escala);
+  const y = Math.max(0, Math.floor(bbox.y * escala) / escala);
+  const w =
+    Math.min(
+      frame.origen.w,
+      Math.ceil((bbox.x + bbox.width) * escala) / escala,
+    ) - x;
+  const h =
+    Math.min(
+      frame.origen.h,
+      Math.ceil((bbox.y + bbox.height) * escala) / escala,
+    ) - y;
+  if (w <= 0 || h <= 0)
+    throw new Error(`${frame.nombre}: sin contenido dentro del viewBox`);
   const recorte: BBox = Object.assign(bbox, { x, y, width: w, height: h });
   resvg.cropByBBox(recorte);
   const img = resvg.render();
