@@ -27,11 +27,32 @@ un doc, manda el doc.
 | Pendientes [P], vertical slice | doc 00 `produccion/tomo1/00_plan_implementacion.md` §4, §8 |
 
 **Relación con otras skills.** En Claude Code, `la-violencia-historia` manda en rigor,
-nombres y Archivo; esta skill manda en el oficio creativo. Las skills genéricas de ficción
-(`story-sense`, `dialogue`, `character-arc`, `interactive-fiction`,
-`perspectival-constellation`, `cliche-transcendence`, etc.) aportan marcos de análisis;
-úsalas, pero sus sugerencias pasan por el filtro de esta skill. Para escribir `.ink`, usa
-`ink-syntax` / `ink-style` / `ink-testing`.
+nombres y Archivo; esta skill manda en el oficio creativo y el filtro final.
+
+## Paso 0 — Cargar la skill de oficio que corresponde
+
+Esta skill no reemplaza a las de ficción: las orquesta. Antes de proponer, **carga además**
+la(s) skill(s) de la tabla que correspondan a la tarea (con la herramienta de skills si está
+disponible) y usa su marco de análisis. Sus sugerencias pasan después por el filtro de rigor
+de abajo. Si una no está instalada, sigue sin ella y dilo.
+
+| Si la tarea es… | Carga |
+|---|---|
+| Pulir o escribir diálogos, voces que suenan iguales, diálogo explicativo | `dialogue` |
+| Arcos, cambio de un personaje, motivación, secundario sin deseo propio | `character-arc` |
+| Decisiones jugables, variables, ramas, consecuencias, cuellos de botella | `interactive-fiction` |
+| Cruces entre Rosalba, Aurelio y Custodia; misma escena desde dos jugables | `perspectival-constellation` |
+| Complicidad, culpas repartidas, "nadie es inocente" | `moral-parallax` |
+| Beats emocionales clave de una misión | `key-moments` |
+| Orden de escenas, ritmo, escenas que repiten función | `scene-sequencing` |
+| Epílogo y finales | `endings` |
+| Algo suena a cliché bélico o de drama histórico | `cliche-transcendence` |
+| Representación de grupos, regiones o víctimas | `sensitivity-check` |
+| Textos de época dentro de la ficción: notas de Custodia, prensa, radio, Archivo | `oblique-worldbuilding` |
+| Diagnóstico general de una misión o del guion | `story-sense` |
+| Escribir o revisar archivos `.ink` (solo Claude Code) | `ink-syntax`, `ink-style`, `ink-testing` |
+
+En la entrega, indica qué skill(s) usaste en cada propuesta.
 
 ## Reglas (resumen; el detalle está en los docs)
 
