@@ -23,10 +23,11 @@ OUTDIR = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
 # Paleta del juego (game/art/paleta.json; reglas y fuentes en planeacion/arte/tomo1/paleta.md). El mundo
 # es una foto iluminada a mano: lavados apagados bajo la tinta y la trama. Solo el rojo y el azul de los
 # partidos van enteros, planos como tinta de imprenta, y no se diluyen con la distancia (paleta.md §6).
-PALETA = {c['id']: c['hex'] for c in json.load(open(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..', 'paleta.json'), encoding='utf-8'))['colores']}
-ROJO, AZUL = PALETA['rojo-liberal'], PALETA['azul-conservador']
-PAPEL, TINTA, GRAFITO, GRIS_TRAMA = PALETA['papel'], PALETA['tinta'], PALETA['grafito'], PALETA['gris-trama']
+_DATOS = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'paleta.json'),
+                        encoding='utf-8'))
+# Guion de color (paleta.md §5): cada escena se genera con el croma de su acto. La plaza del
+# mercado es del Prólogo (×1).
+ACTO = 'prologo'
 
 
 def _a_oklab(hexa):
@@ -51,6 +52,26 @@ def _de_oklab(L, a, b):
     return '#' + ''.join(f'{round(c * 255):02x}' for c in srgb)
 
 
+def _en_acto(c, acto):
+    """Hex de un color en un acto del guion, como color_en_acto de la skill paleta-tematica: el
+    registro que cambia (iluminacion) escala su croma en OKLCH; en el epílogo el partido se desvae."""
+    if c['registro'] == _DATOS.get('registro_guion', 'iluminacion') and acto['croma_mundo'] != 1:
+        L, C, h = c['oklch']
+        C *= acto['croma_mundo']
+        return _de_oklab(L, C * math.cos(math.radians(h)), C * math.sin(math.radians(h)))
+    if acto.get('partido') and c['registro'] == 'partido':
+        variante = next((o for o in _DATOS['colores'] if o['id'].startswith(c['id'].split('-')[0])
+                         and o['id'].endswith(acto['partido'])), None)
+        if variante:
+            return variante['hex']
+    return c['hex']
+
+
+PALETA = {c['id']: _en_acto(c, next(a for a in _DATOS['guion'] if a['id'] == ACTO)) for c in _DATOS['colores']}
+ROJO, AZUL = PALETA['rojo-liberal'], PALETA['azul-conservador']
+PAPEL, TINTA, GRAFITO, GRIS_TRAMA = PALETA['papel'], PALETA['tinta'], PALETA['grafito'], PALETA['gris-trama']
+
+
 def diluir(hexa, k):
     """Lavado más aguado: mezcla en OKLab con el papel (k=1 el color tal cual, k=0 papel)."""
     a, b = _a_oklab(PAPEL), _a_oklab(hexa)
@@ -62,6 +83,7 @@ def lav(token, m, luz=1.0):
     cuanto menos px/m, más lejos y más papel. luz < 1 aclara la cara al sol. Lo partidista no pasa
     por aquí: va entero en cualquier capa."""
     return diluir(PALETA[token], (0.35 + 0.65 * min(1.0, m / 200) ** 0.6) * luz)
+
 
 PARALAJE = {'cielo': 0, 'lejos': 0.15, 'medio': 0.45, 'juego': 1.0, 'frente': 1.3}
 # Trazo base por capa: grueso cerca, fino lejos (doc 03 §1). Lo lejano se entinta en grafito (paleta.md §6.4).
