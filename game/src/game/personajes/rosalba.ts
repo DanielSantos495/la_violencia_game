@@ -17,12 +17,20 @@ export const CAMINATA_ROSALBA: OpcionesCaminar = {
   ciclo: 800,
 };
 
+/**
+ * Cabezas por expresión (neutral, alerta, miedo, rabia, duelo) y su capa de parpadeo:
+ * de pie y agachada (inclinada). Ver core/animacion/expresiones.ts.
+ */
+const CABEZAS_DE_PIE = 'personajes/rosalba-cabezas';
+const CABEZAS_AGACHADA = 'personajes/rosalba-agachada-cabezas';
+
 /** Punto de apoyo entre los pies, común a todas las poses (coordenadas del SVG). */
 export const APOYO_ROSALBA = { x: 150, y: 474 };
 
 export const ROSALBA_MERCADO: Record<string, DefinicionPose> = {
   'de-pie': {
     base: 'personajes/rosalba',
+    cabezas: CABEZAS_DE_PIE,
     piezas: [
       'brazo-izq',
       'antebrazo-izq',
@@ -45,6 +53,7 @@ export const ROSALBA_MERCADO: Record<string, DefinicionPose> = {
 export const ROSALBA_MONTE: Record<string, DefinicionPose> = {
   'de-pie': {
     base: 'personajes/rosalba-monte',
+    cabezas: CABEZAS_DE_PIE,
     piezas: [
       'brazo-izq',
       'antebrazo-izq',
@@ -55,6 +64,7 @@ export const ROSALBA_MONTE: Record<string, DefinicionPose> = {
       'torso',
       'cabeza',
       'zarcillo',
+      'mechones',
       'ruana',
       'trenza',
       'brazo-der',
@@ -64,10 +74,12 @@ export const ROSALBA_MONTE: Record<string, DefinicionPose> = {
   },
   agachada: {
     base: 'personajes/rosalba-agachada',
+    cabezas: CABEZAS_AGACHADA,
     piezas: [
       'cuerpo',
       'cabeza',
       'zarcillo',
+      'mechones',
       'ruana',
       'trenza',
       'brazo-der',

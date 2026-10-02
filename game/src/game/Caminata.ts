@@ -20,13 +20,23 @@ export type OpcionesCaminar = OpcionesCaminata & {
   ciclo?: number;
   /** Largo de pierna (cadera → suelo) en px del SVG; solo modo cadera. */
   largoPierna?: number;
+  /**
+   * Ángulos que se suman a la pose (postura de la expresión). Se lee en cada cuadro, así
+   * un cambio de expresión se nota mientras camina.
+   */
+  postura?: Readonly<Record<string, number>>;
 };
 
 export function caminar(
   escena: Scene,
   contenedor: GameObjects.Container,
   piezas: Map<string, GameObjects.Container>,
-  { ciclo = 1000, largoPierna = 222, ...opciones }: OpcionesCaminar = {},
+  {
+    ciclo = 1000,
+    largoPierna = 222,
+    postura = {},
+    ...opciones
+  }: OpcionesCaminar = {},
 ): Caminata {
   const yBase = contenedor.y;
   const reposo = new Map(
@@ -40,11 +50,10 @@ export function caminar(
     repeat: -1,
     onUpdate: (tw: Tweens.Tween) => {
       const pose = poseCaminata((tw.getValue() ?? 0) * Math.PI * 2, opciones);
-      for (const [id, angulo] of Object.entries(pose.angulos)) {
-        const pieza = piezas.get(id);
-        if (pieza) pieza.angle = angulo;
-      }
       for (const [id, pieza] of piezas) {
+        if (id in pose.angulos || id in postura) {
+          pieza.angle = (pose.angulos[id] ?? 0) + (postura[id] ?? 0);
+        }
         const r = reposo.get(id);
         if (!r) continue;
         pieza.x = r.x + (pose.avance[id] ?? 0);

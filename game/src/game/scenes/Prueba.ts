@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { EXPRESIONES } from '../../core/animacion/expresiones.ts';
 import { ArchivoStore } from '../../core/archivo/ArchivoStore.ts';
 import { InkRunner } from '../../core/narrative/InkRunner.ts';
 import { Globos } from '../../ui/Globos.ts';
@@ -61,7 +62,7 @@ export class Prueba extends Scene {
       APOYO_ROSALBA,
       ROSALBA_MERCADO,
       'de-pie',
-      CAMINATA_ROSALBA,
+      { caminata: CAMINATA_ROSALBA, expresion: 'neutral' },
     );
     mercado.raiz.setScale(0.65);
     void (async () => {
@@ -70,6 +71,16 @@ export class Prueba extends Scene {
         await mercado.caminarHasta(2150);
       }
     })();
+    // Recorre las expresiones mientras camina, para revisarlas en movimiento.
+    let indiceExpresion = 0;
+    this.time.addEvent({
+      delay: 2400,
+      loop: true,
+      callback: () => {
+        indiceExpresion = (indiceExpresion + 1) % EXPRESIONES.length;
+        mercado.expresion(EXPRESIONES[indiceExpresion] ?? 'neutral');
+      },
+    });
 
     // Rosalba del monte: camina, se agacha a acechar, se levanta y sigue (sigilo, M2).
     const monte = new Personaje(
@@ -80,7 +91,7 @@ export class Prueba extends Scene {
       APOYO_ROSALBA,
       ROSALBA_MONTE,
       'de-pie',
-      CAMINATA_ROSALBA,
+      { caminata: CAMINATA_ROSALBA, expresion: 'alerta' },
     );
     monte.raiz.setScale(0.9);
     if (import.meta.env.DEV) {
@@ -90,10 +101,13 @@ export class Prueba extends Scene {
     void (async () => {
       for (;;) {
         monte.raiz.x = -200;
+        monte.expresion('alerta');
         await monte.caminarHasta(760);
         await monte.cambiarPose('agachada');
+        monte.expresion('miedo');
         monte.acechar();
         await this.esperar(3500);
+        monte.expresion('alerta');
         await monte.cambiarPose('de-pie');
         await monte.caminarHasta(2150);
       }

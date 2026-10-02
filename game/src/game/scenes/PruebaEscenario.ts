@@ -82,7 +82,7 @@ export class PruebaEscenario extends Scene {
       APOYO_ROSALBA,
       ROSALBA_MONTE,
       'de-pie',
-      CAMINATA_ROSALBA,
+      { caminata: CAMINATA_ROSALBA },
     );
     rosalba.raiz.setScale(
       escalaPersonaje(ESTATURA_ROSALBA_M, ALTURA_DIBUJO_ROSALBA),

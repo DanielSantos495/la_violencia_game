@@ -1,5 +1,10 @@
 import type { GameObjects, Scene, Tweens } from 'phaser';
 import { poseAcecho } from '../core/animacion/acecho.ts';
+import {
+  DATOS_EXPRESION,
+  type Expresion,
+  intervaloParpadeo,
+} from '../core/animacion/expresiones.ts';
 import { caminar, type OpcionesCaminar } from './Caminata.ts';
 import { armarRecorte } from './Recorte.ts';
 
@@ -7,6 +12,18 @@ import { armarRecorte } from './Recorte.ts';
 export interface DefinicionPose {
   base: string;
   piezas: readonly string[];
+  /**
+   * Base de las cabezas por expresión para esta pose ("<cabezas>/<expresión>" y
+   * "<cabezas>/parpado-<expresión>"), con el mismo pivote que la pieza `cabeza`.
+   */
+  cabezas?: string;
+}
+
+export interface OpcionesPersonaje {
+  /** Cómo camina (p. ej. pies bajo falda larga, duración del ciclo). */
+  caminata?: OpcionesCaminar;
+  /** Expresión inicial. */
+  expresion?: Expresion;
 }
 
 interface Rig {
@@ -15,20 +32,30 @@ interface Rig {
   /** Posición de reposo de cada pieza y del contenedor (la caminata las altera). */
   reposo: Map<string, { x: number; y: number }>;
   yBase: number;
+  /** Imagen de la cabeza (cambia de frame con la expresión) y su capa de parpadeo. */
+  cabezas?: string;
+  cabeza?: GameObjects.Image;
+  parpado?: GameObjects.Image;
 }
 
 /**
  * Personaje cut-out con varias poses dibujadas (p. ej. de pie y agachada) que comparten
- * un punto de apoyo. La raíz está en los pies: escalar la raíz aplasta o estira el
- * personaje sin que los pies se muevan, y moverla lo desplaza por el suelo.
+ * un punto de apoyo, y con expresiones (core/animacion/expresiones.ts). La raíz está en los
+ * pies: escalar la raíz aplasta o estira el personaje sin que los pies se muevan, y moverla
+ * lo desplaza por el suelo.
  */
 export class Personaje {
   readonly raiz: GameObjects.Container;
   private readonly escena: Scene;
+  private readonly atlas: string;
   private readonly rigs = new Map<string, Rig>();
   private poseActual: string;
   private animacion: Tweens.Tween | null = null;
   private readonly opcionesCaminata: OpcionesCaminar;
+  private expresionActual: Expresion = 'neutral';
+  /** Ángulos de la expresión que se suman a la pose; se interpola al cambiar de expresión. */
+  private readonly postura: Record<string, number> = {};
+  private transicionPostura: Tweens.Tween | null = null;
 
   constructor(
     escena: Scene,
@@ -39,11 +66,11 @@ export class Personaje {
     apoyo: { x: number; y: number },
     poses: Record<string, DefinicionPose>,
     inicial: string,
-    /** Cómo camina este personaje (p. ej. pies bajo falda larga, duración del ciclo). */
-    opcionesCaminata: OpcionesCaminar = {},
+    opciones: OpcionesPersonaje = {},
   ) {
     this.escena = escena;
-    this.opcionesCaminata = opcionesCaminata;
+    this.atlas = atlas;
+    this.opcionesCaminata = opciones.caminata ?? {};
     this.raiz = escena.add.container(x, ySuelo);
     for (const [nombre, def] of Object.entries(poses)) {
       const rig = armarRecorte(
@@ -56,33 +83,72 @@ export class Personaje {
       );
       rig.contenedor.setVisible(nombre === inicial);
       this.raiz.add(rig.contenedor);
-      this.rigs.set(nombre, {
+      const datos: Rig = {
         ...rig,
         reposo: new Map(
           [...rig.piezas].map(([id, p]) => [id, { x: p.x, y: p.y }]),
         ),
         yBase: rig.contenedor.y,
-      });
+      };
+      if (def.cabezas) this.prepararCabezas(datos, def.cabezas);
+      this.rigs.set(nombre, datos);
     }
     if (!this.rigs.has(inicial))
       throw new Error(`Pose inicial inexistente: ${inicial}`);
     this.poseActual = inicial;
+    this.expresion(opciones.expresion ?? 'neutral', 0);
+    this.programarParpadeo();
   }
 
   get pose(): string {
     return this.poseActual;
   }
 
+  get gesto(): Expresion {
+    return this.expresionActual;
+  }
+
+  /**
+   * Cambia la expresión en todas las poses: el dibujo cambia de golpe (como en una viñeta) y
+   * la postura se interpola en `duracion` ms.
+   */
+  expresion(nombre: Expresion, duracion = 220): void {
+    this.expresionActual = nombre;
+    for (const rig of this.rigs.values()) {
+      if (!rig.cabezas) continue;
+      rig.cabeza?.setFrame(`${rig.cabezas}/${nombre}`);
+      rig.parpado?.setFrame(`${rig.cabezas}/parpado-${nombre}`);
+    }
+    const destino: Record<string, number> = {
+      ...DATOS_EXPRESION[nombre].postura,
+    };
+    for (const id of Object.keys(this.postura)) destino[id] ??= 0;
+
+    this.transicionPostura?.remove();
+    this.transicionPostura = null;
+    if (duracion <= 0) {
+      Object.assign(this.postura, destino);
+      this.aplicarPosturaSiQuieto();
+      return;
+    }
+    for (const id of Object.keys(destino)) this.postura[id] ??= 0;
+    this.transicionPostura = this.escena.tweens.add({
+      targets: this.postura,
+      ...destino,
+      duration: duracion,
+      ease: 'Sine.easeOut',
+      onUpdate: () => this.aplicarPosturaSiQuieto(),
+    });
+  }
+
   /** Empieza a caminar en la pose actual; devuelve la velocidad (px/s a escala 1). */
   caminar(): number {
     this.quieto();
     const rig = this.rig();
-    const caminata = caminar(
-      this.escena,
-      rig.contenedor,
-      rig.piezas,
-      this.opcionesCaminata,
-    );
+    const caminata = caminar(this.escena, rig.contenedor, rig.piezas, {
+      ...this.opcionesCaminata,
+      postura: this.postura,
+    });
     this.animacion = caminata.tween;
     return caminata.velocidad * this.raiz.scaleX;
   }
@@ -107,22 +173,23 @@ export class Personaje {
       repeat: -1,
       onUpdate: () => {
         const { angulos } = poseAcecho((this.escena.time.now - inicio) / 1000);
-        for (const [id, angulo] of Object.entries(angulos)) {
-          const pieza = rig.piezas.get(id);
-          if (pieza) pieza.angle = angulo;
+        for (const [id, pieza] of rig.piezas) {
+          if (id in angulos || id in this.postura) {
+            pieza.angle = (angulos[id] ?? 0) + (this.postura[id] ?? 0);
+          }
         }
       },
     });
   }
 
-  /** Detiene la animación y devuelve todas las piezas a su posición de reposo. */
+  /** Detiene la animación y devuelve todas las piezas a su reposo (con la postura de la expresión). */
   quieto(): void {
     this.animacion?.remove();
     this.animacion = null;
     const rig = this.rig();
     rig.contenedor.y = rig.yBase;
     for (const [id, pieza] of rig.piezas) {
-      pieza.angle = 0;
+      pieza.angle = this.postura[id] ?? 0;
       const r = rig.reposo.get(id);
       if (r) pieza.setPosition(r.x, r.y);
     }
@@ -153,6 +220,62 @@ export class Personaje {
       duracion * 0.6,
       'Back.easeOut',
     );
+  }
+
+  /** La cabeza de la pose pasa a mostrar las cabezas por expresión, con capa de parpadeo. */
+  private prepararCabezas(rig: Rig, cabezas: string): void {
+    const contenedor = rig.piezas.get('cabeza');
+    const imagen = contenedor?.list[0];
+    if (!contenedor || !imagen || !('setFrame' in imagen)) {
+      throw new Error(`La pose con cabezas "${cabezas}" no tiene pieza cabeza`);
+    }
+    const textura = this.escena.textures.get(this.atlas);
+    for (const e of Object.keys(DATOS_EXPRESION)) {
+      for (const frame of [`${cabezas}/${e}`, `${cabezas}/parpado-${e}`]) {
+        if (!textura.has(frame)) throw new Error(`Frame inexistente: ${frame}`);
+      }
+    }
+    rig.cabezas = cabezas;
+    rig.cabeza = imagen as GameObjects.Image;
+    // El parpadeo va encima de todo lo que cuelga de la cabeza (sombrero, zarcillo, mechones).
+    rig.parpado = this.escena.add.image(
+      0,
+      0,
+      this.atlas,
+      `${cabezas}/parpado-neutral`,
+    );
+    rig.parpado.setVisible(false);
+    contenedor.add(rig.parpado);
+  }
+
+  /** Parpadea a intervalos irregulares según la expresión (a veces dos veces seguidas). */
+  private programarParpadeo(): void {
+    const { parpadeo } = DATOS_EXPRESION[this.expresionActual];
+    this.escena.time.delayedCall(
+      intervaloParpadeo(this.expresionActual, Math.random),
+      () => {
+        const veces = Math.random() < parpadeo.doble ? 2 : 1;
+        for (let i = 0; i < veces; i++) {
+          const inicio = i * (parpadeo.dura + 90);
+          this.escena.time.delayedCall(inicio, () => this.ojosCerrados(true));
+          this.escena.time.delayedCall(inicio + parpadeo.dura, () =>
+            this.ojosCerrados(false),
+          );
+        }
+        this.programarParpadeo();
+      },
+    );
+  }
+
+  private ojosCerrados(cerrados: boolean): void {
+    for (const rig of this.rigs.values()) rig.parpado?.setVisible(cerrados);
+  }
+
+  private aplicarPosturaSiQuieto(): void {
+    if (this.animacion) return;
+    for (const [id, pieza] of this.rig().piezas) {
+      if (id in this.postura) pieza.angle = this.postura[id] ?? 0;
+    }
   }
 
   private interpolar(

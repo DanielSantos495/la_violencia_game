@@ -56,11 +56,28 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
   pañolón o ruana, trenza.
 - **Agachada** (`rosalba-agachada.svg`, variante monte): pose dibujada aparte para el sigilo,
   con cuerpo, ruana, trenza, brazo y antebrazo apoyados en el suelo, y cabeza con zarcillo.
+- **Cabezas por expresión** (`rosalba-cabezas.svg` de pie, `rosalba-agachada-cabezas.svg`
+  inclinada): una cabeza completa por expresión y su capa de parpadeo, con el mismo pivote del
+  cuello; el juego cambia la cabeza sin mover sombrero, zarcillo ni mechones (los mechones del
+  monte son pieza aparte, hija de la cabeza).
 
 ## 4. Animación
 
 - Caminata procedural: `game/src/core/animacion/caminata.ts` (revisión con `pnpm art:walk`).
 - Agacharse y acechar: cambio de pose con un aplastamiento breve y mirada alrededor.
+- Expresiones (`game/src/core/animacion/expresiones.ts`): el dibujo cambia de golpe, como en una
+  viñeta; la postura de la cabeza se interpola y se suma a la caminata y al acecho.
+
+| Expresión | Ojos y cejas | Boca y rostro | Postura y parpadeo |
+|---|---|---|---|
+| Neutral | Mirada tranquila | Rubor de campo | Cabeza recta; parpadeo pausado |
+| Alerta | Ceja alzada, arruga de preocupación | Igual | Cabeza algo alzada; parpadea más |
+| Miedo | Ojo muy abierto, blanco alrededor del iris, ceja arqueada, frente arrugada | Labios entreabiertos, gota de sudor, sin rubor | Cabeza atrás; parpadeo rápido, a veces doble |
+| Rabia | Ceja baja hacia la nariz, entrecejo, párpado recto y pesado | Labios apretados, comisura abajo, aleta de la nariz abierta, rubor intenso | Mentón abajo; casi no parpadea (mirada fija) |
+| Duelo | Párpado pesado, mirada baja, ceja de tristeza, ojeras | Lágrima en tinta (sin color), comisura abajo, mentón tenso | Cabeza caída; parpadeo lento |
+
+A la escala de juego la cabeza mide pocos píxeles: de lejos la emoción se lee sobre todo por la
+postura; el detalle del rostro rinde en planos cercanos y viñetas de cómic.
 - La violencia no se anima: lo que viva Rosalba en la noche de los chulavíes se narra en viñetas
   (doc 02 §1, doc 03 §1).
 
@@ -68,5 +85,6 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
 
 - Hex del rojo y de la paleta completa (hoja de estilo, doc 03 §6.1).
 - Fotografías de campesinas boyacenses de los años 40 que confirmen el traje.
-- Vista de frente y tres cuartos; expresiones (miedo, rabia, duelo).
+- Vista de frente y tres cuartos.
+- Postura del cuerpo por expresión (hombros, brazos) más allá de la cabeza.
 - Escopeta del padre (doc 03 §2): modelo **[P]**; no se dibuja final hasta resolverlo.
