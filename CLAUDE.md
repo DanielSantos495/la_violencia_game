@@ -87,6 +87,7 @@ su **rama**; la carpeta principal queda para la integración y los chats sin ár
 | Archivo, Ink/diálogos, nombres, fechas, diseño de misiones/combate | `la-violencia-historia` (prioridad en historia) |
 | API de Phaser 4 | skills oficiales de Phaser (`scenes`, `tweens`, `loading-assets`, …); prevalecen sobre `phaser-core`/`phaser-arcade-physics` |
 | Elegir qué skill de gamedev aplica | `router`, luego `dialogue-systems`, `save-systems`, `game-feel`, `camera-systems`, `game-ui-ux`, `input-systems`, `audio-design`, `performance-optimization`, `prototype-fast` |
+| Color: elegir, añadir o revisar colores, paleta por acto o región, colores de UI | `paleta-tematica` (método y validación; datos en `game/art/paleta.json`), `color-expert` (ciencia del color), `critique-color` (revisar una pantalla); subordinadas a `la-violencia-art` |
 | Arte generativo o piezas gráficas fuera del juego | `algorithmic-art`, `canvas-design` (subordinadas a `la-violencia-art`) |
 | Narrativa: escenas, diálogos, beats, decisiones, textos del Archivo | `la-violencia-narrativa` (orquesta `story-sense`, `dialogue`, `character-arc`, `interactive-fiction`, `perspectival-constellation` y demás de ficción; ver su Paso 0) |
 | Escribir, formatear o probar `.ink` | `ink-syntax`, `ink-style`, `ink-testing` |

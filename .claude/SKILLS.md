@@ -9,6 +9,7 @@ auditoría: **2026-10-01**. Licencias de redistribución en `.claude/licencias/`
 |---|---|---|---|
 | `la-violencia-art` | Este repo (resume doc 03) | Del proyecto | Estilo, violencia, época [V]/[P], piezas cut-out, pipeline de arte |
 | `la-violencia-historia` | Este repo (resume docs 01, 02, 04 §5 y §7) | Del proyecto | Nombres, diálogos, [V]/[P], Archivo, reglas de diseño |
+| `paleta-tematica` | Este repo (2026-10-02) | Del proyecto | Método para crear o revisar paletas con contexto (significados reservados, fuentes, registros con techo de croma, OKLCH, guion de color) y scripts Python sin dependencias: `validar_paleta.py` (gamut, zonas reservadas, contraste WCAG, daltonismo Machado 2009, grises) y `muestrario.py` (hoja SVG). Datos del juego en `game/art/paleta.json`; reglas en `planeacion/arte/tomo1/paleta.md`. Subordinada a `la-violencia-art` |
 | `la-violencia-narrativa` | Este repo (doc 06, Bloque 2; cita docs 00–04) | Del proyecto | Oficio narrativo con filtro de rigor: 3 alternativas, pruebas de decisión, voz por personaje, formato de propuesta. Subordinada a `la-violencia-historia` en rigor. También en la cuenta de claude.ai |
 
 ## De terceros
@@ -23,6 +24,8 @@ auditoría: **2026-10-01**. Licencias de redistribución en `.claude/licencias/`
 | `canvas-design` | ídem | ídem | Apache-2.0; fuentes OFL-1.1 | Piezas gráficas de apoyo | 81 archivos de fuentes (5,5 MB). IBM Plex Serif e Instrument Serif venían sin licencia: se añadieron sus OFL desde `IBM/plex` e `Instrument/instrument-serif` |
 | 12 skills de narrativa: `story-sense`, `character-arc`, `dialogue`, `interactive-fiction`, `perspectival-constellation`, `moral-parallax`, `key-moments`, `scene-sequencing`, `endings`, `cliche-transcendence`, `sensitivity-check`, `oblique-worldbuilding` | `jwynia/agent-skills` `skills/creative/fiction/` | `e02ec7e226a6e4f8419fd3b88a1d8e472d421b32` (2026-02-24; sin tags) | MIT **declarada solo en el frontmatter**, sin archivo LICENSE (ver `.claude/licencias/jwynia-agent-skills-MIT-declarada.md`) | Diagnóstico y pulido narrativo del guion (doc 06). Subordinadas a `la-violencia-historia` y `la-violencia-narrativa` | Markdown + scripts Deno de solo lectura local (`Deno.readTextFile`); sin red, escritura ni credenciales. Deno no está instalado: los scripts quedan inactivos. **Adaptación:** `description` acortada a ≤200 caracteres (límite de claude.ai) en 11 de 12; original y procedencia en el `ADAPTACION.md` de cada una. También subidas a la cuenta de claude.ai |
 | `ink-syntax`, `ink-style`, `ink-testing` | `spaceninja/narrative-ink-skills` `plugins/narrative-ink/skills/` | `v1.0.0` = `afe2a0926e90bdeaa231d329f2459a373ec6bd6d` | MIT (LICENSE copiado en cada skill y en `.claude/licencias/narrative-ink-skills-MIT.txt`) | Escribir, formatear y probar `.ink` (inkjs + vitest) | `ink-style/format-ink.py` (Python 3, sin dependencias): reescribe el `.ink` indicado; con `--verify-blocks` ejecuta `inkjs-compiler` (variable `INKJS_COMPILER`; está en `game/node_modules/.bin`). Sin red ni credenciales. Fixture de prueba tomado del tutorial MIT de inkle |
+| `color-expert` | `meodai/skill.color-expert` (601 ★; autor de Poline, RampenSau y color-names) | `f74624ceadcde459b4fe07fb8a0ea1c1e97967a0` (main, 2026-09-23; sin tags) | CC BY 4.0, solo el material original (`LICENSE`, `THIRD_PARTY_NOTICES.md`) | Ciencia del color: espacios (OKLCH), gamut, contraste WCAG/APCA, daltonismo, mezcla, nombres, color en la narración. Subordinada a `paleta-tematica` y `la-violencia-art` | Solo `SKILL.md`, sin scripts, red ni credenciales. **Adaptación:** `references/` no se instaló (unos 4 MB con transcripciones y copias íntegras de sitios de terceros, sin relicenciar) y se añadió una nota al inicio de `SKILL.md`; detalles en su `ADAPTACION.md` |
+| `critique-color` | `Owl-Listener/designer-skills` `visual-critique/skills/critique-color/` (2,8 K ★) | `9a6930cf84a822eb458624bd11c61aac5bbdf224` | MIT (`LICENSE` copiado) | Revisar el color de una pantalla renderizada: contraste, coherencia con la paleta, color nunca como único indicador | Un Markdown, sin cambios, sin scripts ni red |
 
 Notas:
 - `create-game-assets` no existe en el tag `v1.1.0` de gamedev-skills; por eso todo ese
@@ -36,6 +39,11 @@ Notas:
 | Skill | Estado | Motivo |
 |---|---|---|
 | `phaserjs/phaser-game-agent` | Descartada | MCP con login |
+| `jakubkrehel/oklch-skill` | Descartada | Sin licencia (todos los derechos reservados). Lo que aporta (OKLCH, gamut, contraste) lo cubren `color-expert` y `paleta-tematica` |
+| `Atmosaero/art-director-loop` | Solo referencia | Sin licencia y 2 ★. Su idea de convertir la dirección de arte en reglas que se prueban inspira el validador de `paleta-tematica`; no se copió texto |
+| `nhatmobile1/color-palette-skill` (MIT) | Descartada | 3 ★. Paletas de UI web por industria; no aplica a una paleta histórica |
+| `yanliudesign/mono-color-skill` (MIT) | Solo referencia | Genera imágenes con modelos (impresión a una tinta) e incluye unos 45 MB de ejemplos; el juego dibuja en SVG por código |
+| `jezweb` `color-palette` | Descartada | Escalas para Tailwind v4 |
 | jwynia `character-naming` | Descartada | Su script importa código remoto (`deno.land/std@0.208.0`) al ejecutarse; los nombres ya están aprobados en el doc 01 |
 | jwynia `story-analysis`, `revision` | No instaladas | Solapan con `story-sense`; `revision` se reevalúa tras el diagnóstico |
 | `howells/fiction` | Descartada | Sistema completo de novela (portadas, publicación, críticos-persona); MIT solo en el README, sin LICENSE |

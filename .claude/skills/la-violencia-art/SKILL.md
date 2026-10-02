@@ -38,7 +38,8 @@ que Daniel pida editarla.
   papel hueso con textura leve.
 - Grises solo por **trama** (rayado o semitono, con `<pattern>`), sin degradados complejos.
 - Únicos acentos de color: **rojo liberal** y **azul conservador**, y solo en lo que cuenta
-  la división (pañuelos, banderas, afiches, fachadas). Ningún otro color de acento.
+  la división (pañuelos, banderas, afiches, fachadas). Ningún otro color de acento. El resto
+  del mundo, si lleva color, va en lavados apagados de la paleta (ver "Paleta").
 - Plano lateral con 2–3 capas de paralaje por escena.
 - Rostros simplificados: expresión por ojos, cejas y postura; nada de retrato realista.
 
@@ -55,13 +56,23 @@ que Daniel pida editarla.
 - Armas: silueta correcta para el año. Un fusil de cerrojo no se dibuja como uno automático;
   los modelos por año están [P] en el doc 03 §3.4 hasta que se resuelvan.
 
-## Paleta y grosores — [P]
+## Paleta
 
-La hoja de estilo con hex, grosores y tramas es un entregable pendiente (doc 03 §6.1;
-doc 00 Sprint 0 "Arte"). **TODO [P]:** hasta que exista, no inventes valores hex
-definitivos. Usa `#000` y `#fff` (o `currentColor`) como placeholders y deja el color de
-acento como referencia a "rojo liberal" / "azul conservador" en un comentario. Cuando la
-hoja exista en `planeacion/arte/`, esta sección debe apuntar a ella, no copiarla.
+Fuentes de color:
+
+- **Reglas y fuentes:** `planeacion/arte/tomo1/paleta.md`, aprobada por Daniel el 2026-10-02. Rojo
+  `#ca2d23` y azul `#1d4aac`. Guion de color por acto: cada escena se genera con el
+  `croma_mundo` de su acto (`guion` en el JSON); detalle en su §5.
+- **Valores:** `game/art/paleta.json`. Cada color tiene id, OKLCH, hex, uso y fuente. Los generadores
+  cargan el JSON y usan tokens por id; no escribas hex sueltos.
+- **Para elegir o añadir un color:** sigue la skill `paleta-tematica` y valida con
+  `python3 .claude/skills/paleta-tematica/scripts/validar_paleta.py game/art/paleta.json`.
+
+Lo esencial: el mundo va en lavados apagados (registro `iluminacion`, con techo de croma). El rojo
+y el azul son tinta plana de imprenta y nada más puede entrar en sus zonas de tono. Por eso el
+fuego es ocre, y el cielo, el agua y la noche no son azules. Un `id` no se renombra sin avisar.
+
+Grosores de línea y tramas siguen pendientes (doc 03 §6.1) **[P]**.
 
 ## Personajes por piezas (cut-out)
 
@@ -125,7 +136,8 @@ art/src/**/*.svg → SVGO → PNG @1x/@2x → un multiatlas por carpeta (art/bui
 ## Checklist por asset
 
 1. ¿Cada elemento de época está [V] en el doc 03 §3? Lo [P] queda como placeholder marcado.
-2. ¿Solo tinta, trama y los dos acentos partidistas? ¿Sin degradados ni colores extra?
+2. ¿Solo tinta, trama, lavados de `paleta.json` y los dos acentos partidistas? ¿Sin
+   degradados, sin hex sueltos y sin nada fuera del partido en las zonas roja o azul?
 3. ¿Violencia con peso y no como espectáculo? ¿Sangre orgánica que se oxida a negro (nunca roja plana)? ¿Sin rostros de víctimas identificables?
 4. ¿Silueta de arma/uniforme/vehículo correcta para el año?
 5. Personajes: ¿piezas con ids de la convención, pivotes en articulaciones, orden de capas?
