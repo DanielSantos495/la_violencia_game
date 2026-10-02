@@ -9,6 +9,7 @@ auditoría: **2026-10-01**. Licencias de redistribución en `.claude/licencias/`
 |---|---|---|---|
 | `la-violencia-art` | Este repo (resume doc 03) | Del proyecto | Estilo, violencia, época [V]/[P], piezas cut-out, pipeline de arte |
 | `la-violencia-historia` | Este repo (resume docs 01, 02, 04 §5 y §7) | Del proyecto | Nombres, diálogos, [V]/[P], Archivo, reglas de diseño |
+| `la-violencia-narrativa` | Este repo (doc 06, Bloque 2; cita docs 00–04) | Del proyecto | Oficio narrativo con filtro de rigor: 3 alternativas, pruebas de decisión, voz por personaje, formato de propuesta. Subordinada a `la-violencia-historia` en rigor. También en la cuenta de claude.ai |
 
 ## De terceros
 
