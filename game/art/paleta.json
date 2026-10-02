@@ -1,0 +1,908 @@
+{
+  "nombre": "La Violencia — Tomo I",
+  "version": "1.0",
+  "estado": "aprobada por Daniel 2026-10-02; pendientes: factores del guion de color y su implementación (paleta.md §11)",
+  "documento": "planeacion/arte/tomo1/paleta.md",
+  "distancia_min": 0.05,
+  "distancia_reserva_min": 0.04,
+  "registros": {
+    "papel": {
+      "croma_max": 0.045,
+      "descripcion": "Soporte: el papel hueso de la página"
+    },
+    "tinta": {
+      "croma_max": 0.05,
+      "descripcion": "Línea, mancha negra, grises de trama y sepias (doc 03 §1)"
+    },
+    "iluminacion": {
+      "croma_max": 0.08,
+      "descripcion": "Lavado transparente sobre la tinta, como la fotografía iluminada a mano; baja con el guion de color"
+    },
+    "luz": {
+      "croma_max": 0.13,
+      "tono": [55, 105],
+      "descripcion": "Fuego y lámparas: amarillo y ocre, nunca rojo"
+    },
+    "partido": {
+      "descripcion": "Tinta de imprenta plana, borde limpio, solo en objetos que cuentan la división (doc 03 §1)"
+    },
+    "sangre": {
+      "croma_max": 0.16,
+      "tono": [10, 40],
+      "descripcion": "Roja solo en el instante, textura orgánica; pasa a tinta (doc 03 §1 Violencia)"
+    }
+  },
+  "zonas_reservadas": [
+    {
+      "id": "rojo-liberal",
+      "tono": [5, 45],
+      "croma_min": 0.1,
+      "registros_permitidos": ["partido", "sangre"]
+    },
+    {
+      "id": "azul-conservador",
+      "tono": [200, 295],
+      "croma_min": 0.035,
+      "registros_permitidos": ["partido"]
+    }
+  ],
+  "colores": [
+    {
+      "id": "papel",
+      "familia": "Papel",
+      "registro": "papel",
+      "oklch": [0.925, 0.028, 88],
+      "nombre": "Papel hueso",
+      "uso": "Fondo de pantalla y de toda ilustración; las luces del dibujo son papel",
+      "fuente": "doc 03 §1",
+      "estado": "V",
+      "hex": "#eee6d2"
+    },
+    {
+      "id": "papel-viejo",
+      "familia": "Papel",
+      "registro": "papel",
+      "oklch": [0.875, 0.038, 82],
+      "nombre": "Papel de archivo",
+      "uso": "Archivo, bordes de página, marcos de foto",
+      "fuente": "doc 03 §1 (papel envejecido)",
+      "estado": "V",
+      "hex": "#e3d4ba"
+    },
+    {
+      "id": "papel-sombra",
+      "familia": "Papel",
+      "registro": "papel",
+      "oklch": [0.8, 0.036, 76],
+      "nombre": "Pliegue",
+      "uso": "Sombra plana sobre el papel, pliegues de página",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#cbbba5"
+    },
+    {
+      "id": "tinta",
+      "familia": "Tinta",
+      "registro": "tinta",
+      "oklch": [0.21, 0.012, 60],
+      "nombre": "Tinta de imprenta",
+      "uso": "Línea de todo el dibujo y texto",
+      "fuente": "doc 03 §1",
+      "estado": "V",
+      "hex": "#1d1713"
+    },
+    {
+      "id": "tinta-plena",
+      "familia": "Tinta",
+      "registro": "tinta",
+      "oklch": [0.155, 0.008, 60],
+      "nombre": "Mancha negra",
+      "uso": "Masas negras: pelo, pañolón, siluetas, sangre del después",
+      "fuente": "doc 03 §1",
+      "estado": "V",
+      "hex": "#0f0b09"
+    },
+    {
+      "id": "grafito",
+      "familia": "Tinta",
+      "registro": "tinta",
+      "oklch": [0.43, 0.012, 70],
+      "nombre": "Tinta aguada",
+      "uso": "Línea de capas lejanas del paralaje",
+      "fuente": "doc 03 §1 (línea fina en fondos)",
+      "estado": "V",
+      "hex": "#544f49"
+    },
+    {
+      "id": "gris-trama",
+      "familia": "Tinta",
+      "registro": "tinta",
+      "oklch": [0.66, 0.012, 80],
+      "nombre": "Trama media",
+      "uso": "Equivalente plano de la trama media en capas lejanas",
+      "fuente": "doc 03 §1",
+      "estado": "V",
+      "hex": "#96918a"
+    },
+    {
+      "id": "gris-claro",
+      "familia": "Tinta",
+      "registro": "tinta",
+      "oklch": [0.8, 0.012, 85],
+      "nombre": "Trama clara",
+      "uso": "Capa más lejana, bruma",
+      "fuente": "doc 03 §1",
+      "estado": "V",
+      "hex": "#c1bdb5"
+    },
+    {
+      "id": "sepia-oscuro",
+      "familia": "Tinta",
+      "registro": "tinta",
+      "oklch": [0.36, 0.035, 55],
+      "nombre": "Sepia oscuro",
+      "uso": "Texto secundario, sombras cálidas, noche",
+      "fuente": "doc 03 (grises y sepias)",
+      "estado": "V",
+      "hex": "#4c382b"
+    },
+    {
+      "id": "sepia",
+      "familia": "Tinta",
+      "registro": "tinta",
+      "oklch": [0.52, 0.045, 62],
+      "nombre": "Sepia",
+      "uso": "Tono medio cálido, viraje de fotos",
+      "fuente": "doc 03 (grises y sepias)",
+      "estado": "V",
+      "hex": "#7c634e"
+    },
+    {
+      "id": "sepia-claro",
+      "familia": "Tinta",
+      "registro": "tinta",
+      "oklch": [0.7, 0.04, 72],
+      "nombre": "Sepia claro",
+      "uso": "Elementos desactivados de la UI, lejanías al atardecer",
+      "fuente": "doc 03 (grises y sepias)",
+      "estado": "V",
+      "hex": "#ae9b84"
+    },
+    {
+      "id": "cal",
+      "familia": "Boyacá: casa y tierra",
+      "registro": "iluminacion",
+      "oklch": [0.955, 0.012, 95],
+      "nombre": "Cal",
+      "uso": "Tapia encalada; más clara y fría que el papel para que se lea como muro",
+      "fuente": "doc 03 §3.1 (tapia pisada encalada en blanco)",
+      "estado": "V",
+      "hex": "#f2f0e7"
+    },
+    {
+      "id": "tapia",
+      "familia": "Boyacá: casa y tierra",
+      "registro": "iluminacion",
+      "oklch": [0.74, 0.04, 72],
+      "nombre": "Tapia",
+      "uso": "Tapia pisada o adobe sin encalar, muros desconchados",
+      "fuente": "doc 03 §3.1",
+      "estado": "V",
+      "hex": "#bba790"
+    },
+    {
+      "id": "tierra",
+      "familia": "Boyacá: casa y tierra",
+      "registro": "iluminacion",
+      "oklch": [0.6, 0.05, 62],
+      "nombre": "Tierra",
+      "uso": "Caminos, patio, plaza",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#967a62"
+    },
+    {
+      "id": "barro",
+      "familia": "Boyacá: casa y tierra",
+      "registro": "iluminacion",
+      "oklch": [0.44, 0.04, 58],
+      "nombre": "Barro",
+      "uso": "Barro húmedo, ruedo embarrado en el monte",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#644d3d"
+    },
+    {
+      "id": "teja",
+      "familia": "Boyacá: casa y tierra",
+      "registro": "iluminacion",
+      "oklch": [0.62, 0.075, 50],
+      "nombre": "Teja",
+      "uso": "Teja de barro cocido, cerámica de Ráquira",
+      "fuente": "doc 03 §3.1 (teja de barro cocido)",
+      "estado": "V",
+      "hex": "#ab795d"
+    },
+    {
+      "id": "madera",
+      "familia": "Boyacá: casa y tierra",
+      "registro": "iluminacion",
+      "oklch": [0.4, 0.042, 64],
+      "nombre": "Madera",
+      "uso": "Portones, vigas, alero, bancas",
+      "fuente": "doc 03 §3.1 (cubierta de madera; portón [P])",
+      "estado": "V",
+      "hex": "#584330"
+    },
+    {
+      "id": "piedra",
+      "familia": "Boyacá: casa y tierra",
+      "registro": "iluminacion",
+      "oklch": [0.66, 0.013, 85],
+      "nombre": "Piedra",
+      "uso": "Cercas de piedra, pila de la plaza",
+      "fuente": "doc 03 §3.1 (paisaje [P])",
+      "estado": "P",
+      "hex": "#969289"
+    },
+    {
+      "id": "trigo",
+      "familia": "Boyacá: campo",
+      "registro": "iluminacion",
+      "oklch": [0.83, 0.075, 88],
+      "nombre": "Trigo",
+      "uso": "Sembrados de trigo maduro; el color más cálido del Prólogo",
+      "fuente": "Álvarez y Chaves (2017), Rev. Cienc. Agríc. 34(2), citando a Valderrama (1976) y a Adams y Mancini (1964): franja triguera de 2.200 a 3.000 m; Boyacá «cerca de un 30%» de la producción nacional",
+      "estado": "V",
+      "hex": "#dcc58f"
+    },
+    {
+      "id": "cebada",
+      "familia": "Boyacá: campo",
+      "registro": "iluminacion",
+      "oklch": [0.77, 0.05, 95],
+      "nombre": "Cebada",
+      "uso": "Cebada y rastrojo",
+      "fuente": "La industria harinera en Duitama-Boyacá 1920-1940 (SciELO): con Bavaria (1936) «se empezó a sustituir el cultivo del trigo» por la cebada",
+      "estado": "V",
+      "hex": "#beb491"
+    },
+    {
+      "id": "potrero",
+      "familia": "Boyacá: campo",
+      "registro": "iluminacion",
+      "oklch": [0.63, 0.055, 130],
+      "nombre": "Potrero",
+      "uso": "Pasto, potreros",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#7e906d"
+    },
+    {
+      "id": "sementera",
+      "familia": "Boyacá: campo",
+      "registro": "iluminacion",
+      "oklch": [0.52, 0.05, 138],
+      "nombre": "Sementera",
+      "uso": "Papa y cultivos de hoja",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#5b7054"
+    },
+    {
+      "id": "monte",
+      "familia": "Boyacá: campo",
+      "registro": "iluminacion",
+      "oklch": [0.5, 0.04, 150],
+      "nombre": "Monte",
+      "uso": "Bosque de vertiente, matorral donde se esconde Rosalba",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#536a57"
+    },
+    {
+      "id": "frailejon",
+      "familia": "Boyacá: campo",
+      "registro": "iluminacion",
+      "oklch": [0.75, 0.03, 120],
+      "nombre": "Frailejón",
+      "uso": "Páramo: hoja gris plateada",
+      "fuente": "Instituto Humboldt (páramos, Espeletia)",
+      "estado": "V",
+      "hex": "#abb19c"
+    },
+    {
+      "id": "niebla",
+      "familia": "Boyacá: campo",
+      "registro": "iluminacion",
+      "oklch": [0.9, 0.008, 110],
+      "nombre": "Niebla",
+      "uso": "Páramo, monte al amanecer",
+      "fuente": "doc 03 §2 (monte al amanecer)",
+      "estado": "V",
+      "hex": "#deded9"
+    },
+    {
+      "id": "agua",
+      "familia": "Boyacá: campo",
+      "registro": "iluminacion",
+      "oklch": [0.72, 0.018, 170],
+      "nombre": "Quebrada",
+      "uso": "Agua: reflejo gris verdoso; el agua no es azul porque el azul es del partido",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#9aa8a3"
+    },
+    {
+      "id": "piel",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.76, 0.055, 68],
+      "nombre": "Piel",
+      "uso": "Lavado de piel trigueña",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#c9ab8c"
+    },
+    {
+      "id": "piel-sombra",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.64, 0.058, 60],
+      "nombre": "Piel en sombra",
+      "uso": "Sombra de piel bajo el ala del sombrero",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#a78469"
+    },
+    {
+      "id": "chapas",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.74, 0.055, 38],
+      "nombre": "Chapas",
+      "uso": "Mejillas quemadas por el frío; croma bajo para quedar fuera de la zona roja",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#cb9f92"
+    },
+    {
+      "id": "blanco-tela",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.95, 0.014, 92],
+      "nombre": "Algodón blanco",
+      "uso": "Blusa, enaguas, alpargatas, globos de diálogo",
+      "fuente": "Ocampo López, El pueblo boyacense y su folclor (1977): blusa «generalmente blanca», enaguas blancas, «alpargates blancos»",
+      "estado": "V",
+      "hex": "#f2eee4"
+    },
+    {
+      "id": "lana-cruda",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.86, 0.03, 84],
+      "nombre": "Lana cruda",
+      "uso": "Ruana de lana sin teñir",
+      "fuente": "Ruanas de Nobsa: tonos naturales gris, blanco y negro",
+      "estado": "V",
+      "hex": "#dad0bb"
+    },
+    {
+      "id": "lana-gris",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.56, 0.01, 75],
+      "nombre": "Lana gris",
+      "uso": "Ruana gris natural",
+      "fuente": "Ruanas de Nobsa: tonos naturales gris, blanco y negro",
+      "estado": "V",
+      "hex": "#78746e"
+    },
+    {
+      "id": "lana-parda",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.4, 0.035, 55],
+      "nombre": "Lana parda",
+      "uso": "Ruana oscura (la de Rosalba en el monte)",
+      "fuente": "Ocampo López (1977) citando a Oviedo, s. XVIII: ruanas «en tonos oscuros y relativamente pequeñas»",
+      "estado": "V",
+      "hex": "#574336"
+    },
+    {
+      "id": "pano-oscuro",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.27, 0.018, 48],
+      "nombre": "Paño oscuro",
+      "uso": "Faldas de frisa o paño, pantalón de pañete",
+      "fuente": "Ocampo López (1977): faldas «generalmente de tonos oscuros»",
+      "estado": "V",
+      "hex": "#2e241f"
+    },
+    {
+      "id": "negro-anil",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.27, 0.024, 268],
+      "nombre": "Negro de añil",
+      "uso": "Falda de frisa teñida con añil: negro frío, por debajo del umbral de la zona azul",
+      "fuente": "Ocampo López (1977): faldas tejidas en telares caseros «y las teñían con añil. La falda generalmente es negra»",
+      "estado": "V",
+      "hex": "#212632"
+    },
+    {
+      "id": "paja",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.8, 0.055, 90],
+      "nombre": "Paja",
+      "uso": "Sombrero de caña, tapia pisada o jipa",
+      "fuente": "Ocampo López (1977); doc 03 §3.1",
+      "estado": "V",
+      "hex": "#cbbd96"
+    },
+    {
+      "id": "cinta-amarilla",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.84, 0.08, 95],
+      "nombre": "Cinta amarilla",
+      "uso": "Cintas del ruedo, abalorios, flores de papel del altar",
+      "fuente": "Ocampo López (1977): cintas del ruedo «con colores vistosos»; flores amarillo claro en altares",
+      "estado": "V",
+      "hex": "#dbcb8e"
+    },
+    {
+      "id": "cinta-verde",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.66, 0.075, 140],
+      "nombre": "Cinta verde",
+      "uso": "Cintas del ruedo, abalorios",
+      "fuente": "Ocampo López (1977): cintas «con colores vistosos» (tono concreto: decisión)",
+      "estado": "D",
+      "hex": "#7a9e72"
+    },
+    {
+      "id": "cinta-rosa",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.8, 0.06, 12],
+      "nombre": "Cinta rosa",
+      "uso": "Cintas, flores del altar; el rosa es rojo sin fuerza: queda fuera de la zona roja",
+      "fuente": "Ocampo López (1977): flores «en tonos rosa» en altares",
+      "estado": "V",
+      "hex": "#e1aeb3"
+    },
+    {
+      "id": "caqui",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.7, 0.045, 88],
+      "nombre": "Caqui",
+      "uso": "Camisa y pantalón llanero",
+      "fuente": "doc 03 §3.3 (blanca o caqui)",
+      "estado": "V",
+      "hex": "#aa9d7f"
+    },
+    {
+      "id": "oliva",
+      "familia": "Gente y vestido",
+      "registro": "iluminacion",
+      "oklch": [0.5, 0.045, 112],
+      "nombre": "Oliva",
+      "uso": "Reservado para uniformes cuando se verifiquen",
+      "fuente": "doc 03 §3.4 (uniformes [P])",
+      "estado": "P",
+      "hex": "#646648"
+    },
+    {
+      "id": "sabana-seca",
+      "familia": "Llano",
+      "registro": "iluminacion",
+      "oklch": [0.8, 0.07, 82],
+      "nombre": "Sabana en verano",
+      "uso": "Pajonal seco, diciembre a abril",
+      "fuente": "Casanare: verano de diciembre a abril, invierno que inunda la sabana",
+      "estado": "V",
+      "hex": "#d4ba8a"
+    },
+    {
+      "id": "sabana-verde",
+      "familia": "Llano",
+      "registro": "iluminacion",
+      "oklch": [0.6, 0.06, 132],
+      "nombre": "Sabana en invierno",
+      "uso": "Sabana inundable verde",
+      "fuente": "ídem",
+      "estado": "V",
+      "hex": "#738863"
+    },
+    {
+      "id": "moriche",
+      "familia": "Llano",
+      "registro": "iluminacion",
+      "oklch": [0.4, 0.045, 140],
+      "nombre": "Morichal",
+      "uso": "Palmas y bosque de galería",
+      "fuente": "ídem",
+      "estado": "V",
+      "hex": "#3b4e37"
+    },
+    {
+      "id": "tierra-llanera",
+      "familia": "Llano",
+      "registro": "iluminacion",
+      "oklch": [0.62, 0.055, 58],
+      "nombre": "Tierra llanera",
+      "uso": "Caminos, caney, corrales",
+      "fuente": "doc 03 §3.3 (caney)",
+      "estado": "D",
+      "hex": "#a07e65"
+    },
+    {
+      "id": "cielo-llano",
+      "familia": "Llano",
+      "registro": "iluminacion",
+      "oklch": [0.955, 0.02, 95],
+      "nombre": "Cielo grande",
+      "uso": "Cielo del Llano: papel encendido, sin azul",
+      "fuente": "decisión de diseño",
+      "estado": "D",
+      "hex": "#f4f0e1"
+    },
+    {
+      "id": "ladrillo",
+      "familia": "Bogotá 1948",
+      "registro": "iluminacion",
+      "oklch": [0.62, 0.06, 52],
+      "nombre": "Ladrillo",
+      "uso": "Muros de ladrillo",
+      "fuente": "fotos de Sady González (blanco y negro): color inferido",
+      "estado": "P",
+      "hex": "#a47c65"
+    },
+    {
+      "id": "piedra-bogota",
+      "familia": "Bogotá 1948",
+      "registro": "iluminacion",
+      "oklch": [0.7, 0.012, 80],
+      "nombre": "Piedra y estuco",
+      "uso": "Edificios republicanos de la Séptima",
+      "fuente": "doc 03 §3.2 (inmuebles [V]; acabados [P])",
+      "estado": "P",
+      "hex": "#a29e96"
+    },
+    {
+      "id": "gabardina",
+      "familia": "Bogotá 1948",
+      "registro": "iluminacion",
+      "oklch": [0.66, 0.03, 80],
+      "nombre": "Gabardina",
+      "uso": "Ropa urbana clara",
+      "fuente": "doc 03 §3.2 (ropa urbana [P])",
+      "estado": "P",
+      "hex": "#9c917e"
+    },
+    {
+      "id": "techo-plata",
+      "familia": "Bogotá 1948",
+      "registro": "iluminacion",
+      "oklch": [0.82, 0.006, 90],
+      "nombre": "Techo plateado",
+      "uso": "Techo de los tranvías «Lorencitas» (1936)",
+      "fuente": "El tranvía de Bogotá, 1882-1951 (Redalyc): techo plateado; color de la carrocería [P]",
+      "estado": "V",
+      "hex": "#c5c4c0"
+    },
+    {
+      "id": "humo",
+      "familia": "Bogotá 1948",
+      "registro": "tinta",
+      "oklch": [0.34, 0.008, 60],
+      "nombre": "Humo",
+      "uso": "Humo de incendio; ciudad envuelta en humo el 9 de abril",
+      "fuente": "fotos de Sady González (Archivo de Bogotá)",
+      "estado": "V",
+      "hex": "#3b3734"
+    },
+    {
+      "id": "humo-claro",
+      "familia": "Bogotá 1948",
+      "registro": "tinta",
+      "oklch": [0.58, 0.008, 70],
+      "nombre": "Humo claro",
+      "uso": "Humo lejano, ceniza",
+      "fuente": "ídem",
+      "estado": "V",
+      "hex": "#7d7a75"
+    },
+    {
+      "id": "llama-nucleo",
+      "familia": "Luz",
+      "registro": "luz",
+      "oklch": [0.94, 0.09, 100],
+      "nombre": "Núcleo de llama",
+      "uso": "Centro de la llama, lo más claro de la escena",
+      "fuente": "decisión de diseño (fuego sin rojo)",
+      "estado": "D",
+      "hex": "#f9eda7"
+    },
+    {
+      "id": "llama",
+      "familia": "Luz",
+      "registro": "luz",
+      "oklch": [0.8, 0.12, 78],
+      "nombre": "Llama",
+      "uso": "Lengua de fuego: ocre encendido",
+      "fuente": "decisión de diseño (fuego sin rojo)",
+      "estado": "D",
+      "hex": "#e8b45e"
+    },
+    {
+      "id": "brasa",
+      "familia": "Luz",
+      "registro": "luz",
+      "oklch": [0.68, 0.11, 66],
+      "nombre": "Brasa",
+      "uso": "Brasas, borde del fuego, tizones",
+      "fuente": "decisión de diseño (fuego sin rojo)",
+      "estado": "D",
+      "hex": "#c68a49"
+    },
+    {
+      "id": "lampara",
+      "familia": "Luz",
+      "registro": "luz",
+      "oklch": [0.9, 0.07, 92],
+      "nombre": "Lámpara de petróleo",
+      "uso": "Luz de lámpara y vela en interiores",
+      "fuente": "doc 03 §2 (lámpara de petróleo)",
+      "estado": "V",
+      "hex": "#efdda9"
+    },
+    {
+      "id": "rojo-liberal",
+      "familia": "Partido",
+      "registro": "partido",
+      "oklch": [0.55, 0.195, 29],
+      "nombre": "Rojo liberal",
+      "uso": "Pañuelos, banderas, afiches, fachadas liberales",
+      "fuente": "doc 03 §1; hex definido y aprobado el 2026-10-02 (paleta.md §2.1)",
+      "estado": "D",
+      "hex": "#ca2d23"
+    },
+    {
+      "id": "rojo-sombra",
+      "familia": "Partido",
+      "registro": "partido",
+      "oklch": [0.43, 0.155, 27],
+      "nombre": "Rojo en sombra",
+      "uso": "Pliegues del pañuelo y la bandera",
+      "fuente": "derivado de rojo-liberal",
+      "estado": "D",
+      "hex": "#921b1a"
+    },
+    {
+      "id": "rojo-desvaido",
+      "familia": "Partido",
+      "registro": "partido",
+      "oklch": [0.7, 0.115, 32],
+      "nombre": "Rojo desvaído",
+      "uso": "Afiche viejo al sol; el pacto del epílogo",
+      "fuente": "derivado de rojo-liberal",
+      "estado": "D",
+      "hex": "#dc8271"
+    },
+    {
+      "id": "azul-conservador",
+      "familia": "Partido",
+      "registro": "partido",
+      "oklch": [0.44, 0.165, 263],
+      "nombre": "Azul conservador",
+      "uso": "Pañuelos, banderas, afiches, fachadas conservadoras",
+      "fuente": "doc 03 §1; hex definido y aprobado el 2026-10-02 (paleta.md §2.1)",
+      "estado": "D",
+      "hex": "#1d4aac"
+    },
+    {
+      "id": "azul-sombra",
+      "familia": "Partido",
+      "registro": "partido",
+      "oklch": [0.34, 0.125, 264],
+      "nombre": "Azul en sombra",
+      "uso": "Pliegues",
+      "fuente": "derivado de azul-conservador",
+      "estado": "D",
+      "hex": "#153177"
+    },
+    {
+      "id": "azul-desvaido",
+      "familia": "Partido",
+      "registro": "partido",
+      "oklch": [0.64, 0.095, 258],
+      "nombre": "Azul desvaído",
+      "uso": "Afiche viejo al sol; el pacto del epílogo",
+      "fuente": "derivado de azul-conservador",
+      "estado": "D",
+      "hex": "#678dc6"
+    },
+    {
+      "id": "sangre-fresca",
+      "familia": "Sangre",
+      "registro": "sangre",
+      "oklch": [0.42, 0.155, 18],
+      "nombre": "Sangre fresca",
+      "uso": "Solo el instante; mancha orgánica con textura, nunca plana",
+      "fuente": "doc 03 §1 Violencia (la sangre se vuelve tinta)",
+      "estado": "V",
+      "hex": "#8e132b"
+    },
+    {
+      "id": "sangre-oxidada",
+      "familia": "Sangre",
+      "registro": "sangre",
+      "oklch": [0.3, 0.06, 35],
+      "nombre": "Sangre oxidada",
+      "uso": "Paso intermedio hacia tinta-plena en segundos",
+      "fuente": "doc 03 §1 Violencia",
+      "estado": "V",
+      "hex": "#472218"
+    }
+  ],
+  "roles_ui": {
+    "fondo": "papel",
+    "texto": "tinta",
+    "texto-secundario": "sepia-oscuro",
+    "globo": "blanco-tela",
+    "borde": "tinta",
+    "seleccion": "cinta-amarilla",
+    "foco": "tinta-plena",
+    "desactivado": "sepia-claro",
+    "archivo-fondo": "papel-viejo",
+    "archivo-sello": "sepia-oscuro"
+  },
+  "contrastes": [
+    {
+      "texto": "tinta",
+      "fondo": "papel",
+      "min": 7,
+      "uso": "texto de globos, menús y Archivo"
+    },
+    {
+      "texto": "tinta",
+      "fondo": "blanco-tela",
+      "min": 7,
+      "uso": "texto en globo"
+    },
+    {
+      "texto": "tinta",
+      "fondo": "papel-viejo",
+      "min": 7,
+      "uso": "texto del Archivo"
+    },
+    {
+      "texto": "sepia-oscuro",
+      "fondo": "papel",
+      "min": 4.5,
+      "uso": "texto secundario, fechas, fuentes"
+    },
+    {
+      "texto": "sepia-oscuro",
+      "fondo": "papel-viejo",
+      "min": 4.5,
+      "uso": "sello y notas del Archivo"
+    },
+    {
+      "texto": "tinta",
+      "fondo": "cinta-amarilla",
+      "min": 4.5,
+      "uso": "opción seleccionada"
+    },
+    {
+      "texto": "papel",
+      "fondo": "tinta-plena",
+      "min": 7,
+      "uso": "texto invertido en cartelas"
+    },
+    {
+      "texto": "rojo-liberal",
+      "fondo": "papel",
+      "min": 3,
+      "uso": "objeto rojo visible sobre papel (no texto)"
+    },
+    {
+      "texto": "azul-conservador",
+      "fondo": "papel",
+      "min": 3,
+      "uso": "objeto azul visible sobre papel (no texto)"
+    }
+  ],
+  "distinguir": [
+    {
+      "a": "rojo-liberal",
+      "b": "azul-conservador",
+      "min": 0.1,
+      "motivo": "la división tiene que leerse con cualquier visión"
+    },
+    {
+      "a": "rojo-liberal",
+      "b": "teja",
+      "motivo": "teja y ladrillo no deben pasar por afiches rojos"
+    },
+    { "a": "rojo-liberal", "b": "ladrillo", "motivo": "ídem" },
+    {
+      "a": "rojo-liberal",
+      "b": "chapas",
+      "motivo": "el rubor no debe leerse como partido"
+    },
+    {
+      "a": "rojo-liberal",
+      "b": "brasa",
+      "motivo": "el fuego no es rojo liberal"
+    },
+    {
+      "a": "rojo-liberal",
+      "b": "sangre-fresca",
+      "min": 0.04,
+      "motivo": "doc 03: la diferencia principal es de forma y tiempo; el color ayuda"
+    },
+    {
+      "a": "azul-conservador",
+      "b": "monte",
+      "motivo": "el verde oscuro no debe leerse como azul"
+    },
+    { "a": "azul-conservador", "b": "agua", "motivo": "el agua no es azul" },
+    {
+      "a": "azul-conservador",
+      "b": "sepia-oscuro",
+      "motivo": "la noche no es azul"
+    },
+    { "a": "azul-conservador", "b": "oliva", "motivo": "uniformes [P]" },
+    {
+      "a": "azul-conservador",
+      "b": "negro-anil",
+      "motivo": "el añil de las faldas no debe leerse como partido"
+    }
+  ],
+  "guion": [
+    {
+      "id": "prologo",
+      "acto": "Prólogo",
+      "anios": "1946",
+      "croma_mundo": 1.0,
+      "nota": "Iluminación plena: mercado, trigo, cintas. El rojo y el azul son un color más entre muchos"
+    },
+    {
+      "id": "acto1",
+      "acto": "Acto I — El 9 de abril",
+      "anios": "1948",
+      "croma_mundo": 0.65,
+      "nota": "Humo: el mundo se apaga; la luz del fuego y la sangre fresca son lo único que brilla además del partido"
+    },
+    {
+      "id": "acto2",
+      "acto": "Acto II — El monte y la ley",
+      "anios": "1949–1953",
+      "croma_mundo": 0.5,
+      "nota": "El Llano trae otra tierra (ocre y verde), blanqueada por el sol"
+    },
+    {
+      "id": "acto3",
+      "acto": "Acto III — La amnistía rota",
+      "anios": "1954–1957",
+      "croma_mundo": 0.25,
+      "nota": "Casi sepia: solo el rojo y el azul siguen enteros"
+    },
+    {
+      "id": "epilogo",
+      "acto": "Epílogo — El pacto",
+      "anios": "1958",
+      "croma_mundo": 0.2,
+      "partido": "desvaido",
+      "nota": "Rojo y azul juntos y desvaídos en el afiche del pacto; en el campo el mundo no recupera el color"
+    }
+  ]
+}
