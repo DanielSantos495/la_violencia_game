@@ -7,6 +7,12 @@ export class Menu extends Scene {
 
   create(): void {
     // Sin menú todavía: pasa directo a la escena de prueba del setup.
-    this.scene.start('Prueba');
+    // En desarrollo, ?escena=<clave> abre otra escena registrada (p. ej. PruebaEscenario).
+    const pedida = import.meta.env.DEV
+      ? new URLSearchParams(location.search).get('escena')
+      : null;
+    this.scene.start(
+      pedida && pedida in this.game.scene.keys ? pedida : 'Prueba',
+    );
   }
 }
