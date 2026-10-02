@@ -376,18 +376,143 @@ def barro(puntos, semilla=3):
         out.append(f'<ellipse cx="{f(x)}" cy="{f(y)}" rx="{f(r*1.4)}" ry="{f(r)}" transform="rotate({(i*37)%180} {f(x)} {f(y)})" fill="#000"/>')
     return ''.join(out)
 
-# ======================= piezas compartidas =======================
-cabeza_monte = cabeza.replace('''    <!-- sombra del ala del sombrero sobre la frente -->
-    <path d="M154,60 C160,60 166,61 170,64 C169,67 166,68 160,67 C156,66 154,64 154,60 Z" fill="url(#trama-fina)"/>
-''', '').replace(
-    '<path id="ceja-der" d="M171.2,72.6 C166,69.4 159.5,69.6 154,72.8 C159.5,71.6 165,71.8 170.6,74.4 Z"',
-    '<path id="ceja-der" d="M171.4,70.8 C166.4,67 159.6,68.2 154,72.2 C159.6,70.4 165.4,69.8 170.8,72.6 Z"'
-).replace('''    <!-- pelo: raya al medio''', '''    <!-- alerta: arruga de preocupación sobre la ceja -->
-    <path d="M165,65.4 C167,65 169,65.4 170.4,66.4" stroke="#000" stroke-width="0.7" fill="none"/>
-    <!-- pelo: raya al medio''').replace('''    <path d="M150,75 C148,77 146.5,79 146.8,82"''', '''    <!-- mechones sueltos: despeinada tras la noche de huida -->
-    <path d="M140,50 C136,44 130,44 127,47 M131,58 C125,55 120,57 118,61 M124,78 C119,77 116,80 116,84" stroke="#000" stroke-width="1" fill="none" stroke-linecap="round"/>
-    <path d="M150,75 C148,77 146.5,79 146.8,82"''')
-assert cabeza_monte.count('arruga') == 1 and 'sombra del ala' not in cabeza_monte
+# ======================= cabeza y expresiones =======================
+# La cabeza = partes fijas (cuello, contorno, nariz, pelo, oreja) + rasgos por expresión
+# (ojo, ceja, boca, mejilla). Rostro simplificado (doc 03 §2): la expresión vive en ojos,
+# cejas, boca y postura. Cada expresión es una cabeza completa con el mismo pivote (cuello),
+# así el juego la intercambia sin mover sombrero ni zarcillo.
+def _tramo(texto, desde, hasta=None):
+    i = texto.index(desde)
+    j = texto.index(hasta, i) if hasta else len(texto)
+    return texto[i:j]
+
+CUELLO_CONTORNO = _tramo(cabeza, '    <!-- cuello -->', '    <!-- sombra del ala')
+SOMBRA_ALA = _tramo(cabeza, '    <!-- sombra del ala', '    <!-- sombra bajo la mandíbula')
+SOMBRA_MANDIBULA = _tramo(cabeza, '    <!-- sombra bajo la mandíbula', '    <!-- rubor de campo')
+NARIZ = _tramo(cabeza, '    <!-- nariz: ala y fosa -->', '    <!-- boca -->')
+PELO_OREJA = _tramo(cabeza, '    <!-- pelo: raya al medio')
+MECHONES = '<path d="M140,50 C136,44 130,44 127,47 M131,58 C125,55 120,57 118,61 M124,78 C119,77 116,80 116,84" stroke="#000" stroke-width="1" fill="none" stroke-linecap="round"/>'
+
+def ojo(clave, almendra, iris, brillo, pestana, puntas, pliegue, inferior, extra='', grosor=2.1):
+    """Ojo de perfil: almendra blanca, iris recortado por la almendra, pestañas y párpados."""
+    cx, cy, rx, ry = iris
+    bx, by, br = brillo
+    return (f'<clipPath id="ojo-{clave}"><path d="{almendra}"/></clipPath>'
+            f'<path d="{almendra}" fill="#fff" stroke="#000" stroke-width="0.9"/>'
+            f'<g clip-path="url(#ojo-{clave})"><ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="#000"/>'
+            f'<circle cx="{bx}" cy="{by}" r="{br}" fill="#fff"/></g>'
+            f'<path d="{pestana}" stroke="#000" stroke-width="{grosor}" fill="none" stroke-linecap="round"/>'
+            f'<path d="{puntas}" stroke="#000" stroke-width="0.9" stroke-linecap="round"/>'
+            + (f'<path d="{pliegue}" stroke="#000" stroke-width="0.8" fill="none"/>' if pliegue else '')
+            + f'<path d="{inferior}" stroke="#000" stroke-width="0.7" fill="none"/>' + extra)
+
+def ceja(d):
+    return f'<path d="{d}" fill="#000" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>'
+
+POMULO = '<path d="M155,90 C157,93 159,95 162,96" stroke="#000" stroke-width="0.7" fill="none"/>'
+RUBOR = '<path d="M158,95 L156.5,99 M160.5,95.5 L159,99.5 M163,96 L161.5,100" stroke="#000" stroke-width="0.8" stroke-linecap="round"/>'
+BOCA_NEUTRAL = ('<path d="M173.3,107 L169,107.4" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>'
+                '<path d="M171.5,110.2 C172.6,110.8 173.8,110.6 174.4,110" stroke="#000" stroke-width="0.8" fill="none"/>'
+                '<path d="M169,107.4 C168.2,106.6 168.4,105.8 169.2,105.4" stroke="#000" stroke-width="0.8" fill="none"/>')
+
+CEJAS = {
+    'neutral': 'M171.2,72.6 C166,69.4 159.5,69.6 154,72.8 C159.5,71.6 165,71.8 170.6,74.4 Z',
+    'alerta': 'M171.4,70.8 C166.4,67 159.6,68.2 154,72.2 C159.6,70.4 165.4,69.8 170.8,72.6 Z',
+    'miedo': 'M171.6,69.6 C166.6,64.8 159.8,66.2 154,70.8 C159.8,68.8 165.8,67.8 171,71.4 Z',
+    'rabia': 'M171.8,75.6 C166.4,71.6 160,70.6 154,72 C159.8,72.4 165.6,73.6 170.4,77.4 Z',
+    'duelo': 'M171.4,70 C166.8,68 160.8,69.6 155,74.6 C160.8,71.4 166.2,70.6 170.8,72 Z',
+}
+
+OJO_NEUTRAL = dict(
+    almendra='M157.5,80.5 C160.5,78.2 164.5,78 168,79.6 C165.5,82.4 161.5,83.4 157.5,80.5 Z',
+    iris=(164.4, 80.7, 2, 2.5), brillo=(165.2, 79.8, 0.65),
+    pestana='M156.2,80.6 C159.5,77.3 164.5,77 168.6,79.2 C169.4,78.6 170,77.8 170.3,77',
+    puntas='M168.6,79.2 L171,78.6 M167.4,78.5 L169.4,77',
+    pliegue='M158.4,76.6 C161.5,75.4 165,75.4 167.6,76.6',
+    inferior='M159.5,82.8 C162,83.8 165,83.6 167.2,82.2',
+)
+
+RASGOS = {
+    # Mirada tranquila; rubor de campo.
+    'neutral': RUBOR + POMULO + ojo('neutral', **OJO_NEUTRAL) + ceja(CEJAS['neutral']) + '{NARIZ}' + BOCA_NEUTRAL,
+    # Atenta: ceja alzada, arruga de preocupación, párpado algo más abierto.
+    'alerta': RUBOR + POMULO + ojo('alerta', **{**OJO_NEUTRAL,
+        'pestana': 'M156.2,80.4 C159.5,76.7 164.5,76.4 168.6,78.8 C169.4,78.2 170,77.4 170.3,76.6',
+        'pliegue': 'M158.4,75.8 C161.5,74.6 165,74.6 167.6,75.8'})
+        + ceja(CEJAS['alerta'])
+        + '<path d="M165,65.4 C167,65 169,65.4 170.4,66.4" stroke="#000" stroke-width="0.7" fill="none"/>'
+        + '{NARIZ}' + BOCA_NEUTRAL,
+    # Miedo: ojo muy abierto con blanco alrededor del iris, ceja arqueada hacia arriba,
+    # frente arrugada, labios entreabiertos, gota de sudor; sin rubor (palidez).
+    'miedo': POMULO + ojo('miedo',
+        almendra='M157,80.6 C160.2,76.6 164.8,76.2 168.4,78.8 C166,83.6 161.4,84.8 157,80.6 Z',
+        iris=(163.8, 80.6, 1.6, 1.9), brillo=(164.4, 79.8, 0.55),
+        pestana='M155.8,80.4 C159.4,75.6 164.8,75.2 168.8,78.4 C169.6,77.6 170.2,76.8 170.6,76',
+        puntas='M168.8,78.4 L171.2,77.6 M167.6,77.4 L169.6,75.8',
+        pliegue='M158.2,73.8 C161.4,72.6 165.2,72.6 167.8,73.8',
+        inferior='M159,84 C161.8,85.4 165,85.2 167.6,83.4')
+        + ceja(CEJAS['miedo'])
+        + '<path d="M164.2,62.6 C166.4,62 168.6,62.4 170.2,63.4 M163.4,65.2 C165.6,64.8 167.8,65.2 169.4,66" stroke="#000" stroke-width="0.6" fill="none"/>'
+        + '<path d="M154.6,84.6 C153.2,87.4 152.6,89.2 153.4,90.6 C154.2,91.8 156,91.6 156.4,90.2 C156.8,88.8 155.8,87 154.6,84.6 Z" fill="#fff" stroke="#000" stroke-width="0.8"/>'
+        + '<path d="M154.2,88.4 L154,89.6" stroke="#000" stroke-width="0.5"/>'
+        + '{NARIZ}'
+        + '<path d="M173.4,106.6 C171.8,106.8 170.4,107 169,107.2" stroke="#000" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
+        + '<path d="M173.6,107.2 L169.2,107.6 C169.6,108.4 171.2,108.8 173.8,108.6 Z" fill="#000"/>'
+        + '<path d="M171.4,111 C172.6,111.6 173.8,111.4 174.6,110.6" stroke="#000" stroke-width="0.8" fill="none"/>',
+    # Rabia: ceja baja hacia la nariz, entrecejo marcado, ojo entrecerrado y tenso,
+    # aleta de la nariz abierta, labios apretados, mandíbula tensa, rubor intenso.
+    'rabia': '<path d="M157.6,94.6 L156,99 M160,95 L158.4,99.4 M162.4,95.4 L160.8,99.8 M164.8,96 L163.4,100" stroke="#000" stroke-width="0.95" stroke-linecap="round"/>'
+        + POMULO + ojo('rabia',
+        almendra='M157.8,81 C160.8,79.6 164.8,79.4 168,80.6 C165.4,82.8 161.6,83.4 157.8,81 Z',
+        iris=(164.2, 81.6, 2, 2.5), brillo=(164.9, 80.9, 0.5),
+        pestana='M156.4,80.6 C159.8,79.4 164.6,79.2 169.2,80.8',
+        puntas='M169.2,80.8 L171.2,80.6',
+        pliegue='M158.6,77.8 C161.6,77.2 165,77.2 167.6,78',
+        inferior='M159.2,82.6 C162,83.2 165,83 167.8,82',
+        extra='<path d="M160,85 C162.6,85.6 165.2,85.4 167,84.6" stroke="#000" stroke-width="0.6" fill="none"/>', grosor=2.6)
+        + ceja(CEJAS['rabia'])
+        + '<path d="M170.2,70.6 C170.8,72 170.8,73.2 170.4,74.4" stroke="#000" stroke-width="0.7" fill="none"/>'
+        + '{NARIZ}'
+        + '<path d="M172.8,94.4 C174.8,91.8 178.4,92.4 178.8,95.6" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>'
+        + '<path d="M173.4,107.2 C171.8,107.5 170.2,107.9 168.6,108.6 C168.2,109.2 168.1,109.9 168.3,110.6" stroke="#000" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+        + '<path d="M171.6,110.4 C172.6,110.8 173.6,110.6 174.2,110.2" stroke="#000" stroke-width="0.8" fill="none"/>',
+    # Duelo: párpado pesado y mirada baja, ceja de tristeza (adentro alta, afuera caída),
+    # ojeras, una lágrima en tinta (sin color), comisura hacia abajo, mentón tenso.
+    'duelo': POMULO + ojo('duelo',
+        almendra='M157.6,81.4 C160.6,80.4 164.8,80.2 168,81 C165.6,83.6 161.4,84.2 157.6,81.4 Z',
+        iris=(163.6, 82.6, 1.9, 2.3), brillo=(164.2, 82.2, 0.5),
+        pestana='M156.4,81.2 C159.6,79.6 164.6,79.2 168.4,80.8 C169.2,80.6 169.8,80.4 170.2,80',
+        puntas='M168.4,80.8 L170.4,81.4',
+        pliegue='M157.8,78.4 C161,76.8 165,76.8 167.8,78.2',
+        inferior='M159.6,84.8 C162.4,85.8 165.4,85.4 167.4,84',
+        extra='<path d="M160.4,86.8 C162.8,87.6 165.4,87.4 167,86.2" stroke="#000" stroke-width="0.5" fill="none"/>')
+        + ceja(CEJAS['duelo'])
+        + '<path d="M166.6,85.4 C166.2,89.2 165.2,93 164.8,96.2" stroke="#000" stroke-width="0.6" fill="none"/>'
+        + '<path d="M165.2,96.2 C163.8,98.6 163.2,100.4 164,101.6 C164.8,102.8 166.6,102.6 167,101.2 C167.4,99.8 166.6,98.2 165.2,96.2 Z" fill="#fff" stroke="#000" stroke-width="0.8"/>'
+        + '<path d="M164.6,99.4 L164.4,100.6" stroke="#000" stroke-width="0.5"/>'
+        + '{NARIZ}'
+        + '<path d="M173.2,107.4 C171.8,107.8 170.4,108.6 169,109.8" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+        + '<path d="M171.6,110.8 C172.6,111.2 173.6,111 174.2,110.4" stroke="#000" stroke-width="0.7" fill="none"/>'
+        + '<path d="M170.8,114.4 C171.6,114.8 172.4,114.8 173,114.4" stroke="#000" stroke-width="0.6" fill="none"/>',
+}
+EXPRESIONES = list(RASGOS)
+
+def cabeza_de(expr):
+    """Cabeza completa (sin sombra de sombrero ni mechones) con los rasgos de la expresión."""
+    return CUELLO_CONTORNO + SOMBRA_MANDIBULA + RASGOS[expr].replace('{NARIZ}', NARIZ) + PELO_OREJA
+
+def parpado_de(expr):
+    """Parpadeo: tapa el ojo con piel, dibuja el ojo cerrado y repone la ceja de la expresión."""
+    return ('<path d="M155.2,80.8 C158.2,75.2 165.2,74.6 170.4,77.6 L170.2,85 C165.8,87 159.8,87 155.2,82.8 Z" fill="#fff"/>'
+            '<path d="M156.4,81 C159.8,83.2 164.6,83.4 168.8,81.2" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>'
+            '<path d="M161,82.8 L160.6,84.4 M164.4,83 L164.4,84.8 M167.4,82.2 L168,83.8" stroke="#000" stroke-width="0.8" stroke-linecap="round"/>'
+            '<path d="M158.2,78.6 C161.6,77.4 165.2,77.4 167.8,78.6" stroke="#000" stroke-width="0.7" fill="none"/>'
+            + ceja(CEJAS[expr]))
+
+# La cabeza de pie por defecto es la neutral; la sombra del ala pasa al sombrero.
+cabeza_monte = cabeza_de('alerta')
+sombrero = SOMBRA_ALA + sombrero
+cabeza = cabeza_de('neutral')
 
 torso_monte = torso.split('    <!-- collar de abalorios')[0]
 
@@ -457,8 +582,9 @@ guardar('rosalba-monte.svg', encabezado('Rosalba Insuasty — de pie, variante m
 {piece('enagua', '146 232', enagua_monte, 'Enagua con el ruedo embarrado')}
 {piece('falda', '146 232', falda_monte, 'Falda negra con salpicaduras de barro')}
 {piece('torso', '146 232', torso_monte, 'Torso: blusa bordada, sin collar')}
-{piece('cabeza', '150 130', cabeza_monte, 'Cabeza sin sombrero, ceja alzada (alerta) y mechones sueltos')}
+{piece('cabeza', '150 130', cabeza_monte, 'Cabeza sin sombrero, expresión alerta (las demás en rosalba-cabezas.svg)')}
 {piece('zarcillo', '143.6 100.8', zarcillo, 'Zarcillo; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('mechones', '150 130', MECHONES, 'Mechones sueltos tras la noche de huida; hijo de cabeza', extra=' data-padre="cabeza"')}
 {piece('ruana', '145 128', ruana_pie, 'Ruana oscura de lana (doc 03 [V]; Ocampo: tonos oscuros, pequeña)')}
 {piece('trenza', '134 110', trenza(), 'Trenza con cinta roja')}
 {piece('brazo-der', '153 140', bd_up, 'Brazo derecho libre')}
@@ -476,6 +602,7 @@ z = cab_punto(143.6, 100.8)
 nuca = cab_punto(134, 110)
 cabeza_ag = f'<g transform="translate({CAB_T[0]} {CAB_T[1]}) rotate({CAB_R} 150 130)">{cabeza_monte}</g>'
 zarcillo_ag = f'<g transform="translate({CAB_T[0]} {CAB_T[1]}) rotate({CAB_R} 150 130)">{zarcillo}</g>'
+mechones_ag = f'<g transform="translate({CAB_T[0]} {CAB_T[1]}) rotate({CAB_R} 150 130)">{MECHONES}</g>'
 
 FALDA_AG = 'M118,404 C126,384 150,374 176,370 C192,368 204,370 212,378 C218,386 219,400 219,414 C219,436 220,452 222,466 Q166,472 104,466 C102,446 104,424 110,412 C112,408 115,405 118,404 Z'
 cuerpo_ag = (
@@ -550,8 +677,33 @@ guardar('rosalba-agachada.svg', encabezado('Rosalba Insuasty — agachada (sigil
 {piece('cuerpo', '150 440', cuerpo_ag, 'Cuerpo en cuclillas: falda en domo, enagua al ras, talón de la alpargata')}
 {piece('cabeza', f'{f(cuello[0])} {f(cuello[1])}', cabeza_ag, 'Cabeza (la de pie, inclinada hacia adelante)')}
 {piece('zarcillo', f'{f(z[0])} {f(z[1])}', zarcillo_ag, 'Zarcillo; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('mechones', f'{f(cuello[0])} {f(cuello[1])}', mechones_ag, 'Mechones sueltos; hijo de cabeza', extra=' data-padre="cabeza"')}
 {piece('ruana', '182 310', ruana_ag, 'Ruana sobre la espalda curvada')}
 {piece('trenza', f'{f(nuca[0])} {f(nuca[1])}', trenza(nuca[0], nuca[1] + 1, nuca[0] - 4, nuca[1] + 96, 12), 'Trenza colgando por gravedad')}
 {piece('brazo-der', f'{HOMBRO[0]} {HOMBRO[1]}', brazo_ag, 'Brazo derecho hacia el suelo')}
 {piece('antebrazo-der', f'{CODO[0]} {CODO[1]}', antebrazo_ag, 'Antebrazo y mano apoyada; hijo de brazo-der', extra=' data-padre="brazo-der"')}
 {piece('ruana-doblez', '182 310', doblez_ag, 'Doblez de la ruana sobre el hombro derecho')}''')
+
+# ======================= 4. cabezas por expresión =======================
+# Una cabeza completa por expresión y su capa de parpadeo, puestas en fila para revisarlas
+# juntas. Cada pieza lleva el pivote en su cuello: en el juego reemplaza el frame de la
+# cabeza (mismo pivote), así sombrero, zarcillo y mechones siguen en su sitio.
+def hoja_cabezas(nombre, titulo, rotacion, ancho, alto, dx0, dy):
+    piezas = []
+    ranuras = [(e, cabeza_de(e), f'Cabeza: {e}') for e in EXPRESIONES] + \
+              [(f'parpado-{e}', parpado_de(e), f'Parpadeo sobre la cabeza {e}') for e in EXPRESIONES]
+    for i, (pid, cuerpo, comentario) in enumerate(ranuras):
+        tx, ty = dx0 + i * ancho, dy
+        rot = f' rotate({rotacion} 150 130)' if rotacion else ''
+        # Los ids internos (clipPath de cada ojo) deben ser únicos en el archivo.
+        cuerpo = cuerpo.replace('id="ojo-', f'id="{pid}-ojo-').replace('url(#ojo-', f'url(#{pid}-ojo-')
+        piezas.append(piece(pid, f'{f(150 + tx)} {f(130 + ty)}', f'<g transform="translate({f(tx)} {f(ty)}){rot}">{cuerpo}</g>', comentario))
+    ruta = os.path.join(OUTDIR, nombre)
+    ancho_total = ancho * len(ranuras)
+    cuerpo = encabezado(titulo, 'Expresiones: ' + ', '.join(EXPRESIONES) + '. Rostro simplificado: ojos, cejas, boca y postura (doc 03 §2).')
+    cuerpo = cuerpo.replace('width="300" height="500" viewBox="0 0 300 500"', f'width="{ancho_total}" height="{alto}" viewBox="0 0 {ancho_total} {alto}"')
+    open(ruta, 'w').write(cuerpo + ''.join(piezas) + '\n</svg>\n')
+    print('ok', nombre, len(ranuras), 'piezas')
+
+hoja_cabezas('rosalba-cabezas.svg', 'Rosalba Insuasty — cabezas por expresión (de pie).', 0, 90, 104, -110, -40)
+hoja_cabezas('rosalba-agachada-cabezas.svg', 'Rosalba Insuasty — cabezas por expresión (agachada, inclinada).', CAB_R, 100, 116, -104, -30)
