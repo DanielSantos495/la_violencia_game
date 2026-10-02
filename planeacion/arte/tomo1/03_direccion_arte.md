@@ -66,7 +66,7 @@ Los SVG fuente se versionan en el repo (`art/src`) y los PNG se generan en el bu
 | Vivienda | Un nivel, muros gruesos de adobe o tapia pisada, cubierta de madera con teja de barro cocido, alero sobre la fachada que forma corredor; habitaciones oscuras encadenadas | **[V]** estudio de vivienda rural en Ráquira |
 | Muros | Tapia pisada encalada en blanco | **[V]** foto Biblioteca Virtual Banrep |
 | Vestido hombre | Pantalón de dril (angosto, sobre el tobillo en la primera mitad del s. XX), camisa de algodón, ruana de lana, sombrero de tapia pisada (palmiche/fique) o de fieltro, alpargatas | **[V]** estudios de folclor boyacense |
-| Vestido mujer | Falda de paño/algodón, blusa, pañolón, ruana, sombrero de paño negro o de caña, alpargatas blancas | **[V]** |
+| Vestido mujer | Falda de paño/algodón, blusa, pañolón, ruana, sombrero de paño negro o de caña, alpargatas blancas | **[V]** · detalle en J. Ocampo López, *El pueblo boyacense y su folclor*, cap. 4 (BanRep) |
 | Iglesia, plaza, tiendas | Plaza con pila, iglesia colonial, tiendas con portón de madera | **[P]** fotos de pueblos del norte de Boyacá (Soatá, Boavita, La Uvita) años 40–50 |
 | Paisaje | Altiplano y vertiente andina, cultivos, cercas de piedra | **[P]** referencias fotográficas regionales |
 
@@ -140,6 +140,6 @@ Sin licencia, estas fuentes solo se usan como referencia interna para dibujar.
 
 ## 6. Entregables de arte de preproducción
 1. Hoja de estilo: grosores de línea, tramas, paleta exacta (hueso, grises, negro, rojo, azul en hex).
-2. Hoja de personaje de Rosalba, Aurelio y Custodia (frente, perfil, piezas de recorte).
+2. Hoja de personaje de Rosalba, Aurelio y Custodia (frente, perfil, piezas de recorte). Rosalba en curso: `personajes/rosalba.md`.
 3. Kit modular de arquitectura boyacense en SVG.
 4. Prueba de escena: plaza de Puente Alto con paralaje y una página de cómic.
