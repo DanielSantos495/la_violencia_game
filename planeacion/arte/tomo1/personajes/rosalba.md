@@ -23,11 +23,15 @@ envejecer con la historia: empieza como muchacha de mercado y termina en el mont
 
 - **Silueta:** sombrero claro arriba, masa negra de pañolón o ruana en el centro, falda oscura
   ancha y casi al tobillo, alpargatas blancas abajo. Se reconoce incluso pequeña y en paralaje.
-- **Valores:** negro pleno en pelo y abrigo; grises solo por trama (falda); blanco de papel en
-  blusa, piel y alpargatas, para que cara y manos se lean primero.
-- **Único acento de color:** la **cinta roja** al final de la trenza (rojo liberal, doc 03 §1).
-  Es un rasgo documentado del traje (abajo) y a la vez la marca partidista discreta del personaje.
-  Hex del rojo pendiente de la hoja de estilo **[P]**.
+- **Valores y color:** tinta plena en pelo, pañolón y siluetas; lavados apagados de la paleta
+  (`../paleta.md` v1.0, aprobada el 02-oct-2026; tokens por pieza en su §9): piel, blanco de tela,
+  paja, negro de añil en la falda, lana parda en la ruana. Las sombras van en trama sobre el
+  lavado (`piel-sombra` bajo el ala y la mandíbula). Cara y manos claras para que se lean primero.
+- **Único color entero:** la **cinta roja** al final de la trenza, en `rojo-liberal` (`#ca2d23`,
+  doc 03 §1). Es un rasgo documentado del traje (abajo) y a la vez la marca partidista discreta del
+  personaje; en la historia pasa de adorno a señal peligrosa (aprobado por Daniel el 02-oct-2026;
+  falta registrarlo en el doc 10 desde narrativa). Cintas del ruedo, abalorios, barbuquejo y
+  zarcillos llevan lavados de la paleta, fuera de las zonas del rojo y del azul.
 - **Rostro:** perfil firme, ceja gruesa por dentro y algo fruncida, ojo almendrado con iris
   oscuro y brillo, nariz recta de punta redonda, mentón decidido, rubor de tres trazos.
   Expresión por ceja, párpado y postura; nada de retrato realista (doc 03 §2).
@@ -41,7 +45,7 @@ de un traje tradicional de larga duración: confirmar con fotografías de los a�
 
 | Elemento | Diseño | Fuente | Variante |
 |---|---|---|---|
-| Falda | Negra, de frisa, casi al tobillo, con vuelo y pliegues; cintas de colores en el ruedo → tres bandas de trama distinta (no hay color fuera del rojo/azul) | Doc 03 [V]; Ocampo | Todas |
+| Falda | Negra, de frisa, casi al tobillo, con vuelo y pliegues; cintas de colores en el ruedo → tres bandas en `cinta-amarilla`, `cinta-verde` y `cinta-rosa`, con su labor en tinta | Doc 03 [V]; Ocampo | Todas |
 | Enagua | Blanca, de encaje, asoma desigual bajo la falda | Ocampo | Todas (en el monte, con barro en el ruedo) |
 | Blusa | Blanca, pechera bordada con abalorios, puños adornados, manga abullonada | Doc 03 [V]; Ocampo | Todas |
 | Collar | Abalorios (cuentas) | Ocampo | Mercado |
@@ -76,6 +80,16 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
   sombrero, pañolón y collar; monte con ruana y mechones; rostro sin rasgos), rasgos por
   expresión (ojos, cejas, boca, mejilla) y parpadeo. En el juego: `Retrato`
   (`game/src/game/personajes/Retrato.ts`).
+  Construcción (v2): cabeza a 3/4 con guías fijas (cejas, ojos, base de la nariz, boca y mentón
+  a alturas constantes en todas las capas); ojo lejano más estrecho y con el lagrimal hacia la
+  nariz; puente de la nariz que tapa el lagrimal lejano; luz de arriba a la izquierda (sombra en
+  el lado lejano, bajo la nariz, bajo el ala y bajo la mandíbula). Trazo de grosor variable en
+  párpados, cejas, labios y contorno. Sombrero proyectado en 3D: copa redonda, ala caída y
+  trencilla cosida en espiral, con cinta negra y moño al costado de atrás; barbuquejo pegado al
+  borde de la cara y anudado bajo el mentón. Pelo recogido hacia la nuca, de donde sale la
+  trenza de tres cabos. Pechera bordada con columna central simétrica, guarda de flores en el
+  escote y abalorios en dos vueltas; pañolón con guarda bordada en los bordes delanteros. En el
+  monte, la ruana va terciada sobre el hombro derecho y deja ver la manga abullonada.
 
 ## 4. Animación
 
@@ -88,7 +102,7 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
 |---|---|---|---|
 | Neutral | Mirada tranquila | Rubor de campo | Cabeza recta, brazos sueltos; parpadeo pausado |
 | Alerta | Ceja alzada, arruga de preocupación | Igual | Cabeza algo alzada, brazo adelantado, listo; parpadea más |
-| Miedo | Ojo muy abierto, blanco alrededor del iris, ceja arqueada, frente arrugada | Labios entreabiertos, gota de sudor, sin rubor | Cabeza atrás, codo pegado al cuerpo y mano al pecho (se aferra al pañolón o a la ruana); parpadeo rápido, a veces doble |
+| Miedo | Ojo muy abierto pero almendrado, blanco sobre el iris, ceja arqueada con la cabeza alzada, un pliegue entre las cejas | Boca entreabierta en óvalo (filo de los dientes de arriba), gota de sudor en la sien, sin rubor | Cabeza atrás, codo pegado al cuerpo y mano al pecho (se aferra al pañolón o a la ruana); parpadeo rápido, a veces doble |
 | Rabia | Ceja baja hacia la nariz, entrecejo, párpado recto y pesado | Labios apretados, comisura abajo, aleta de la nariz abierta, rubor intenso | Mentón abajo, brazos tensos hacia adelante; casi no parpadea (mirada fija) |
 | Duelo | Párpado pesado, mirada baja, ceja de tristeza, ojeras | Lágrima en tinta (sin color), comisura abajo, mentón tenso | Cabeza caída, brazos colgando sin fuerza; parpadeo lento |
 
@@ -100,7 +114,9 @@ Agachada, la postura solo mueve la cabeza: la mano de apoyo sigue en el suelo.
 
 ## 5. Pendientes [P]
 
-- Hex del rojo y de la paleta completa (hoja de estilo, doc 03 §6.1).
+- Color por acto (`../paleta.md` §11): sigue abierta la forma de apagarlo. Si se genera cada
+  escena con el croma de su acto, Rosalba necesitará variantes por acto; si se usa un filtro en
+  vivo, la cinta roja tendrá que salir de la pieza `trenza` a una pieza propia para no apagarse.
 - Fotografías de campesinas boyacenses de los años 40 que confirmen el traje.
 - Vista de frente de cuerpo entero (hoja completa del doc 03 §6.2).
 - Hombros y torso por expresión (hoy la postura mueve cabeza, brazos y trenza; el torso no es
