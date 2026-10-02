@@ -4,8 +4,9 @@
     {
       "name": "game-dev",
       "runtimeExecutable": "sh",
-      "runtimeArgs": ["-c", "cd game && PATH=\"$HOME/.nvm/versions/node/v24.21.0/bin:$PATH\" pnpm dev --port 5173 --strictPort"],
-      "port": 5173
+      "runtimeArgs": ["-c", "cd game && PATH=\"$HOME/.nvm/versions/node/v24.21.0/bin:$PATH\" pnpm dev --port \"${PORT:-5173}\" --strictPort"],
+      "port": 5173,
+      "autoPort": true
     }
   ]
 }
