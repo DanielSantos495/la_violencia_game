@@ -88,5 +88,9 @@ su **rama**; la carpeta principal queda para la integración y los chats sin ár
 | API de Phaser 4 | skills oficiales de Phaser (`scenes`, `tweens`, `loading-assets`, …); prevalecen sobre `phaser-core`/`phaser-arcade-physics` |
 | Elegir qué skill de gamedev aplica | `router`, luego `dialogue-systems`, `save-systems`, `game-feel`, `camera-systems`, `game-ui-ux`, `input-systems`, `audio-design`, `performance-optimization`, `prototype-fast` |
 | Arte generativo o piezas gráficas fuera del juego | `algorithmic-art`, `canvas-design` (subordinadas a `la-violencia-art`) |
+| Narrativa: escenas, diálogos, beats, decisiones, textos del Archivo | `la-violencia-narrativa` (orquesta `story-sense`, `dialogue`, `character-arc`, `interactive-fiction`, `perspectival-constellation` y demás de ficción; ver su Paso 0) |
+| Escribir, formatear o probar `.ink` | `ink-syntax`, `ink-style`, `ink-testing` |
 
-Las skills propias mandan sobre las genéricas en arte e historia.
+Las skills propias mandan sobre las genéricas en arte e historia. Las reglas de historia
+(`la-violencia-historia` y los docs) prevalecen sobre cualquier sugerencia creativa de una
+skill de terceros.
