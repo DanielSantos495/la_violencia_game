@@ -1,7 +1,7 @@
 {
   "nombre": "La Violencia — Tomo I",
   "version": "1.0",
-  "estado": "aprobada por Daniel 2026-10-02; pendientes: factores del guion de color y su implementación (paleta.md §11)",
+  "estado": "aprobada por Daniel 2026-10-02, con el guion de color y su implementación (paleta.md §5 y §11)",
   "documento": "planeacion/arte/tomo1/paleta.md",
   "distancia_min": 0.05,
   "distancia_reserva_min": 0.04,
