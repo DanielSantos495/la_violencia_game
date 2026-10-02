@@ -86,7 +86,10 @@ mismo punto, cada una en un contenedor articulado en su pivote (y anidada según
 a cuadro. La caminata es procedural: `poseCaminata()` (`game/src/core/animacion/caminata.ts`)
 calcula la pose y `caminar()` (`game/src/game/Caminata.ts`) la aplica; reutiliza esos ids
 (`pierna-*`, `brazo-*`, `antebrazo-*`, prendas) para que un personaje nuevo camine sin código
-extra. Para la API de tweens consulta la skill oficial `tweens`.
+extra. Con **falda larga** (Rosalba) las piernas no giran desde la cadera: usa la opción
+`faldaLarga` (pies que se deslizan bajo el ruedo, pivote de la pierna en el **tobillo**) y
+verifica con `pnpm art:walk <svg> --falda-larga`, que falla si en alguna fase asoma la canilla
+o un pie sale por detrás de la falda. Para la API de tweens consulta la skill oficial `tweens`.
 
 Poses que no salen de girar piezas (agacharse, caer, trepar) se **dibujan aparte** en otro
 SVG del mismo personaje, en el mismo marco y con el mismo punto de apoyo entre los pies.

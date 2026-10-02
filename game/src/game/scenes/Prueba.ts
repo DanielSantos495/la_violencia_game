@@ -6,6 +6,7 @@ import { VisorArchivo } from '../../ui/VisorArchivo.ts';
 import { Personaje } from '../Personaje.ts';
 import {
   APOYO_ROSALBA,
+  CAMINATA_ROSALBA,
   ROSALBA_MERCADO,
   ROSALBA_MONTE,
 } from '../personajes/rosalba.ts';
@@ -63,6 +64,7 @@ export class Prueba extends Scene {
       APOYO_ROSALBA,
       ROSALBA_MERCADO,
       'de-pie',
+      CAMINATA_ROSALBA,
     );
     mercado.raiz.setScale(0.65);
     void (async () => {
@@ -81,6 +83,7 @@ export class Prueba extends Scene {
       APOYO_ROSALBA,
       ROSALBA_MONTE,
       'de-pie',
+      CAMINATA_ROSALBA,
     );
     monte.raiz.setScale(0.9);
     if (import.meta.env.DEV) {

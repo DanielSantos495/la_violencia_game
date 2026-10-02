@@ -39,6 +39,21 @@ pnpm validate:archivo [--release] | ink:build | art:build | art:review <svg|atla
 
 Antes de dar algo por hecho: `lint`, `typecheck`, `test` y `build` en verde.
 
+## Trabajo en paralelo (varios chats)
+
+Daniel trabaja con varios chats a la vez sobre este mismo repo y la misma rama.
+
+- **Servidor de desarrollo:** levántalo con `preview_start` y la configuración `game-dev`
+  (`.claude/launch.json`). Tiene `autoPort`: si el 5173 está ocupado por otro chat, se asigna
+  otro puerto libre. Usa la URL que devuelve la herramienta; no asumas el 5173.
+- No detengas ni reinicies el servidor de otro chat. Cada chat usa el suyo; todos sirven los
+  mismos archivos, así que Vite recarga con los cambios de cualquier chat.
+- Desde una terminal: `pnpm dev --port <puerto libre>`.
+- **Commits:** añade solo tus archivos (`git add <rutas>`, nunca `git add .` ni carpetas
+  enteras de otros); revisa `git status` porque otro chat puede tener cambios sin commitear.
+- `art:build` regenera `public/generated/` para todos los servidores: si otro chat está
+  editando arte, coordina antes de regenerar.
+
 ## Skills
 
 | Cuándo | Skill |

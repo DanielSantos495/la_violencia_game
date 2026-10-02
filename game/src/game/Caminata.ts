@@ -3,7 +3,6 @@ import {
   type OpcionesCaminata,
   poseCaminata,
   velocidadCaminata,
-  ZANCADA_POR_DEFECTO,
 } from '../core/animacion/caminata.ts';
 
 /**
@@ -16,18 +15,23 @@ export interface Caminata {
   velocidad: number;
 }
 
+export type OpcionesCaminar = OpcionesCaminata & {
+  /** Duración de un ciclo completo (dos pasos) en ms. */
+  ciclo?: number;
+  /** Largo de pierna (cadera → suelo) en px del SVG; solo modo cadera. */
+  largoPierna?: number;
+};
+
 export function caminar(
   escena: Scene,
   contenedor: GameObjects.Container,
   piezas: Map<string, GameObjects.Container>,
-  {
-    ciclo = 1000,
-    largoPierna = 222,
-    ...opciones
-  }: OpcionesCaminata & { ciclo?: number; largoPierna?: number } = {},
+  { ciclo = 1000, largoPierna = 222, ...opciones }: OpcionesCaminar = {},
 ): Caminata {
   const yBase = contenedor.y;
-  const yInicial = new Map([...piezas].map(([id, p]) => [id, p.y]));
+  const reposo = new Map(
+    [...piezas].map(([id, p]) => [id, { x: p.x, y: p.y }]),
+  );
 
   const tween = escena.tweens.addCounter({
     from: 0,
@@ -40,20 +44,15 @@ export function caminar(
         const pieza = piezas.get(id);
         if (pieza) pieza.angle = angulo;
       }
-      for (const [id, px] of Object.entries(pose.levante)) {
-        const pieza = piezas.get(id);
-        if (pieza) pieza.y = (yInicial.get(id) ?? 0) - px;
+      for (const [id, pieza] of piezas) {
+        const r = reposo.get(id);
+        if (!r) continue;
+        pieza.x = r.x + (pose.avance[id] ?? 0);
+        pieza.y = r.y - (pose.levante[id] ?? 0);
       }
       contenedor.y = yBase - pose.rebote;
     },
   });
 
-  return {
-    tween,
-    velocidad: velocidadCaminata(
-      largoPierna,
-      ciclo,
-      opciones.zancada ?? ZANCADA_POR_DEFECTO,
-    ),
-  };
+  return { tween, velocidad: velocidadCaminata(ciclo, opciones, largoPierna) };
 }

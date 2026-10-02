@@ -434,8 +434,8 @@ guardar('rosalba.svg', encabezado('Rosalba Insuasty — de pie, traje de mercado
         'Pañolón negro con bordado y flecos, sombrero de caña con barbuquejo, collar de abalorios.') + f'''
 {piece('brazo-izq', '141 144', bi_up, 'Brazo izquierdo (lejano)')}
 {piece('antebrazo-izq', '145 202', bi_fore, 'Antebrazo y mano izquierdos; hijo de brazo-izq', extra=' data-padre="brazo-izq"')}
-{piece('pierna-izq', '138 250', alpargata(-24, lejana=True), 'Pierna izquierda (lejana): canilla y alpargata')}
-{piece('pierna-der', '150 250', alpargata(0), 'Pierna derecha: alpargata de fique, capellada labrada, galones con nudo en rosa')}
+{piece('pierna-izq', '133 462', alpargata(-24, lejana=True), 'Pierna izquierda (lejana): canilla y alpargata; pivote en el tobillo (pies bajo falda larga)')}
+{piece('pierna-der', '157 462', alpargata(0), 'Pierna derecha: alpargata de fique, capellada labrada, galones con nudo en rosa; pivote en el tobillo')}
 {piece('enagua', '146 232', enagua(), 'Enagua blanca de encaje que asoma desigual bajo la falda')}
 {piece('falda', '146 232', falda, 'Falda negra de frisa con cintas en el ruedo (tramas en lugar de color)')}
 {piece('torso', '146 232', torso, 'Torso: blusa blanca con pechera bordada y collar de abalorios')}
@@ -452,8 +452,8 @@ guardar('rosalba-monte.svg', encabezado('Rosalba Insuasty — de pie, variante m
         'Sin sombrero ni pañolón; ruana oscura y pequeña terciada sobre el hombro derecho (decisión de diseño). Barro en el ruedo; expresión alerta.') + f'''
 {piece('brazo-izq', '141 144', bi_up, 'Brazo izquierdo (lejano)')}
 {piece('antebrazo-izq', '145 202', bi_fore, 'Antebrazo y mano izquierdos; hijo de brazo-izq', extra=' data-padre="brazo-izq"')}
-{piece('pierna-izq', '138 250', alpargata(-24, lejana=True), 'Pierna izquierda (lejana)')}
-{piece('pierna-der', '150 250', alpargata(0), 'Pierna derecha')}
+{piece('pierna-izq', '133 462', alpargata(-24, lejana=True), 'Pierna izquierda (lejana)')}
+{piece('pierna-der', '157 462', alpargata(0), 'Pierna derecha')}
 {piece('enagua', '146 232', enagua_monte, 'Enagua con el ruedo embarrado')}
 {piece('falda', '146 232', falda_monte, 'Falda negra con salpicaduras de barro')}
 {piece('torso', '146 232', torso_monte, 'Torso: blusa bordada, sin collar')}

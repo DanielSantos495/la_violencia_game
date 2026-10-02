@@ -1,3 +1,4 @@
+import type { OpcionesCaminar } from '../Caminata.ts';
 import type { DefinicionPose } from '../Personaje.ts';
 
 /**
@@ -5,6 +6,16 @@ import type { DefinicionPose } from '../Personaje.ts';
  * dibujo; la jerarquía (data-padre) llega desde el atlas. Hoja de personaje:
  * planeacion/arte/tomo1/personajes/rosalba.md.
  */
+
+/**
+ * Cómo camina Rosalba: con falda casi al tobillo las piernas no giran desde la cadera; los
+ * pies se deslizan bajo el ruedo (pivote en el tobillo) con pasos cortos y rápidos.
+ * La guarda tests/rosalba-arte.test.ts comprueba que ninguna pierna salga de la falda.
+ */
+export const CAMINATA_ROSALBA: OpcionesCaminar = {
+  faldaLarga: true,
+  ciclo: 800,
+};
 
 /** Punto de apoyo entre los pies, común a todas las poses (coordenadas del SVG). */
 export const APOYO_ROSALBA = { x: 150, y: 474 };
