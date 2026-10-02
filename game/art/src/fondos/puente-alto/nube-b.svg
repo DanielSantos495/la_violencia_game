@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="120" viewBox="0 0 420 120">
+  <!--
+    Puente Alto · nube (deriva despacio)
+    Capa: cielo (paralaje 0, 0 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Frame suelto: la escena lo desplaza en x (deriva) y lo repite al salir de cuadro.
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (grafito), rojo y azul enteros.
+    GENERADO por game/art/gen/puente_alto.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="t-fina" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#544f49" stroke-width="0.7"/></pattern>
+    <pattern id="t-media" width="3.6" height="3.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="3.6" stroke="#544f49" stroke-width="0.9"/></pattern>
+    <pattern id="t-cruz" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#544f49" stroke-width="0.9"/><line x1="0" y1="0" x2="4" y2="0" stroke="#544f49" stroke-width="0.9"/></pattern>
+    <pattern id="t-densa" width="2.8" height="2.8" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><line x1="0" y1="0" x2="0" y2="2.8" stroke="#544f49" stroke-width="1.2"/><line x1="0" y1="0" x2="2.8" y2="0" stroke="#544f49" stroke-width="1"/></pattern>
+    <pattern id="t-horiz" width="8" height="4" patternUnits="userSpaceOnUse"><line x1="0" y1="2" x2="8" y2="2" stroke="#544f49" stroke-width="0.8"/></pattern>
+    <pattern id="t-vert" width="4" height="8" patternUnits="userSpaceOnUse"><line x1="2" y1="0" x2="2" y2="8" stroke="#544f49" stroke-width="0.8"/></pattern>
+    <pattern id="t-puntos" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.8" fill="#544f49"/></pattern>
+    <pattern id="t-puntos-ralos" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.7" fill="#544f49"/><circle cx="5.5" cy="5.5" r="0.6" fill="#544f49"/></pattern>
+    <pattern id="t-madera" width="40" height="6" patternUnits="userSpaceOnUse"><path d="M0,3 C10,2 20,4 40,3" stroke="#544f49" stroke-width="0.6" fill="none"/></pattern>
+    <pattern id="t-tejido" width="6.5" height="6.5" patternUnits="userSpaceOnUse"><path d="M0,3.2 H6.5 M3.2,0 V6.5" stroke="#544f49" stroke-width="0.4"/></pattern>
+    <pattern id="t-madera-v" width="6" height="40" patternUnits="userSpaceOnUse"><path d="M3,0 C2,10 4,20 3,40" stroke="#544f49" stroke-width="0.6" fill="none"/></pattern>
+  </defs>
+<clipPath id="c-nube-b"><path d="M6,111 A50.4,50.4 0 0 1 50.8,55.2 A53.8,53.8 0 0 1 138,22.6 A51,51 0 0 1 217.8,13.3 A36.8,36.8 0 0 1 276.2,32.5 A73.8,73.8 0 0 1 387.7,56.5 A40.6,40.6 0 0 1 414,113 A120.2,120.2 0 0 1 337.6,115.2 A260.6,260.6 0 0 1 208.1,115.5 A185.1,185.1 0 0 1 85.7,114.1 A111.7,111.7 0 0 1 6,111 Z"/></clipPath>
+<path d="M6,111 A50.4,50.4 0 0 1 50.8,55.2 A53.8,53.8 0 0 1 138,22.6 A51,51 0 0 1 217.8,13.3 A36.8,36.8 0 0 1 276.2,32.5 A73.8,73.8 0 0 1 387.7,56.5 A40.6,40.6 0 0 1 414,113 A120.2,120.2 0 0 1 337.6,115.2 A260.6,260.6 0 0 1 208.1,115.5 A185.1,185.1 0 0 1 85.7,114.1 A111.7,111.7 0 0 1 6,111 Z" fill="#f4f0e1"/>
+<g clip-path="url(#c-nube-b)">
+<path d="M0,118 L0,65.6 Q51.4,58.8 102.7,64.1 Q156.9,52.4 211,64.8 Q264.7,55.6 318.3,68.5 Q352.9,51.8 387.4,68.6 Q403.7,52.2 420,64.9 L420,118 Z" fill="#deded9"/>
+<path d="M0,118 L0,65.6 Q51.4,58.8 102.7,64.1 Q156.9,52.4 211,64.8 Q264.7,55.6 318.3,68.5 Q352.9,51.8 387.4,68.6 Q403.7,52.2 420,64.9 L420,118 Z" fill="url(#t-fina)"/>
+<rect x="0" y="101.6" width="420" height="16.8" fill="url(#t-horiz)"/>
+</g>
+<path d="M57.8,87.9 A36.6,36.6 0 0 1 116.4,54.9 M144.4,54.1 A33.5,33.5 0 0 1 198,23.9 M222.5,60.9 A24.5,24.5 0 0 1 261.7,38.8 M285.1,92.7 A46.8,46.8 0 0 1 360,50.6" stroke="#544f49" stroke-width="0.5" fill="none"/>
+<path d="M6,111 A50.4,50.4 0 0 1 50.8,55.2 A53.8,53.8 0 0 1 138,22.6 A51,51 0 0 1 217.8,13.3 A36.8,36.8 0 0 1 276.2,32.5 A73.8,73.8 0 0 1 387.7,56.5 A40.6,40.6 0 0 1 414,113 A120.2,120.2 0 0 1 337.6,115.2 A260.6,260.6 0 0 1 208.1,115.5 A185.1,185.1 0 0 1 85.7,114.1 A111.7,111.7 0 0 1 6,111 Z" fill="none" stroke="#544f49" stroke-width="1" stroke-linejoin="round"/>
+</svg>

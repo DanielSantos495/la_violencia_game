@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="170" viewBox="0 0 620 170">
+  <!--
+    Puente Alto · nube (deriva despacio)
+    Capa: cielo (paralaje 0, 0 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Frame suelto: la escena lo desplaza en x (deriva) y lo repite al salir de cuadro.
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (grafito), rojo y azul enteros.
+    GENERADO por game/art/gen/puente_alto.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="t-fina" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#544f49" stroke-width="0.7"/></pattern>
+    <pattern id="t-media" width="3.6" height="3.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="3.6" stroke="#544f49" stroke-width="0.9"/></pattern>
+    <pattern id="t-cruz" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#544f49" stroke-width="0.9"/><line x1="0" y1="0" x2="4" y2="0" stroke="#544f49" stroke-width="0.9"/></pattern>
+    <pattern id="t-densa" width="2.8" height="2.8" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><line x1="0" y1="0" x2="0" y2="2.8" stroke="#544f49" stroke-width="1.2"/><line x1="0" y1="0" x2="2.8" y2="0" stroke="#544f49" stroke-width="1"/></pattern>
+    <pattern id="t-horiz" width="8" height="4" patternUnits="userSpaceOnUse"><line x1="0" y1="2" x2="8" y2="2" stroke="#544f49" stroke-width="0.8"/></pattern>
+    <pattern id="t-vert" width="4" height="8" patternUnits="userSpaceOnUse"><line x1="2" y1="0" x2="2" y2="8" stroke="#544f49" stroke-width="0.8"/></pattern>
+    <pattern id="t-puntos" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.8" fill="#544f49"/></pattern>
+    <pattern id="t-puntos-ralos" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.7" fill="#544f49"/><circle cx="5.5" cy="5.5" r="0.6" fill="#544f49"/></pattern>
+    <pattern id="t-madera" width="40" height="6" patternUnits="userSpaceOnUse"><path d="M0,3 C10,2 20,4 40,3" stroke="#544f49" stroke-width="0.6" fill="none"/></pattern>
+    <pattern id="t-tejido" width="6.5" height="6.5" patternUnits="userSpaceOnUse"><path d="M0,3.2 H6.5 M3.2,0 V6.5" stroke="#544f49" stroke-width="0.4"/></pattern>
+    <pattern id="t-madera-v" width="6" height="40" patternUnits="userSpaceOnUse"><path d="M3,0 C2,10 4,20 3,40" stroke="#544f49" stroke-width="0.6" fill="none"/></pattern>
+  </defs>
+<clipPath id="c-nube-a"><path d="M6,161 A49.2,49.2 0 0 1 36,93 A60.7,60.7 0 0 1 116,59.3 A54,54 0 0 1 199.8,55.3 A45.4,45.4 0 0 1 257.2,20.8 A57.3,57.3 0 0 1 340.7,40.8 A56.1,56.1 0 0 1 439.1,42.8 A50.3,50.3 0 0 1 510.2,62.5 A52,52 0 0 1 580.2,100 A43.5,43.5 0 0 1 614,163 A239.1,239.1 0 0 1 499.7,164.6 A365.9,365.9 0 0 1 325.7,163.9 A328.7,328.7 0 0 1 134.2,163.6 A275.4,275.4 0 0 1 6,161 Z"/></clipPath>
+<path d="M6,161 A49.2,49.2 0 0 1 36,93 A60.7,60.7 0 0 1 116,59.3 A54,54 0 0 1 199.8,55.3 A45.4,45.4 0 0 1 257.2,20.8 A57.3,57.3 0 0 1 340.7,40.8 A56.1,56.1 0 0 1 439.1,42.8 A50.3,50.3 0 0 1 510.2,62.5 A52,52 0 0 1 580.2,100 A43.5,43.5 0 0 1 614,163 A239.1,239.1 0 0 1 499.7,164.6 A365.9,365.9 0 0 1 325.7,163.9 A328.7,328.7 0 0 1 134.2,163.6 A275.4,275.4 0 0 1 6,161 Z" fill="#f4f0e1"/>
+<g clip-path="url(#c-nube-a)">
+<path d="M0,168 L0,94.6 Q76.1,86.5 152.2,91.3 Q203.7,74.7 255.1,95.4 Q321.8,83.7 388.6,96.4 Q446.3,83 504.1,97.5 Q562,75.5 620,98.8 L620,168 Z" fill="#deded9"/>
+<path d="M0,168 L0,94.6 Q76.1,86.5 152.2,91.3 Q203.7,74.7 255.1,95.4 Q321.8,83.7 388.6,96.4 Q446.3,83 504.1,97.5 Q562,75.5 620,98.8 L620,168 Z" fill="url(#t-fina)"/>
+<rect x="0" y="145.6" width="620" height="23.8" fill="url(#t-horiz)"/>
+</g>
+<path d="M263.9,81.8 A35.1,35.1 0 0 1 320,50.3 M348.6,86.1 A41.3,41.3 0 0 1 414.7,48.9" stroke="#544f49" stroke-width="0.5" fill="none"/>
+<path d="M6,161 A49.2,49.2 0 0 1 36,93 A60.7,60.7 0 0 1 116,59.3 A54,54 0 0 1 199.8,55.3 A45.4,45.4 0 0 1 257.2,20.8 A57.3,57.3 0 0 1 340.7,40.8 A56.1,56.1 0 0 1 439.1,42.8 A50.3,50.3 0 0 1 510.2,62.5 A52,52 0 0 1 580.2,100 A43.5,43.5 0 0 1 614,163 A239.1,239.1 0 0 1 499.7,164.6 A365.9,365.9 0 0 1 325.7,163.9 A328.7,328.7 0 0 1 134.2,163.6 A275.4,275.4 0 0 1 6,161 Z" fill="none" stroke="#544f49" stroke-width="1" stroke-linejoin="round"/>
+</svg>
