@@ -29,8 +29,8 @@ Ante cualquier duda de diseño, historia o arte, lee el doc correspondiente en `
   guionizados, con control directo y coste narrativo; nunca contra víctimas reales
   (doc 02 §1 regla 1, doc 04 §5).
 - **Arte:** tinta y trama sobre papel hueso; rojo liberal y azul conservador como únicos
-  acentos; violencia explícita pero sin sangre roja (tinta y trama); lo [P] de época no se
-  dibuja como final (doc 03).
+  acentos; la sangre es roja solo un instante (orgánica, con textura) y se oxida a tinta
+  negra; lo [P] de época no se dibuja como final (doc 03).
 
 ## Comandos (en `game/`, Node 24.21.0 + pnpm 11)
 
@@ -88,5 +88,9 @@ su **rama**; la carpeta principal queda para la integración y los chats sin ár
 | API de Phaser 4 | skills oficiales de Phaser (`scenes`, `tweens`, `loading-assets`, …); prevalecen sobre `phaser-core`/`phaser-arcade-physics` |
 | Elegir qué skill de gamedev aplica | `router`, luego `dialogue-systems`, `save-systems`, `game-feel`, `camera-systems`, `game-ui-ux`, `input-systems`, `audio-design`, `performance-optimization`, `prototype-fast` |
 | Arte generativo o piezas gráficas fuera del juego | `algorithmic-art`, `canvas-design` (subordinadas a `la-violencia-art`) |
+| Narrativa: escenas, diálogos, beats, decisiones, textos del Archivo | `la-violencia-narrativa` (orquesta `story-sense`, `dialogue`, `character-arc`, `interactive-fiction`, `perspectival-constellation` y demás de ficción; ver su Paso 0) |
+| Escribir, formatear o probar `.ink` | `ink-syntax`, `ink-style`, `ink-testing` |
 
-Las skills propias mandan sobre las genéricas en arte e historia.
+Las skills propias mandan sobre las genéricas en arte e historia. Las reglas de historia
+(`la-violencia-historia` y los docs) prevalecen sobre cualquier sugerencia creativa de una
+skill de terceros.
