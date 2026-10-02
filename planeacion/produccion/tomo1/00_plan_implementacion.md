@@ -10,6 +10,10 @@
 | 04 | Documento técnico | Plataforma web + escritorio, Phaser 4, stack, arquitectura, combate, episodios, esquema del Archivo |
 | 05 | Prompt de setup desde cero | Bloques de configuración del proyecto en `game/` con Claude Code y decisiones del Bloque 0 |
 | 06 | Prompt de skills de narrativa | Skills de narrativa (terceros y `la-violencia-narrativa`), diagnóstico del guion, herramientas narrativas y primera pasada de pulido |
+| 07 | Mapa de decisiones | Dónde se escribe y lee cada variable, consecuencias visibles, finales y huecos |
+| 08 | Cronología cruzada | Dónde está cada jugable por fecha, qué sabe, huecos y oportunidades de cruce |
+| 09 | Fichas de personaje | Deseo, necesidad, miedo, contradicción, secreto y voz de jugables y secundarios |
+| 10 | Registro de propuestas | Cambios propuestos, estado (propuesto / aprobado / descartado) y motivo |
 
 ---
 

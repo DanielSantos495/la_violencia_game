@@ -12,7 +12,7 @@
 | Línea | Tinta negra de grosor variable: gruesa en siluetas y primeros planos, fina en fondos |
 | Relleno | Manchas planas de negro; grises por trama (rayado o puntos de semitono), sin degradados complejos |
 | Papel | Fondo color hueso con textura leve de papel de prensa |
-| Color | Solo **rojo liberal** y **azul conservador**: pañuelos, banderas, afiches, fachadas de tiendas partidistas. El color cuenta la división |
+| Color | Solo **rojo liberal** y **azul conservador**: pañuelos, banderas, afiches, fachadas de tiendas partidistas. El color cuenta la división. Única excepción: la sangre, roja solo un instante (ver "Violencia") |
 | Encuadre de juego | Plano lateral con 2–3 capas de fondo en paralaje |
 | Viñetas | Las escenas de guion se presentan como páginas de cómic: viñetas que aparecen en secuencia, globos de texto, onomatopeyas mínimas |
 | Modo registro (Custodia) | Al fotografiar, la escena se congela en una viñeta con marco de foto de época y trama de semitono más densa |
@@ -21,7 +21,7 @@
 ### Violencia (tono bélico sin espectáculo)
 - La guerra se muestra: combates, incendios, muertos, desplazamiento. No se omite.
 - **Más explícita desde el 01-oct-2026:** heridas, sangre y muertos se dibujan de forma visible cuando la escena lo pide, siempre por su peso y no como espectáculo.
-- La sangre va en **tinta negra y trama**, no en rojo: el rojo sigue reservado al partido liberal y así no compite **[provisional: confirmar con Daniel]**.
+- **La sangre se vuelve tinta** (decisión del 01-oct-2026). La sangre es roja solo en el instante: fresca, como mancha orgánica con textura (pincel seco, salpicadura, trama) y borde irregular, sobre cuerpos, ropa o suelo. En segundos se oxida y pasa a tinta negra; en las viñetas fijas del después ya es negra. El rojo partidista, en cambio, es siempre plano, de imprenta, con borde limpio y solo en objetos (pañuelos, banderas, afiches, fachadas). La diferencia es de forma, textura y tiempo, no solo de matiz (sirve también a jugadores con daltonismo). Lectura: la violencia se convierte en registro, la tinta con la que se escribe la historia.
 - La violencia contra civiles puede ser jugable en momentos guionizados (doc 02 §1 regla 1); el después se cierra en viñetas fijas (antes/después, humo, objetos abandonados).
 - Muertos: cuerpos visibles cuando la escena lo pide; rostros de víctimas nunca identificables.
 
