@@ -44,6 +44,7 @@ src/
   ui/           DOM sobre el canvas: globos, visor del Archivo
 content/ink/    guion (.ink)            content/archivo/  entradas del Archivo (.json)
 art/src/        SVG fuente              art/build/        generado, no se edita
+art/gen/        generadores de SVG por personaje (python3 sin dependencias)
 audio/src/      fuentes de audio        tools/            scripts de build
 tests/          Vitest
 ```

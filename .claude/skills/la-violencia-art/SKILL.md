@@ -88,6 +88,13 @@ calcula la pose y `caminar()` (`game/src/game/Caminata.ts`) la aplica; reutiliza
 (`pierna-*`, `brazo-*`, `antebrazo-*`, prendas) para que un personaje nuevo camine sin código
 extra. Para la API de tweens consulta la skill oficial `tweens`.
 
+Poses que no salen de girar piezas (agacharse, caer, trepar) se **dibujan aparte** en otro
+SVG del mismo personaje, en el mismo marco y con el mismo punto de apoyo entre los pies.
+`Personaje` (`game/src/game/Personaje.ts`) cambia de pose con un aplastamiento breve hacia el
+suelo; las listas de piezas por pose van en `game/src/game/personajes/<personaje>.ts`.
+Si los SVG de un personaje se generan con un script (`game/art/gen/<personaje>.py`), edita
+el script y regenera: no edites el SVG generado.
+
 ## Pipeline (no edites PNG a mano)
 
 ```

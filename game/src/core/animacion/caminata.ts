@@ -28,13 +28,13 @@ export interface PoseCaminata {
   rebote: number;
 }
 
-export const ZANCADA_POR_DEFECTO = 8;
+export const ZANCADA_POR_DEFECTO = 12;
 
 export function poseCaminata(
   fase: number,
   {
     zancada = ZANCADA_POR_DEFECTO,
-    levantePie = 7,
+    levantePie = 9,
     rebote = 3.5,
   }: OpcionesCaminata = {},
 ): PoseCaminata {
@@ -49,10 +49,11 @@ export function poseCaminata(
       'antebrazo-der': -6 - 7 * (0.5 - 0.5 * Math.sin(fase - 0.7)),
       'antebrazo-izq': -6 - 7 * (0.5 + 0.5 * Math.sin(fase - 0.7)),
       cabeza: 0.8 * Math.sin(2 * fase + 0.5),
-      falda: 1.6 * Math.sin(fase - 0.9),
-      enagua: 2.2 * Math.sin(fase - 1.3),
+      falda: 2.4 * Math.sin(fase - 0.9),
+      enagua: 3.2 * Math.sin(fase - 1.3),
       panolon: 0.9 * Math.sin(2 * fase - 1.1) + 0.6 * Math.sin(fase - 1),
       ruana: 0.9 * Math.sin(2 * fase - 1.1),
+      'ruana-doblez': 0.9 * Math.sin(2 * fase - 1.1),
       trenza: 3.5 * Math.sin(fase - 1.7) + 1.5 * Math.sin(2 * fase - 1.2),
       zarcillo: 9 * Math.sin(2 * fase - 1.5),
     },

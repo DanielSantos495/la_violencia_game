@@ -3,10 +3,15 @@ import { ArchivoStore } from '../../core/archivo/ArchivoStore.ts';
 import { InkRunner } from '../../core/narrative/InkRunner.ts';
 import { Globos } from '../../ui/Globos.ts';
 import { VisorArchivo } from '../../ui/VisorArchivo.ts';
-import { caminar } from '../Caminata.ts';
+import { Personaje } from '../Personaje.ts';
+import {
+  APOYO_ROSALBA,
+  ROSALBA_MERCADO,
+  ROSALBA_MONTE,
+} from '../personajes/rosalba.ts';
 import { armarRecorte } from '../Recorte.ts';
 
-/** Escena de prueba del setup: figura SVG por piezas con tween, diálogo Ink en globos DOM y visor del Archivo. No es contenido del juego. */
+/** Escena de prueba del setup: personajes SVG por piezas animados, diálogo Ink en globos DOM y visor del Archivo. No es contenido del juego. */
 export class Prueba extends Scene {
   constructor() {
     super('Prueba');
@@ -49,39 +54,50 @@ export class Prueba extends Scene {
       ease: 'Sine.easeInOut',
     });
 
-    // Rosalba caminando de izquierda a derecha (piezas en orden de dibujo del SVG;
-    // la jerarquía antebrazo→brazo y sombrero/zarcillo→cabeza viene del atlas).
-    const rosalba = armarRecorte(
+    // Rosalba de mercado al fondo, cruzando en bucle.
+    const mercado = new Personaje(
       this,
-      -320,
-      420,
+      -200,
+      640,
       'arte',
-      'personajes/rosalba',
-      [
-        'brazo-izq',
-        'antebrazo-izq',
-        'pierna-izq',
-        'pierna-der',
-        'enagua',
-        'falda',
-        'torso',
-        'cabeza',
-        'zarcillo',
-        'sombrero',
-        'brazo-der',
-        'antebrazo-der',
-        'panolon',
-        'trenza',
-      ],
+      APOYO_ROSALBA,
+      ROSALBA_MERCADO,
+      'de-pie',
     );
-    const paso = caminar(this, rosalba.contenedor, rosalba.piezas);
-    const recorrido = 1940 - rosalba.contenedor.x;
-    this.tweens.add({
-      targets: rosalba.contenedor,
-      x: 1940,
-      duration: (recorrido / paso.velocidad) * 1000,
-      repeat: -1,
-    });
+    mercado.raiz.setScale(0.65);
+    void (async () => {
+      for (;;) {
+        mercado.raiz.x = -200;
+        await mercado.caminarHasta(2150);
+      }
+    })();
+
+    // Rosalba del monte: camina, se agacha a acechar, se levanta y sigue (sigilo, M2).
+    const monte = new Personaje(
+      this,
+      -200,
+      850,
+      'arte',
+      APOYO_ROSALBA,
+      ROSALBA_MONTE,
+      'de-pie',
+    );
+    monte.raiz.setScale(0.9);
+    if (import.meta.env.DEV) {
+      // Solo en desarrollo: permite inspeccionar la secuencia desde la consola del navegador.
+      Object.assign(globalThis, { __prueba: { monte, mercado } });
+    }
+    void (async () => {
+      for (;;) {
+        monte.raiz.x = -200;
+        await monte.caminarHasta(760);
+        await monte.cambiarPose('agachada');
+        monte.acechar();
+        await this.esperar(3500);
+        await monte.cambiarPose('de-pie');
+        await monte.caminarHasta(2150);
+      }
+    })();
 
     const archivo = new ArchivoStore(this.cache.json.get('archivo'));
     const visor = new VisorArchivo(capaUi);
@@ -98,6 +114,12 @@ export class Prueba extends Scene {
     this.events.once('shutdown', () => {
       globos.destruir();
       visor.destruir();
+    });
+  }
+
+  private esperar(ms: number): Promise<void> {
+    return new Promise((resolver) => {
+      this.time.delayedCall(ms, resolver);
     });
   }
 }

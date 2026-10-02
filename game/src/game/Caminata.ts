@@ -21,7 +21,7 @@ export function caminar(
   contenedor: GameObjects.Container,
   piezas: Map<string, GameObjects.Container>,
   {
-    ciclo = 1100,
+    ciclo = 1000,
     largoPierna = 222,
     ...opciones
   }: OpcionesCaminata & { ciclo?: number; largoPierna?: number } = {},

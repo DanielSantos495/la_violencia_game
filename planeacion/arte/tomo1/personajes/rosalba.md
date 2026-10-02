@@ -2,7 +2,8 @@
 
 > Entregable del doc 03 §6.2 (en curso: perfil lateral; faltan vista de frente y otros ángulos).
 > Personaje ficticio (doc 01). Arco y voz: doc 02 §3. Reglas de estilo: doc 03 §1.
-> Los SVG en `game/art/src/personajes/` son la fuente del dibujo; esta hoja fija las decisiones.
+> El dibujo se genera con `game/art/gen/rosalba.py` → `game/art/src/personajes/rosalba*.svg`;
+> esta hoja fija las decisiones.
 
 ## 1. Concepto
 
