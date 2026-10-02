@@ -41,9 +41,9 @@ También fija la escala y el suelo de la capa, como en una perspectiva simplific
 
 | Capa | Factor | px/m | Suelo (y) | Contenido |
 |---|---|---|---|---|
-| cielo | 0 | — | — | Cielo y nubes en trama; fijo |
-| lejos | 0,15 | 30 | 628 | Cerros y cordillera (el paisaje muy lejano se compone a ojo, no a escala) |
-| medio | 0,45 | 90 | 724 | Casas y árboles al fondo, la iglesia vista desde lejos |
+| cielo | 0 | — | — | Cielo, nubes que derivan y cordillera: a kilómetros el paisaje no se mueve (se compone a ojo, no a escala) |
+| lejos | 0,15 | 30 | 628 | Lo que está a decenas de metros: el otro lado de la plaza, casas e iglesia del fondo |
+| medio | 0,45 | 90 | 724 | Lo que está a unos 10 m: el mercado, la gente, la pila |
 | juego | 1 | 200 | 900 | Fachadas, suelo, objetos con los que se interactúa, personajes |
 | frente | 1,3 | 260 | 996 | Primer plano opcional (postes, ramas, matas) que pasa por delante; nunca tapa al personaje en un punto de decisión |
 
@@ -54,8 +54,11 @@ También fija la escala y el suelo de la capa, como en una perspectiva simplific
 - Un módulo mide como máximo **2048 px a @1x** por lado (4096 px a @2x, el tope de página del
   atlas). Los tramos que se repiten (suelo, cielo) se diseñan para empalmar sin costura.
 - Un atlas por escenario: `game/art/src/fondos/<escenario>/` (p. ej. `fondos/puente-alto`).
-- Valores de color: tinta y trama sobre papel (doc 03 §1). Las capas lejanas llevan menos
-  contraste y trazo más fino que el plano de juego (doc 03 §1: línea fina en fondos).
+- Color: paleta del juego (`paleta.md`, datos en `game/art/paleta.json`): lavados bajo la tinta y
+  la trama. Perspectiva aérea (paleta.md §6.4): el lavado se diluye hacia el papel según los px/m
+  de la capa (100 % en juego y frente, ≈75 % en medio, ≈55 % en lejos, 35–60 % en el cielo) y la
+  línea pasa de tinta a grafito en lejos y cielo. El rojo y el azul de partido no se diluyen.
+  Las capas lejanas llevan además trazo más fino (doc 03 §1: línea fina en fondos).
 
 ## 5. Pendientes
 
