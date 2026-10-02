@@ -75,13 +75,18 @@ Convención del pipeline (`game/tools/art-build.ts`):
   `pierna-izq`, `pierna-der`, `ruana`, `sombrero`. Detalles internos pueden llevar ids
   propios dentro de la pieza (`ojo-izq`, `ceja-der`), pero no cambies un id publicado:
   el código y los tweens los referencian como frame `personajes/<personaje>/<id>`.
+- Si una pieza cuelga de otra (antebrazo → brazo, zarcillo o sombrero → cabeza), añade
+  `data-padre="<id>"`; el padre se declara antes y el hijo hereda su movimiento en Phaser.
 - El orden en el documento es el orden de dibujo (lo primero queda detrás).
 - `<defs>` compartidas (tramas) arriba; SVGO conserva ids, grupos y `data-*`.
 
 En Phaser se arma con `armarRecorte()` (`game/src/game/Recorte.ts`): todas las piezas en el
-mismo punto, cada una con su pivote como origen. Las animaciones son **tweens de Phaser**
-sobre esas piezas (ángulo en articulaciones, leve vaivén del contenedor), no cuadro a
-cuadro. Para la API de tweens consulta la skill oficial `tweens`.
+mismo punto, cada una en un contenedor articulado en su pivote (y anidada según
+`data-padre`). Las animaciones son **tweens de Phaser** sobre esas articulaciones, no cuadro
+a cuadro. La caminata es procedural: `poseCaminata()` (`game/src/core/animacion/caminata.ts`)
+calcula la pose y `caminar()` (`game/src/game/Caminata.ts`) la aplica; reutiliza esos ids
+(`pierna-*`, `brazo-*`, `antebrazo-*`, prendas) para que un personaje nuevo camine sin código
+extra. Para la API de tweens consulta la skill oficial `tweens`.
 
 ## Pipeline (no edites PNG a mano)
 
@@ -93,6 +98,9 @@ art/src/**/*.svg → SVGO → PNG @1x/@2x → atlas JSON Hash (art/build, public
 - `pnpm run art:review <ruta.svg | art/build/atlas@1x.json>` crea un PNG de revisión en
   `art/build/revision/` con cajas y pivotes. Ábrelo (Read) para inspeccionarlo antes de
   dar un asset por bueno.
+- `pnpm run art:walk <personaje.svg> [fases]` crea la hoja del ciclo de caminata
+  (`art/build/revision/<nombre>-caminata.png`) con la misma pose que usa el juego: revisa
+  apoyo de pies, contrafase de brazos y que las prendas no se despeguen.
 - Las referencias de época se usan solo para dibujar; las fotos reales con licencia viven
   en el Archivo, no en el arte del juego (doc 03 §4).
 

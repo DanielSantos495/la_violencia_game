@@ -49,7 +49,8 @@ export class Prueba extends Scene {
       ease: 'Sine.easeInOut',
     });
 
-    // Rosalba caminando de izquierda a derecha (piezas en orden de dibujo del SVG).
+    // Rosalba caminando de izquierda a derecha (piezas en orden de dibujo del SVG;
+    // la jerarquía antebrazo→brazo y sombrero/zarcillo→cabeza viene del atlas).
     const rosalba = armarRecorte(
       this,
       -320,
@@ -58,24 +59,27 @@ export class Prueba extends Scene {
       'personajes/rosalba',
       [
         'brazo-izq',
+        'antebrazo-izq',
         'pierna-izq',
         'pierna-der',
+        'enagua',
         'falda',
         'torso',
         'cabeza',
-        'ruana',
-        'trenza',
-        'brazo-der',
-        'ruana-doblez',
-        'panuelo',
+        'zarcillo',
         'sombrero',
+        'brazo-der',
+        'antebrazo-der',
+        'panolon',
+        'trenza',
       ],
     );
-    caminar(this, rosalba.contenedor, rosalba.piezas);
+    const paso = caminar(this, rosalba.contenedor, rosalba.piezas);
+    const recorrido = 1940 - rosalba.contenedor.x;
     this.tweens.add({
       targets: rosalba.contenedor,
       x: 1940,
-      duration: 16000,
+      duration: (recorrido / paso.velocidad) * 1000,
       repeat: -1,
     });
 

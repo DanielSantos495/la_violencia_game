@@ -111,3 +111,33 @@ describe('rasterizar y empaquetar', () => {
     }
   });
 });
+
+describe('jerarquía de piezas (data-padre)', () => {
+  const conPadre = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <g id="brazo" data-pieza="" data-pivote="50 10"><rect x="45" y="10" width="10" height="40"/></g>
+    <g id="antebrazo" data-pieza="" data-pivote="50 50" data-padre="brazo"><rect x="45" y="50" width="10" height="40"/></g>
+  </svg>`;
+
+  it('pasa el padre al frame fuente y al JSON del atlas', () => {
+    const frames = framesDeSvg(conPadre, 'p');
+    expect(frames.map((f) => f.padre)).toEqual([null, 'brazo']);
+    const atlas = empaquetar(
+      frames,
+      frames.map((f) => rasterizar(f, 1)),
+      1,
+      'atlas@1x.png',
+    );
+    expect(atlas.json.frames['p/antebrazo']?.padre).toBe('brazo');
+    expect(atlas.json.frames['p/brazo']?.padre).toBeUndefined();
+  });
+
+  it('exige que el padre exista y se declare antes', () => {
+    const invertido = conPadre.replace(
+      'data-padre="brazo"',
+      'data-padre="mano"',
+    );
+    expect(() => framesDeSvg(invertido, 'p')).toThrow(
+      'no es una pieza declarada antes',
+    );
+  });
+});

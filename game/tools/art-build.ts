@@ -4,7 +4,8 @@
 // Convención de los SVG fuente:
 // - Raíz con viewBox; 1 unidad = 1 px a @1x.
 // - Personajes por piezas (cut-out): cada pieza es un <g id="…" data-pieza> y opcionalmente
-//   data-pivote="x y" (en coordenadas del viewBox) para rotar en tweens.
+//   data-pivote="x y" (en coordenadas del viewBox) para rotar en tweens, y data-padre="id"
+//   si cuelga de otra pieza (antebrazo → brazo); el padre se declara antes que el hijo.
 //   Frame: "<archivo>/<id>". Sin piezas, el archivo entero es un frame: "<archivo>".
 // - Las piezas se exportan recortadas (trimmed) conservando su posición en el personaje,
 //   así que todas se colocan en el mismo x,y y la figura se arma sola.
@@ -46,6 +47,7 @@ export const configSvgo: Config = {
 export interface Pieza {
   id: string;
   pivote: { x: number; y: number } | null;
+  padre: string | null;
 }
 
 export interface FrameFuente {
@@ -53,6 +55,8 @@ export interface FrameFuente {
   /** SVG con solo esta pieza (y las defs compartidas). */
   svg: string;
   pivote: { x: number; y: number } | null;
+  /** Id de la pieza de la que cuelga (data-padre), o null. */
+  padre: string | null;
   /** Tamaño del viewBox del archivo (tamaño de origen del frame a @1x). */
   origen: { w: number; h: number };
 }
@@ -101,7 +105,18 @@ function listarPiezas(svg: string, archivo: string): Pieza[] {
                   `${archivo}: data-pivote inválido en "${id}" (formato "x y")`,
                 );
               }
-              piezas.push({ id, pivote });
+              const padre = n.attributes['data-padre'] ?? null;
+              if (padre !== null && !piezas.some((p) => p.id === padre)) {
+                throw new Error(
+                  `${archivo}: data-padre "${padre}" de "${id}" no es una pieza declarada antes`,
+                );
+              }
+              if (padre !== null && !pivote) {
+                throw new Error(
+                  `${archivo}: "${id}" tiene data-padre pero no data-pivote`,
+                );
+              }
+              piezas.push({ id, pivote, padre });
             },
           },
         }),
@@ -135,11 +150,12 @@ export function framesDeSvg(fuente: string, nombreBase: string): FrameFuente[] {
   const origen = leerViewBox(svg, nombreBase);
   const piezas = listarPiezas(svg, nombreBase);
   if (piezas.length === 0)
-    return [{ nombre: nombreBase, svg, pivote: null, origen }];
+    return [{ nombre: nombreBase, svg, pivote: null, padre: null, origen }];
   return piezas.map((p) => ({
     nombre: `${nombreBase}/${p.id}`,
     svg: aislarPieza(svg, p.id),
     pivote: p.pivote,
+    padre: p.padre,
     origen,
   }));
 }
@@ -184,6 +200,8 @@ export interface FrameAtlas {
   spriteSourceSize: { x: number; y: number; w: number; h: number };
   sourceSize: { w: number; h: number };
   pivot?: { x: number; y: number };
+  /** Pieza padre (data-padre); Phaser la expone en frame.customData.padre. */
+  padre?: string;
 }
 
 export interface Atlas {
@@ -238,6 +256,7 @@ export function empaquetar(
         x: f.pivote.x / f.origen.w,
         y: f.pivote.y / f.origen.h,
       };
+    if (f.padre) entrada.padre = f.padre;
     jsonFrames[r.nombre] = entrada;
     imagenes.push(
       `<image x="${rect.x}" y="${rect.y}" width="${r.ancho}" height="${r.alto}" href="data:image/png;base64,${r.png.toString('base64')}"/>`,

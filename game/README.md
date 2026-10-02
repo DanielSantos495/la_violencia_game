@@ -29,6 +29,7 @@ pnpm install --frozen-lockfile
 | `pnpm ink:build` | `content/ink/*.ink` → `public/generated/ink/*.json` |
 | `pnpm art:build` | `art/src/**/*.svg` → SVGO → PNG @1x/@2x → atlas (`art/build/`, `public/generated/art/`) |
 | `pnpm art:review <svg\|atlas.json>` | PNG de revisión en `art/build/revision/` |
+| `pnpm art:walk <personaje.svg> [fases]` | Hoja del ciclo de caminata en `art/build/revision/` |
 
 Los scripts de `tools/` son TypeScript ejecutado por Node 24 sin transpilar (solo sintaxis
 borrable: `erasableSyntaxOnly`).
