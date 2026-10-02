@@ -27,8 +27,8 @@ pnpm install --frozen-lockfile
 | `pnpm test` | Vitest |
 | `pnpm validate:archivo [--release]` | Valida `content/archivo/*.json`; `--release` excluye pendientes, licencias no concedidas y `arch-prueba-*` |
 | `pnpm ink:build` | `content/ink/*.ink` → `public/generated/ink/*.json` |
-| `pnpm art:build` | `art/src/**/*.svg` → SVGO → PNG @1x/@2x → atlas (`art/build/`, `public/generated/art/`) |
-| `pnpm art:review <svg\|atlas.json>` | PNG de revisión en `art/build/revision/` |
+| `pnpm art:build` | `art/src/**/*.svg` → SVGO → PNG @1x/@2x → un multiatlas por carpeta (`art/build/atlas/`, `public/generated/art/`) |
+| `pnpm art:review <svg\|art/build/atlas/<grupo>@1x.json>` | PNG de revisión en `art/build/revision/` |
 | `pnpm art:walk <personaje.svg> [fases] [--falda-larga]` | Hoja del ciclo de caminata en `art/build/revision/`; con `--falda-larga` falla si una pierna sale de la falda |
 
 Los scripts de `tools/` son TypeScript ejecutado por Node 24 sin transpilar (solo sintaxis

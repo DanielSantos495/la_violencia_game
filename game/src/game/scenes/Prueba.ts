@@ -3,6 +3,7 @@ import { ArchivoStore } from '../../core/archivo/ArchivoStore.ts';
 import { InkRunner } from '../../core/narrative/InkRunner.ts';
 import { Globos } from '../../ui/Globos.ts';
 import { VisorArchivo } from '../../ui/VisorArchivo.ts';
+import { cargarAtlas } from '../arte.ts';
 import { Personaje } from '../Personaje.ts';
 import {
   APOYO_ROSALBA,
@@ -21,11 +22,7 @@ export class Prueba extends Scene {
   preload(): void {
     this.load.json('ink-prueba', 'generated/ink/prueba.json');
     this.load.json('archivo', 'generated/archivo/indice.json');
-    this.load.atlas(
-      'arte',
-      'generated/art/atlas@1x.png',
-      'generated/art/atlas@1x.json',
-    );
+    cargarAtlas(this, 'personajes', 'prueba');
   }
 
   create(): void {
@@ -33,7 +30,7 @@ export class Prueba extends Scene {
     if (!capaUi) throw new Error('Falta el contenedor #ui');
 
     this.cameras.main.setBackgroundColor('#ece4d0');
-    const figura = armarRecorte(this, 860, 300, 'arte', 'prueba/figura', [
+    const figura = armarRecorte(this, 860, 300, 'prueba', 'prueba/figura', [
       'torso',
       'cabeza',
       'brazo',
@@ -60,7 +57,7 @@ export class Prueba extends Scene {
       this,
       -200,
       640,
-      'arte',
+      'personajes',
       APOYO_ROSALBA,
       ROSALBA_MERCADO,
       'de-pie',
@@ -79,7 +76,7 @@ export class Prueba extends Scene {
       this,
       -200,
       850,
-      'arte',
+      'personajes',
       APOYO_ROSALBA,
       ROSALBA_MONTE,
       'de-pie',
