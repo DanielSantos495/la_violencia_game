@@ -67,6 +67,10 @@ su **rama**; la carpeta principal queda para la integración y los chats sin ár
   (`.claude/launch.json`). Tiene `autoPort`: si el 5173 está ocupado por otro chat, se asigna
   otro puerto libre; usa la URL que devuelve la herramienta. No detengas ni reinicies el
   servidor de otro chat. Desde una terminal: `pnpm dev --port <puerto libre>`.
+  **Ojo en un worktree:** `game-dev` se ejecuta desde la carpeta principal (sirve
+  `la_violencia_game`, no el worktree). En un worktree arranca el servidor en `game/` con
+  `pnpm exec vite --port <libre> --strictPort` (en segundo plano) y abre la URL con
+  `preview_start` + `url`. Comprueba qué carpeta sirve antes de verificar nada.
 - **Commits:** `git add <rutas>` de tu territorio, nunca `git add .` ni carpetas enteras;
   revisa `git status`, otro chat puede tener cambios sin commitear en la misma carpeta.
 - **Stash:** la pila de `git stash` es común a todos los worktrees; no uses `git stash` sin
