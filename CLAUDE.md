@@ -29,8 +29,8 @@ Ante cualquier duda de diseño, historia o arte, lee el doc correspondiente en `
   guionizados, con control directo y coste narrativo; nunca contra víctimas reales
   (doc 02 §1 regla 1, doc 04 §5).
 - **Arte:** tinta y trama sobre papel hueso; rojo liberal y azul conservador como únicos
-  acentos; violencia explícita pero sin sangre roja (tinta y trama); lo [P] de época no se
-  dibuja como final (doc 03).
+  acentos; la sangre es roja solo un instante (orgánica, con textura) y se oxida a tinta
+  negra; lo [P] de época no se dibuja como final (doc 03).
 
 ## Comandos (en `game/`, Node 24.21.0 + pnpm 11)
 
