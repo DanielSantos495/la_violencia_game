@@ -33,7 +33,7 @@ export const ESCALA_ROSALBA = escalaPersonaje(
  */
 export const CAMINATA_ROSALBA: OpcionesCaminar = {
   faldaLarga: true,
-  ciclo: 800,
+  ciclo: 740,
 };
 
 /**
