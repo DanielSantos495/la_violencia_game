@@ -2,6 +2,7 @@ import { Resvg } from '@resvg/resvg-js';
 import { optimize } from 'svgo';
 import { describe, expect, it } from 'vitest';
 import {
+  type Atlas,
   configSvgo,
   empaquetar,
   framesDeSvg,
@@ -67,6 +68,15 @@ const definido = <T>(v: T | undefined): T => {
   return v;
 };
 
+/** Busca un frame en cualquier página del multiatlas; devuelve también el índice de página. */
+const buscar = (atlas: Atlas, nombre: string) => {
+  for (const [pagina, t] of atlas.json.textures.entries()) {
+    const frame = t.frames.find((f) => f.filename === nombre);
+    if (frame) return { frame, pagina };
+  }
+  throw new Error(`frame ${nombre} no está en el atlas`);
+};
+
 describe('rasterizar y empaquetar', () => {
   const frames = framesDeSvg(svg, 'p/fig');
 
@@ -77,38 +87,86 @@ describe('rasterizar y empaquetar', () => {
     expect([r2.ancho, r2.alto]).toEqual([60, 60]);
   });
 
-  it('genera JSON Hash de Phaser con trim, tamaño de origen y pivote normalizado', () => {
+  it('genera un multiatlas de Phaser con trim, tamaño de origen y pivote normalizado', () => {
     const rasters = frames.map((f) => rasterizar(f, 2));
-    const atlas = empaquetar(frames, rasters, 2, 'atlas@2x.png');
-    const cuerpo = atlas.json.frames['p/fig/cuerpo'];
-    expect(cuerpo?.trimmed).toBe(true);
-    expect(cuerpo?.sourceSize).toEqual({ w: 200, h: 200 });
-    expect(cuerpo?.spriteSourceSize).toMatchObject({ x: 20, y: 80 });
-    expect(cuerpo?.pivot).toEqual({ x: 0.5, y: 0.8 });
-    expect(atlas.json.frames['p/fig/cabeza']?.pivot).toBeUndefined();
+    const atlas = empaquetar(frames, rasters, 2, 'p@2x');
+    expect(atlas.json.textures.map((t) => t.image)).toEqual(['p@2x-0.png']);
+    const { frame: cuerpo } = buscar(atlas, 'p/fig/cuerpo');
+    expect(cuerpo.trimmed).toBe(true);
+    expect(cuerpo.sourceSize).toEqual({ w: 200, h: 200 });
+    expect(cuerpo.spriteSourceSize).toMatchObject({ x: 20, y: 80 });
+    expect(cuerpo.pivot).toEqual({ x: 0.5, y: 0.8 });
+    expect(buscar(atlas, 'p/fig/cabeza').frame.pivot).toBeUndefined();
   });
 
   it('el atlas copia los píxeles de cada frame sin remuestrear', () => {
     const rasters = frames.map((f) => rasterizar(f, 1));
-    const atlas = empaquetar(frames, rasters, 1, 'atlas@1x.png');
-    const pixAtlas = new Resvg(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${(atlas.json.meta.size as { w: number }).w}" height="${(atlas.json.meta.size as { h: number }).h}"><image href="data:image/png;base64,${atlas.png.toString('base64')}" width="100%" height="100%"/></svg>`,
-    ).render();
-    const anchoAtlas = pixAtlas.width;
+    const atlas = empaquetar(frames, rasters, 1, 'p@1x');
     for (const r of rasters) {
-      const f = definido(atlas.json.frames[r.nombre]).frame;
+      const { frame, pagina } = buscar(atlas, r.nombre);
+      const t = definido(atlas.json.textures[pagina]);
+      const pixAtlas = new Resvg(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${t.size.w}" height="${t.size.h}"><image href="data:image/png;base64,${definido(atlas.pngs[pagina]).toString('base64')}" width="100%" height="100%"/></svg>`,
+      ).render();
       const pixFrame = new Resvg(
         `<svg xmlns="http://www.w3.org/2000/svg" width="${r.ancho}" height="${r.alto}"><image href="data:image/png;base64,${r.png.toString('base64')}" width="${r.ancho}" height="${r.alto}"/></svg>`,
       ).render().pixels;
+      const f = frame.frame;
       for (let y = 0; y < f.h; y++) {
         const filaAtlas = pixAtlas.pixels.subarray(
-          ((f.y + y) * anchoAtlas + f.x) * 4,
-          ((f.y + y) * anchoAtlas + f.x + f.w) * 4,
+          ((f.y + y) * pixAtlas.width + f.x) * 4,
+          ((f.y + y) * pixAtlas.width + f.x + f.w) * 4,
         );
         const filaFrame = pixFrame.subarray(y * f.w * 4, (y + 1) * f.w * 4);
         expect(Buffer.compare(filaAtlas, filaFrame)).toBe(0);
       }
     }
+  });
+
+  it('reparte en varias páginas cuando no cabe en una', () => {
+    const tres = framesDeSvg(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50">
+        <g id="a" data-pieza=""><rect x="0" y="0" width="40" height="40"/></g>
+        <g id="b" data-pieza=""><rect x="50" y="0" width="40" height="40"/></g>
+        <g id="c" data-pieza=""><rect x="100" y="0" width="40" height="40"/></g>
+      </svg>`,
+      't',
+    );
+    // Páginas de 64 px (60 útiles): dos cuadrados de 40 no caben juntos.
+    const atlas = empaquetar(
+      tres,
+      tres.map((f) => rasterizar(f, 1)),
+      1,
+      't@1x',
+      { lado: 64 },
+    );
+    expect(atlas.json.textures.length).toBe(3);
+    expect(atlas.pngs.length).toBe(3);
+    expect(atlas.json.textures.map((t) => t.image)).toEqual([
+      't@1x-0.png',
+      't@1x-1.png',
+      't@1x-2.png',
+    ]);
+    for (const t of atlas.json.textures) {
+      for (const f of t.frames) {
+        expect(f.frame.x + f.frame.w).toBeLessThanOrEqual(t.size.w);
+        expect(f.frame.y + f.frame.h).toBeLessThanOrEqual(t.size.h);
+      }
+    }
+  });
+
+  it('exige un lado de página potencia de dos', () => {
+    const rasters = frames.map((f) => rasterizar(f, 1));
+    expect(() => empaquetar(frames, rasters, 1, 'p@1x', { lado: 100 })).toThrow(
+      'potencia de dos',
+    );
+  });
+
+  it('rechaza un frame más grande que una página, con un mensaje accionable', () => {
+    const rasters = frames.map((f) => rasterizar(f, 1));
+    expect(() => empaquetar(frames, rasters, 1, 'p@1x', { lado: 64 })).toThrow(
+      'no cabe en una página de 64 px',
+    );
   });
 });
 
@@ -125,10 +183,10 @@ describe('jerarquía de piezas (data-padre)', () => {
       frames,
       frames.map((f) => rasterizar(f, 1)),
       1,
-      'atlas@1x.png',
+      'p@1x',
     );
-    expect(atlas.json.frames['p/antebrazo']?.padre).toBe('brazo');
-    expect(atlas.json.frames['p/brazo']?.padre).toBeUndefined();
+    expect(buscar(atlas, 'p/antebrazo').frame.padre).toBe('brazo');
+    expect(buscar(atlas, 'p/brazo').frame.padre).toBeUndefined();
   });
 
   it('exige que el padre exista y se declare antes', () => {

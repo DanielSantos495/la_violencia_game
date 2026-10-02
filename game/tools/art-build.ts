@@ -1,4 +1,5 @@
-// Pipeline de arte (doc 03 §2): art/src/**/*.svg → SVGO → PNG @1x/@2x → atlas JSON Hash de Phaser.
+// Pipeline de arte (doc 03 §2): art/src/**/*.svg → SVGO → PNG @1x/@2x → un multiatlas de Phaser
+// por carpeta (convención en src/core/arte/atlas.ts).
 // Los PNG se generan siempre; nunca se editan a mano.
 //
 // Convención de los SVG fuente:
@@ -14,12 +15,18 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
+  rmSync,
   writeFileSync,
 } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { type BBox, Resvg } from '@resvg/resvg-js';
 import { MaxRectsPacker } from 'maxrects-packer';
 import { type Config, optimize, type XastElement } from 'svgo';
+import {
+  archivoDeGrupo,
+  grupoDe,
+  LADO_MAXIMO_ATLAS,
+} from '../src/core/arte/atlas.ts';
 
 export const ESCALAS = [1, 2] as const;
 
@@ -194,6 +201,7 @@ export function rasterizar(frame: FrameFuente, escala: number): FrameRaster {
 }
 
 export interface FrameAtlas {
+  filename: string;
   frame: { x: number; y: number; w: number; h: number };
   rotated: false;
   trimmed: true;
@@ -204,81 +212,118 @@ export interface FrameAtlas {
   padre?: string;
 }
 
-export interface Atlas {
-  png: Buffer;
-  json: { frames: Record<string, FrameAtlas>; meta: Record<string, unknown> };
+/** Una página (textura) de un multiatlas de Phaser. */
+export interface PaginaAtlas {
+  image: string;
+  format: 'RGBA8888';
+  size: { w: number; h: number };
+  scale: number;
+  frames: FrameAtlas[];
 }
 
-const MAX_ATLAS = 4096;
+/** Multiatlas de Phaser (`load.multiatlas`): una o más páginas bajo una misma clave. */
+export interface Atlas {
+  pngs: Buffer[];
+  json: { textures: PaginaAtlas[]; meta: { app: string; escala: number } };
+}
+
 const RELLENO = 2;
 
-/** Empaqueta los frames de una escala en un atlas (maxrects-packer) y lo compone con resvg. */
+/**
+ * Empaqueta los frames de una escala en un multiatlas (maxrects-packer) y compone cada
+ * página con resvg. Si no caben en una página de `lado` px se reparten en varias.
+ */
 export function empaquetar(
   frames: FrameFuente[],
   rasters: FrameRaster[],
   escala: number,
-  imagen: string,
+  nombreBase: string,
+  { lado = LADO_MAXIMO_ATLAS }: { lado?: number } = {},
 ): Atlas {
-  const packer = new MaxRectsPacker(MAX_ATLAS, MAX_ATLAS, RELLENO, {
+  // maxrects-packer con pot:true redondea la página a potencia de dos hacia abajo: con otro
+  // lado los frames se saldrían de la página y se solaparían.
+  if (!Number.isInteger(Math.log2(lado))) {
+    throw new Error(
+      `El lado del atlas debe ser potencia de dos (recibido ${lado})`,
+    );
+  }
+  const util = lado - 2 * RELLENO;
+  for (const r of rasters) {
+    if (r.ancho > util || r.alto > util) {
+      throw new Error(
+        `${r.nombre}: ${r.ancho}×${r.alto} px a @${escala}x no cabe en una página de ${lado} px; ` +
+          'divídelo en módulos o tramos (p. ej. capas de paralaje en segmentos)',
+      );
+    }
+  }
+  const packer = new MaxRectsPacker(lado, lado, RELLENO, {
     smart: true,
     pot: true,
     border: RELLENO,
   });
-  for (const r of rasters) packer.add(r.ancho, r.alto, r);
-  if (packer.bins.length !== 1)
-    throw new Error(`Los frames no caben en un atlas de ${MAX_ATLAS}px`);
-  const bin = packer.bins[0];
-  if (!bin) throw new Error('Atlas vacío');
+  // Orden estable (más altos primero, luego por nombre) para que el atlas sea reproducible.
+  const ordenados = [...rasters].sort(
+    (a, b) =>
+      b.alto - a.alto || b.ancho - a.ancho || a.nombre.localeCompare(b.nombre),
+  );
+  for (const r of ordenados) packer.add(r.ancho, r.alto, r);
+  if (packer.bins.length === 0) throw new Error('Atlas vacío');
 
-  const jsonFrames: Record<string, FrameAtlas> = {};
-  const imagenes: string[] = [];
-  for (const rect of bin.rects) {
-    const r = rect.data as FrameRaster;
-    const f = frames.find((x) => x.nombre === r.nombre);
-    if (!f) throw new Error(`Frame sin fuente: ${r.nombre}`);
-    const entrada: FrameAtlas = {
-      frame: { x: rect.x, y: rect.y, w: r.ancho, h: r.alto },
-      rotated: false,
-      trimmed: true,
-      spriteSourceSize: {
-        x: Math.round(r.recorte.x * escala),
-        y: Math.round(r.recorte.y * escala),
-        w: r.ancho,
-        h: r.alto,
-      },
-      sourceSize: {
-        w: Math.round(f.origen.w * escala),
-        h: Math.round(f.origen.h * escala),
-      },
-    };
-    if (f.pivote)
-      entrada.pivot = {
-        x: f.pivote.x / f.origen.w,
-        y: f.pivote.y / f.origen.h,
+  const fuentes = new Map(frames.map((f) => [f.nombre, f]));
+  const pngs: Buffer[] = [];
+  const textures = packer.bins.map((bin, i): PaginaAtlas => {
+    const paginaFrames: FrameAtlas[] = [];
+    const imagenes: string[] = [];
+    for (const rect of bin.rects) {
+      const r = rect.data as FrameRaster;
+      if (rect.x + r.ancho > bin.width || rect.y + r.alto > bin.height) {
+        throw new Error(`${r.nombre}: quedó fuera de la página ${i} del atlas`);
+      }
+      const f = fuentes.get(r.nombre);
+      if (!f) throw new Error(`Frame sin fuente: ${r.nombre}`);
+      const entrada: FrameAtlas = {
+        filename: r.nombre,
+        frame: { x: rect.x, y: rect.y, w: r.ancho, h: r.alto },
+        rotated: false,
+        trimmed: true,
+        spriteSourceSize: {
+          x: Math.round(r.recorte.x * escala),
+          y: Math.round(r.recorte.y * escala),
+          w: r.ancho,
+          h: r.alto,
+        },
+        sourceSize: {
+          w: Math.round(f.origen.w * escala),
+          h: Math.round(f.origen.h * escala),
+        },
       };
-    if (f.padre) entrada.padre = f.padre;
-    jsonFrames[r.nombre] = entrada;
-    imagenes.push(
-      `<image x="${rect.x}" y="${rect.y}" width="${r.ancho}" height="${r.alto}" href="data:image/png;base64,${r.png.toString('base64')}"/>`,
+      if (f.pivote)
+        entrada.pivot = {
+          x: f.pivote.x / f.origen.w,
+          y: f.pivote.y / f.origen.h,
+        };
+      if (f.padre) entrada.padre = f.padre;
+      paginaFrames.push(entrada);
+      imagenes.push(
+        `<image x="${rect.x}" y="${rect.y}" width="${r.ancho}" height="${r.alto}" href="data:image/png;base64,${r.png.toString('base64')}"/>`,
+      );
+    }
+    // Composición a escala 1:1 en posiciones enteras: resvg copia los píxeles sin remuestrear.
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${bin.width}" height="${bin.height}" viewBox="0 0 ${bin.width} ${bin.height}">${imagenes.join('')}</svg>`;
+    pngs.push(
+      new Resvg(svg, { font: { loadSystemFonts: false } }).render().asPng(),
     );
-  }
-  // Composición a escala 1:1 en posiciones enteras: resvg copia los píxeles sin remuestrear.
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${bin.width}" height="${bin.height}" viewBox="0 0 ${bin.width} ${bin.height}">${imagenes.join('')}</svg>`;
-  const png = new Resvg(svg, { font: { loadSystemFonts: false } })
-    .render()
-    .asPng();
+    return {
+      image: `${nombreBase}-${i}.png`,
+      format: 'RGBA8888',
+      size: { w: bin.width, h: bin.height },
+      scale: escala,
+      frames: paginaFrames.sort((a, b) => a.filename.localeCompare(b.filename)),
+    };
+  });
   return {
-    png,
-    json: {
-      frames: jsonFrames,
-      meta: {
-        app: 'tools/art-build.ts',
-        image: imagen,
-        format: 'RGBA8888',
-        size: { w: bin.width, h: bin.height },
-        scale: String(escala),
-      },
-    },
+    pngs,
+    json: { textures, meta: { app: 'tools/art-build.ts', escala } },
   };
 }
 
@@ -292,15 +337,20 @@ if (import.meta.main) {
   const raiz = resolve(import.meta.dirname, '..');
   const origen = join(raiz, 'art/src');
   const salida = join(raiz, 'art/build');
+  const salidaAtlas = join(salida, 'atlas');
   const publico = join(raiz, 'public/generated/art');
 
   const archivos = listarSvg(origen);
+  // Las salidas de atlas se regeneran completas: sin restos de grupos que ya no existen.
+  rmSync(salidaAtlas, { recursive: true, force: true });
+  rmSync(publico, { recursive: true, force: true });
   if (archivos.length === 0) {
     console.log('art:build: no hay SVG en art/src');
     process.exit(0);
   }
 
-  const frames = archivos.flatMap((archivo) => {
+  const porGrupo = new Map<string, FrameFuente[]>();
+  for (const archivo of archivos) {
     const nombre = relative(origen, join(origen, archivo))
       .replace(/\.svg$/, '')
       .split(sep)
@@ -312,31 +362,44 @@ if (import.meta.main) {
     const destinoSvg = join(salida, 'svg', `${nombre}.svg`);
     mkdirSync(dirname(destinoSvg), { recursive: true });
     writeFileSync(destinoSvg, optimizado);
-    return framesDeSvg(optimizado, nombre);
-  });
+    const grupo = grupoDe(nombre);
+    porGrupo.set(grupo, [
+      ...(porGrupo.get(grupo) ?? []),
+      ...framesDeSvg(optimizado, nombre),
+    ]);
+  }
 
+  mkdirSync(salidaAtlas, { recursive: true });
   mkdirSync(publico, { recursive: true });
-  for (const escala of ESCALAS) {
-    const rasters = frames.map((f) => rasterizar(f, escala));
-    for (const r of rasters) {
-      const destino = join(salida, 'png', `${r.nombre}@${escala}x.png`);
-      mkdirSync(dirname(destino), { recursive: true });
-      writeFileSync(destino, r.png);
+  for (const [grupo, frames] of porGrupo) {
+    for (const escala of ESCALAS) {
+      const rasters = frames.map((f) => rasterizar(f, escala));
+      for (const r of rasters) {
+        const destino = join(salida, 'png', `${r.nombre}@${escala}x.png`);
+        mkdirSync(dirname(destino), { recursive: true });
+        writeFileSync(destino, r.png);
+      }
+      const base = `${archivoDeGrupo(grupo)}@${escala}x`;
+      const atlas = empaquetar(frames, rasters, escala, base);
+      const salidas = [
+        ...atlas.json.textures.map((t, i) => {
+          writeFileSync(join(salidaAtlas, t.image), atlas.pngs[i] as Buffer);
+          return t.image;
+        }),
+        `${base}.json`,
+      ];
+      writeFileSync(
+        join(salidaAtlas, `${base}.json`),
+        JSON.stringify(atlas.json, null, 2),
+      );
+      for (const archivo of salidas)
+        copyFileSync(join(salidaAtlas, archivo), join(publico, archivo));
+      const tamanos = atlas.json.textures
+        .map((t) => `${t.size.w}×${t.size.h}`)
+        .join(', ');
+      console.log(
+        `✓ ${grupo} @${escala}x: ${rasters.length} frames en ${atlas.json.textures.length} página(s) [${tamanos}]`,
+      );
     }
-    const imagen = `atlas@${escala}x.png`;
-    const atlas = empaquetar(frames, rasters, escala, imagen);
-    writeFileSync(join(salida, imagen), atlas.png);
-    writeFileSync(
-      join(salida, `atlas@${escala}x.json`),
-      JSON.stringify(atlas.json, null, 2),
-    );
-    copyFileSync(join(salida, imagen), join(publico, imagen));
-    copyFileSync(
-      join(salida, `atlas@${escala}x.json`),
-      join(publico, `atlas@${escala}x.json`),
-    );
-    console.log(
-      `✓ atlas@${escala}x: ${rasters.length} frames, ${atlas.json.meta.size ? JSON.stringify(atlas.json.meta.size) : ''}`,
-    );
   }
 }

@@ -1,6 +1,6 @@
 // Renderiza un PNG de revisión para inspeccionar arte (Daniel y Claude).
 //   node tools/art-review.ts art/src/prueba/figura.svg   → piezas con su caja y pivote, a @2x
-//   node tools/art-review.ts art/build/atlas@1x.json     → atlas con el contorno de cada frame
+//   node tools/art-review.ts art/build/atlas/personajes@1x.json → páginas del atlas con el contorno de cada frame
 // Salida: art/build/revision/<nombre>.png. El fondo y los colores de marca son solo de revisión.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
@@ -36,15 +36,22 @@ function revisarSvg(ruta: string): Buffer {
 
 function revisarAtlas(ruta: string): Buffer {
   const json = JSON.parse(readFileSync(ruta, 'utf8')) as Atlas['json'];
-  const imagen = readFileSync(join(dirname(ruta), String(json.meta.image)));
-  const { w, h } = json.meta.size as { w: number; h: number };
-  const cajas = Object.values(json.frames)
-    .map(
-      (f) =>
-        `<rect x="${f.frame.x}" y="${f.frame.y}" width="${f.frame.w}" height="${f.frame.h}" fill="none" stroke="${MARCA}"/>`,
-    )
-    .join('');
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="${FONDO}"/><image width="${w}" height="${h}" href="data:image/png;base64,${imagen.toString('base64')}"/>${cajas}</svg>`;
+  // Páginas apiladas en vertical, cada una con el contorno de sus frames.
+  let y = 0;
+  const capas = json.textures.map((t) => {
+    const imagen = readFileSync(join(dirname(ruta), t.image));
+    const cajas = t.frames
+      .map(
+        (f) =>
+          `<rect x="${f.frame.x}" y="${y + f.frame.y}" width="${f.frame.w}" height="${f.frame.h}" fill="none" stroke="${MARCA}"/>`,
+      )
+      .join('');
+    const capa = `<image y="${y}" width="${t.size.w}" height="${t.size.h}" href="data:image/png;base64,${imagen.toString('base64')}"/>${cajas}<line x1="0" y1="${y + t.size.h + 4}" x2="${t.size.w}" y2="${y + t.size.h + 4}" stroke="${MARCA}" stroke-dasharray="6 4"/>`;
+    y += t.size.h + 8;
+    return capa;
+  });
+  const w = Math.max(...json.textures.map((t) => t.size.w));
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${y}"><rect width="100%" height="100%" fill="${FONDO}"/>${capas.join('')}</svg>`;
   return new Resvg(svg, { font: { loadSystemFonts: false } }).render().asPng();
 }
 

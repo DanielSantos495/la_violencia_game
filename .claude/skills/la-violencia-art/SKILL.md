@@ -98,11 +98,16 @@ el script y regenera: no edites el SVG generado.
 ## Pipeline (no edites PNG a mano)
 
 ```
-art/src/**/*.svg → SVGO → PNG @1x/@2x → atlas JSON Hash (art/build, public/generated/art)
+art/src/**/*.svg → SVGO → PNG @1x/@2x → un multiatlas por carpeta (art/build/atlas, public/generated/art)
 ```
 
 - `pnpm run art:build` (en `game/`) genera todo; los PNG jamás se editan a mano.
-- `pnpm run art:review <ruta.svg | art/build/atlas@1x.json>` crea un PNG de revisión en
+- **Un atlas por carpeta:** la clave del atlas es la carpeta del SVG (`personajes`,
+  `fondos/puente-alto`); organiza los SVG por escena para que cada una cargue solo lo suyo.
+  En la escena: `cargarAtlas(this, 'personajes', 'fondos/puente-alto')`
+  (`game/src/game/arte.ts`). Si un atlas no cabe en 4096 px se reparte en páginas; un frame
+  que por sí solo no cabe es un error: divídelo en módulos o tramos.
+- `pnpm run art:review <ruta.svg | art/build/atlas/<grupo>@1x.json>` crea un PNG de revisión en
   `art/build/revision/` con cajas y pivotes. Ábrelo (Read) para inspeccionarlo antes de
   dar un asset por bueno.
 - `pnpm run art:walk <personaje.svg> [fases]` crea la hoja del ciclo de caminata
