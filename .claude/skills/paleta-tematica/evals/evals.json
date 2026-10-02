@@ -1,0 +1,23 @@
+{
+  "skill_name": "paleta-tematica",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Vamos a dibujar la plaza de Puente Alto en día de mercado (1946). ¿De qué color van los toldos, las frutas, la pila y los afiches pegados en la pared? Que se vea vivo pero sin romper la paleta.",
+      "expected_output": "Asigna tokens existentes de game/art/paleta.json por material, con fuente o decisión. Los afiches son los únicos en rojo/azul planos. Nada del mundo entra en las zonas reservadas. Las frutas o toldos que serían rojos o azules se llevan bajo el umbral o se cambian, y se explica por qué. Valida con el script si propone colores nuevos.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Necesito la paleta del Acto II en el Llano: sabana, morichales, un caney y los guerrilleros con su ropa. También quiero los atardeceres llaneros, que son muy rojos.",
+      "expected_output": "Usa la familia Llano y el croma del guion del Acto II. Resuelve el atardecer sin rojo reservado (luz ocre o papel encendido) y lo justifica. Marca [P] lo no verificado (pañuelos de la guerrilla) y comprueba contraste y daltonismo de los colores nuevos con validar_paleta.py.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Hazme una paleta para otro proyecto: un juego sobre la huelga de las bananeras de 1928 en Ciénaga. El rojo también tiene significado político ahí y el verde es de la compañía.",
+      "expected_output": "Sigue el flujo: inventario de significados y zonas reservadas (rojo, verde de la United Fruit si tiene fuente), investigación con fuentes citadas, registros con techos, OKLCH, guion, JSON con el esquema de references/esquema-paleta.md, validación y muestrario.",
+      "files": []
+    }
+  ]
+}
