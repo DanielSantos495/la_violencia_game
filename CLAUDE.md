@@ -24,10 +24,13 @@ Ante cualquier duda de diseño, historia o arte, lee el doc correspondiente en `
   entra a un build público (Archivo `pendiente` → excluido en release).
 - **Figuras reales:** nombre alterado en la ficción (doc 01) y sin diálogos inventados.
   Las víctimas reales no se ficcionalizan; solo aparecen en el Archivo con su nombre real.
-- **Violencia sin espectáculo:** nunca se premia matar, sin contador de bajas, atrocidades no
-  jugables (solo viñetas), combate solo contra armados y máximo 1 por misión (doc 04 §5).
+- **Violencia jugable, nunca objetivo:** nunca se premia matar, sin contador de bajas; combate
+  libre solo contra armados y máximo 1 por misión; violencia contra civiles solo en momentos
+  guionizados, con control directo y coste narrativo; nunca contra víctimas reales
+  (doc 02 §1 regla 1, doc 04 §5).
 - **Arte:** tinta y trama sobre papel hueso; rojo liberal y azul conservador como únicos
-  acentos; sin sangre roja; lo [P] de época no se dibuja como final (doc 03).
+  acentos; violencia explícita pero sin sangre roja (tinta y trama); lo [P] de época no se
+  dibuja como final (doc 03).
 
 ## Comandos (en `game/`, Node 24.21.0 + pnpm 11)
 

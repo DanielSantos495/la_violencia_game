@@ -20,9 +20,10 @@
 
 ### Violencia (tono bélico sin espectáculo)
 - La guerra se muestra: combates, incendios, muertos, desplazamiento. No se omite.
-- Se dibuja con **silueta y mancha negra**: sin sangre roja (el rojo está reservado al partido liberal, y así no compite), sin gore ni mutilaciones detalladas.
-- Las atrocidades se narran en viñetas fijas (antes/después, siluetas, humo, objetos abandonados); nunca son acciones controladas por el jugador.
-- Muertos: cuerpos en silueta o cubiertos; rostros de víctimas nunca identificables.
+- **Más explícita desde el 01-oct-2026:** heridas, sangre y muertos se dibujan de forma visible cuando la escena lo pide, siempre por su peso y no como espectáculo.
+- La sangre va en **tinta negra y trama**, no en rojo: el rojo sigue reservado al partido liberal y así no compite **[provisional: confirmar con Daniel]**.
+- La violencia contra civiles puede ser jugable en momentos guionizados (doc 02 §1 regla 1); el después se cierra en viñetas fijas (antes/después, humo, objetos abandonados).
+- Muertos: cuerpos visibles cuando la escena lo pide; rostros de víctimas nunca identificables.
 
 ---
 

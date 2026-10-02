@@ -44,11 +44,12 @@ que Daniel pida editarla.
 
 ## Violencia (doc 03 §1 "Violencia")
 
-- Silueta y mancha negra. **Sin sangre roja** (el rojo es del partido liberal), sin gore,
-  sin mutilaciones detalladas.
-- Rostros de víctimas nunca identificables; muertos en silueta o cubiertos.
-- Las atrocidades solo existen como viñetas fijas (antes/después, humo, objetos
-  abandonados). Ningún asset debe permitir que el jugador la ejecute o la anime.
+- Explícita cuando la escena lo pide (heridas, sangre y muertos visibles), por su peso y no
+  como espectáculo. **Sangre en tinta negra y trama, nunca roja** (el rojo es del partido
+  liberal) [provisional, doc 03 §1].
+- Rostros de víctimas nunca identificables.
+- La violencia contra civiles puede ser jugable en momentos guionizados (doc 02 §1 regla 1):
+  los assets de esas escenas deben poder animarse; el después se cierra en viñetas fijas.
 - Armas: silueta correcta para el año. Un fusil de cerrojo no se dibuja como uno automático;
   los modelos por año están [P] en el doc 03 §3.4 hasta que se resuelvan.
 
@@ -123,7 +124,7 @@ art/src/**/*.svg → SVGO → PNG @1x/@2x → un multiatlas por carpeta (art/bui
 
 1. ¿Cada elemento de época está [V] en el doc 03 §3? Lo [P] queda como placeholder marcado.
 2. ¿Solo tinta, trama y los dos acentos partidistas? ¿Sin degradados ni colores extra?
-3. ¿Violencia en silueta/mancha, sin sangre roja ni rostros de víctimas identificables?
+3. ¿Violencia con peso y no como espectáculo, sin sangre roja ni rostros de víctimas identificables?
 4. ¿Silueta de arma/uniforme/vehículo correcta para el año?
 5. Personajes: ¿piezas con ids de la convención, pivotes en articulaciones, orden de capas?
 6. `pnpm run art:build` sin errores y PNG de revisión inspeccionado.

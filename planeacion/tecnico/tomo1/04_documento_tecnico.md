@@ -72,11 +72,11 @@ art/
 ```
 
 ## 5. Combate (simple y raro)
-- Solo contra combatientes armados; nunca contra civiles.
+- Combate libre solo contra combatientes armados. La violencia contra civiles existe únicamente en momentos guionizados de la misión, con control directo; fuera de ellos el jugador no puede atacar civiles (doc 02 §1 regla 1).
 - Máximo 1 enfrentamiento por misión, y solo en misiones de Rosalba y Aurelio.
 - Mecánica lateral: cubrirse tras obstáculos, asomarse, disparar con **munición muy limitada** y recarga lenta propia de armas de la época (cerrojo, escopeta de un tiro). Retirarse es siempre una opción válida.
 - Sin contador de bajas en ningún sistema ni UI. La misión se evalúa por supervivencia, civiles protegidos e información registrada.
-- Las atrocidades no son jugables: se narran en páginas de cómic.
+- La violencia contra civiles nunca se premia: siempre tiene coste narrativo y nunca se aplica a víctimas reales (doc 02 §1 regla 1).
 
 ## 6. Episodios
 | Episodio | Contenido | Lanzamiento |

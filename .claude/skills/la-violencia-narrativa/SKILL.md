@@ -63,8 +63,9 @@ En la entrega, indica qué skill(s) usaste en cada propuesta.
    víctimas reales no se ficcionalizan: solo en el Archivo, con nombre real. (doc 01 reglas 4–5)
 3. **Sin tomar partido.** Cada bando tiene razones y culpas; ningún secundario es caricatura.
    (doc 02 §1 regla 2)
-4. **Violencia por su peso, no como espectáculo.** El jugador nunca ejecuta una atrocidad, no
-   hay contador de bajas y nunca se premia matar. Las atrocidades son viñetas fijas.
+4. **Violencia por su peso, no como espectáculo.** Es jugable pero nunca el objetivo: contra
+   civiles solo en momentos guionizados de la misión, con control directo y coste narrativo;
+   nunca contra víctimas reales; sin contador de bajas y nunca se premia matar.
    (doc 02 §1 regla 1; doc 03 §1; doc 04 §5)
 5. **Voz de época.** Usted y "sumercé" en Boyacá, léxico llanero en el Llano, sin
    anacronismos ni ortografía caricaturesca, frases cortas. (doc 02 §6)
@@ -85,7 +86,7 @@ Para cada beat, escena, diálogo o decisión:
    - ¿Toca o desplaza algún hecho [V]?
    - ¿Depende de un [P] para funcionar? (si sí: queda bloqueada hasta tener fuente)
    - ¿Pone palabras en boca de una figura real o ficcionaliza a una víctima real?
-   - ¿Premia la violencia o la vuelve espectáculo?
+   - ¿Premia la violencia, la vuelve espectáculo o la permite fuera de un momento guionizado?
    - ¿Convierte a algún bando o secundario en caricatura?
 4. **Recomienda una** y explica por qué (qué gana la historia, qué cuesta).
 
@@ -145,7 +146,7 @@ contradice, manda la ficha aprobada.
 - [ ] Leí el beat y su contexto en doc 02 y las marcas [V]/[P] que lo afectan.
 - [ ] Nombres según doc 01; ninguna figura real con diálogo inventado.
 - [ ] Ningún hecho [V] alterado; ningún [P] tratado como hecho.
-- [ ] Violencia fuera de cuadro o en viñeta fija; nada que premie matar.
+- [ ] Violencia solo en el contexto de la escena, con coste narrativo; nada que premie matar.
 - [ ] Voz de época del personaje (tabla de arriba y doc 02 §6); sin anacronismos.
 - [ ] Hay subtexto: la línea hace al menos dos cosas (personaje + tensión, o tensión + mundo).
 - [ ] Si hay decisión, pasa las cinco pruebas.

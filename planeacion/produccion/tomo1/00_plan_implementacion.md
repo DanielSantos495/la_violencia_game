@@ -92,7 +92,7 @@ Por qué: cubre las mecánicas núcleo (movimiento lateral, cámara de Custodia,
 2. Todas las marcas [P] de esa misión resueltas o el elemento retirado.
 3. Revisión del historiador firmada.
 4. Entradas de Archivo con fuente y licencia válidas.
-5. Ningún sistema premia matar; ninguna atrocidad es interactiva.
+5. Ningún sistema premia matar; la violencia contra civiles solo es jugable en momentos guionizados y siempre con coste narrativo (doc 02 §1 regla 1).
 6. Build de rendimiento dentro del objetivo.
 
 ---

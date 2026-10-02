@@ -81,8 +81,9 @@ reporta la fuente, con rango si lo hay; mientras no haya fuente, [P] (doc 02 §5
 
 - Nunca se premia matar. **Sin contador de bajas** en ningún sistema ni UI; las misiones
   se evalúan por supervivencia, civiles protegidos e información registrada.
-- Las atrocidades no son jugables: se narran en páginas de cómic.
-- Combate solo contra combatientes armados, **máximo 1 por misión** y solo en misiones de
+- La violencia es jugable pero nunca es el objetivo: contra civiles solo en momentos
+  guionizados de la misión, con coste narrativo y nunca contra víctimas reales.
+- Combate libre solo contra combatientes armados, **máximo 1 por misión** y solo en misiones de
   Rosalba y Aurelio; retirarse siempre es válido; munición escasa y armas de la época.
 - Cada bando tiene razones y culpas; ningún secundario es caricatura.
 - Desobedecer órdenes injustas tiene consecuencias, nunca premio por cumplirlas (Aurelio).

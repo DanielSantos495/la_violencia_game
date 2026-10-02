@@ -16,7 +16,7 @@
 **Formato:** aventura lateral 2D en estilo novela gráfica (doc 03). Diálogos solo en globos de texto (sin voces); la emoción se marca con tipografía, onomatopeyas y sonido. Se publica en 3 episodios: **Ep. 1** Prólogo + Acto I · **Ep. 2** Acto II · **Ep. 3** Acto III + Epílogo. El combate es breve, poco frecuente y solo contra armados (doc 04 §5).
 
 **Reglas de storytelling**
-1. **El jugador nunca ejecuta una atrocidad.** Las masacres se narran en páginas de cómic (siluetas, humo, ausencia, antes/después), nunca como secuencia jugable ni con detalle gráfico.
+1. **La violencia es jugable, pero nunca es el objetivo** (regla modificada el 01-oct-2026). El jugador puede golpear o matar, con control directo, solo dentro del contexto de la escena: en combate, únicamente contra armados (doc 04 §5); contra civiles, únicamente en momentos guionizados de la misión, nunca como acción libre. Toda violencia contra civiles tiene coste narrativo (relaciones, variables de §4, finales y lo que el Archivo registra) y nada la premia. El jugador nunca ejerce violencia sobre víctimas reales (doc 01 regla 5). Representación: doc 03 §1 "Violencia".
 2. **Cada bando tiene razones y culpas.** Ningún personaje secundario es caricatura: hay azules que protegen liberales y rojos que cometen represalias.
 3. **La historia grande entra por medios de época:** radio, periódico, rumor, altavoz. Las figuras reales casi nunca están en escena.
 4. **La información es el recurso central.** Se recompensa observar, recordar y registrar, no matar.
