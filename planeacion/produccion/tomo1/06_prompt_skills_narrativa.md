@@ -37,14 +37,11 @@ Juego narrativo-documental 2D lateral (novela gráfica) sobre La Violencia en Co
 
 ---
 
-## Bloque 0 — Diagnóstico narrativo (esperar aprobación)
+## Bloque 0 — Reconocimiento y plan de instalación (esperar aprobación)
 
-1. Haz el inventario y lee los docs 01 y 02 completos; del 00, 03 y 04 solo las secciones citadas.
-2. Entrégame un **diagnóstico breve** del guion actual con estos puntos:
-   - Qué funciona y por qué. Máximo 5 puntos.
-   - Debilidades concretas, citando misión y beat: arcos planos, decisiones sin consecuencia visible, secundarios funcionales sin deseo propio, escenas que repiten función, clichés del género bélico o del "drama histórico", diálogos explicativos.
-   - Riesgos de rigor: escenas que dependen de un [P] para funcionar.
-3. Propón el plan de skills y herramientas de los bloques siguientes, ajustado al diagnóstico. **Espera mi aprobación.**
+1. Haz el inventario y lee los docs 01 y 02 completos; del 00, 03 y 04 solo las secciones citadas. Hace falta para construir la skill propia con criterio.
+2. **Todavía no diagnostiques el guion.** El diagnóstico se hace después de instalar las skills, para que use sus marcos (Bloque 3).
+3. Propón el plan de instalación de los Bloques 1 y 2: qué skills, de qué fuente, con qué tag/SHA y licencia. **Espera mi aprobación.**
 
 ## Bloque 1 — Skills de terceros
 
@@ -112,9 +109,21 @@ Créala con `skill-creator` en `.claude/skills/la-violencia-narrativa/`. **Apunt
 - **Checklist de voz por personaje:** léxico, ritmo, lo que nunca diría.
 - **Checklist de revisión** antes de proponer un texto.
 
-## Bloque 3 — Herramientas de trabajo narrativo
+**Prueba de activación al terminar los Bloques 1 y 2:** "pule el diálogo de Efraín en la M2" debe activar `la-violencia-narrativa` + `dialogue`. Si no se activan, corrige las descripciones antes del diagnóstico.
 
-Primero propón; crea solo con mi aprobación. Los documentos van en `planeacion/historia/tomo1/` y usan el siguiente número libre.
+## Bloque 3 — Diagnóstico narrativo con las skills (esperar aprobación)
+
+1. Analiza el guion (doc 02) **aplicando las skills instaladas**: `story-sense` para el diagnóstico general, `character-arc` para los arcos, `perspectival-constellation` para las 3 perspectivas, `interactive-fiction` para el sistema de decisiones, `dialogue` para las voces, `cliche-transcendence` para los clichés y `la-violencia-narrativa` como filtro de rigor. En cada hallazgo indica qué skill lo detectó.
+2. Entrégame un **diagnóstico breve** del guion actual con estos puntos:
+   - Qué funciona y por qué. Máximo 5 puntos.
+   - Debilidades concretas, citando misión y beat: arcos planos, decisiones sin consecuencia visible, secundarios funcionales sin deseo propio, escenas que repiten función, clichés del género bélico o del "drama histórico", diálogos explicativos.
+   - Riesgos de rigor: escenas que dependen de un [P] para funcionar.
+3. Si el diagnóstico muestra un hueco que ninguna skill cubre, propón cómo cubrirlo (ajuste a la skill propia o una skill adicional verificada).
+4. Ajusta al diagnóstico el plan de los Bloques 4 y 5. **Espera mi aprobación.**
+
+## Bloque 4 — Herramientas de trabajo narrativo
+
+Prioriza según el diagnóstico. Primero propón; crea solo con mi aprobación. Los documentos van en `planeacion/historia/tomo1/` y usan el siguiente número libre.
 
 1. **Fichas de personaje** (jugables y secundarios clave) con:
    - deseo, necesidad, miedo, contradicción y secreto;
@@ -130,7 +139,7 @@ Primero propón; crea solo con mi aprobación. Los documentos van en `planeacion
    - Compilación con inklecate o el compilador de inkjs.
    - Si existe una herramienta verificada para visualizar el grafo de ramas, recomiéndala; si no, propón un script simple. **No instales sin aprobación.**
 
-## Bloque 4 — Primera pasada de pulido (prueba de las skills)
+## Bloque 5 — Primera pasada de pulido (prueba de las skills)
 
 1. Toma **el Prólogo y la Misión 2** (el vertical slice, doc 00 §4).
 2. Usa las skills para proponer:
@@ -140,18 +149,17 @@ Primero propón; crea solo con mi aprobación. Los documentos van en `planeacion
    - 1 idea arriesgada para hacer la historia más memorable, siempre dentro de las reglas.
 3. Entrega en formato de propuesta: original → propuesta → motivo → riesgo de rigor. **No edites el doc 02.**
 
-## Bloque 5 — Registro y validación
+## Bloque 6 — Registro y validación
 
 1. `.claude/SKILLS.md`: añade las skills de narrativa a la tabla existente (o créala) con nombre, fuente, tag/SHA, licencia, fecha, motivo y auditoría.
 2. `CLAUDE.md` (Edit, si existe): una sección corta sobre cuándo usar `la-violencia-narrativa` y las de terceros. Las reglas de historia prevalecen sobre cualquier sugerencia creativa de una skill de terceros.
-3. **Prueba de activación:** "pule el diálogo de Efraín en la M2" debe activar `la-violencia-narrativa` + `dialogue`.
-4. Commits por bloque con mensajes claros. **No hagas push**; al terminar, sugiéreme hacerlo.
+3. Commits por bloque con mensajes claros. **No hagas push**; al terminar, sugiéreme hacerlo.
 
 ## Reporte final (breve)
 
 - Skills instaladas, con tag/SHA y licencia.
 - Lo descartado y por qué.
 - Herramientas pendientes de mi decisión.
-- Resumen del diagnóstico y de las propuestas del Bloque 4.
+- Resumen del diagnóstico (Bloque 3) y de las propuestas del Bloque 5.
 - Los [P] que bloquean escenas.
 - Riesgos de la auditoría.

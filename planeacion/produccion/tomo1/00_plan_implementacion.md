@@ -9,6 +9,7 @@
 | 03 | Dirección de arte | Estilo visual recomendado, referencias verificadas por región, fuentes a licenciar |
 | 04 | Documento técnico | Plataforma web + escritorio, Phaser 4, stack, arquitectura, combate, episodios, esquema del Archivo |
 | 05 | Prompt de setup desde cero | Bloques de configuración del proyecto en `game/` con Claude Code y decisiones del Bloque 0 |
+| 06 | Prompt de skills de narrativa | Skills de narrativa (terceros y `la-violencia-narrativa`), diagnóstico del guion, herramientas narrativas y primera pasada de pulido |
 
 ---
 
