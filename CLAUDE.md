@@ -39,6 +39,39 @@ pnpm validate:archivo [--release] | ink:build | art:build | art:review <svg|atla
 
 Antes de dar algo por hecho: `lint`, `typecheck`, `test` y `build` en verde.
 
+## Trabajo en paralelo (varios chats)
+
+Daniel trabaja con varios chats a la vez. Cada área tiene su **worktree** (carpeta hermana) y
+su **rama**; la carpeta principal queda para la integración y los chats sin área propia.
+
+| Área | Carpeta | Rama | Territorio |
+|---|---|---|---|
+| Integración y otros chats | `la_violencia_game` | `setup/tomo1-base` | Lo que no sea de un área |
+| Rosalba | `la_violencia_game--rosalba` | `arte/rosalba` | `game/art/src/personajes/`, `game/art/gen/rosalba.py`, `game/src/game/personajes/`, `Personaje.ts`, `Caminata.ts`, `game/src/core/animacion/`, `game/src/game/scenes/Prueba.ts` (escena de prueba de Rosalba), `planeacion/arte/tomo1/personajes/` |
+| Fondos y escenarios | `la_violencia_game--fondos` | `arte/fondos` | Fondos y escenarios, `game/tools/art-build.ts` (un atlas por carpeta), escala del personaje en escena y su propia escena de prueba |
+
+- **Integración:** `setup/tomo1-base` es la rama de integración. Cuando un bloque de un área
+  está en verde, se fusiona ahí desde la carpeta principal
+  (`git merge --no-ff arte/<área>`); luego cada área trae lo integrado a su rama
+  (`git merge setup/tomo1-base`) para que los conflictos sean pequeños. Al cerrar el Sprint,
+  PR de `setup/tomo1-base` a `main`. Push solo con aprobación de Daniel.
+- **Archivos compartidos** (`main.ts`, `package.json`, `pnpm-lock.yaml`, skill
+  `la-violencia-art`, READMEs, `CLAUDE.md`, docs 00/03): cambios mínimos, en commits aparte,
+  y avisa a Daniel. No toques el territorio de otra área.
+- **Contexto:** la memoria de Claude se guarda por carpeta y **no se comparte entre
+  worktrees**. Lo que deba durar va en git: este archivo, `planeacion/` y las hojas de personaje.
+- **Worktree nuevo:** `pnpm install --frozen-lockfile` y `pnpm ink:build`,
+  `pnpm validate:archivo`, `pnpm art:build` en `game/` (lo generado no se versiona y cada
+  worktree tiene el suyo).
+- **Servidor de desarrollo:** `preview_start` con la configuración `game-dev`
+  (`.claude/launch.json`). Tiene `autoPort`: si el 5173 está ocupado por otro chat, se asigna
+  otro puerto libre; usa la URL que devuelve la herramienta. No detengas ni reinicies el
+  servidor de otro chat. Desde una terminal: `pnpm dev --port <puerto libre>`.
+- **Commits:** `git add <rutas>` de tu territorio, nunca `git add .` ni carpetas enteras;
+  revisa `git status`, otro chat puede tener cambios sin commitear en la misma carpeta.
+- **Stash:** la pila de `git stash` es común a todos los worktrees; no uses `git stash` sin
+  más (podrías sacar el de otro chat). Prefiere un commit temporal.
+
 ## Skills
 
 | Cuándo | Skill |

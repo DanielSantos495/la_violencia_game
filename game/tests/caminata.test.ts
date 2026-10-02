@@ -48,9 +48,44 @@ describe('poseCaminata', () => {
   });
 });
 
+describe('poseCaminata con pies bajo falda larga', () => {
+  const opciones = { faldaLarga: { adelante: 30, atras: 20, inclinacion: 8 } };
+
+  it('desliza los pies dentro del rango, sin girar desde la cadera', () => {
+    for (const f of fases) {
+      const p = poseCaminata(f, opciones);
+      for (const id of ['pierna-der', 'pierna-izq']) {
+        expect(p.avance[id]).toBeGreaterThanOrEqual(-20 - 1e-9);
+        expect(p.avance[id]).toBeLessThanOrEqual(30 + 1e-9);
+        expect(Math.abs(p.angulos[id] ?? 0)).toBeLessThanOrEqual(8);
+      }
+    }
+  });
+
+  it('apoya el talón adelante (punta arriba) y despega la punta atrás (talón arriba)', () => {
+    const adelante = poseCaminata((3 * Math.PI) / 2, opciones); // pie derecho al frente
+    expect(adelante.avance['pierna-der']).toBeCloseTo(30);
+    expect(adelante.angulos['pierna-der']).toBeLessThan(0);
+    const atras = poseCaminata(Math.PI / 2, opciones); // pie derecho atrás
+    expect(atras.avance['pierna-der']).toBeCloseTo(-20);
+    expect(atras.angulos['pierna-der']).toBeGreaterThan(0);
+  });
+
+  it('en modo cadera no desliza los pies', () => {
+    expect(poseCaminata(1).avance).toEqual({});
+  });
+});
+
 describe('velocidadCaminata', () => {
-  it('avanza dos cuerdas de pierna por ciclo', () => {
-    const v = velocidadCaminata(200, 1000, 30);
+  it('modo cadera: avanza dos cuerdas de pierna por ciclo', () => {
+    const v = velocidadCaminata(1000, { zancada: 30 }, 200);
     expect(v).toBeCloseTo(2 * 2 * 200 * 0.5);
+  });
+
+  it('falda larga: avanza dos recorridos de pie (adelante + atrás) por ciclo', () => {
+    const v = velocidadCaminata(800, {
+      faldaLarga: { adelante: 30, atras: 20 },
+    });
+    expect(v).toBeCloseTo((2 * 50) / 0.8);
   });
 });

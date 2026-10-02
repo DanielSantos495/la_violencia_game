@@ -1,6 +1,6 @@
 import type { GameObjects, Scene, Tweens } from 'phaser';
 import { poseAcecho } from '../core/animacion/acecho.ts';
-import { caminar } from './Caminata.ts';
+import { caminar, type OpcionesCaminar } from './Caminata.ts';
 import { armarRecorte } from './Recorte.ts';
 
 /** Una pose dibujada del personaje: frames "<base>/<pieza>" del atlas, en orden de dibujo. */
@@ -13,7 +13,7 @@ interface Rig {
   contenedor: GameObjects.Container;
   piezas: Map<string, GameObjects.Container>;
   /** Posición de reposo de cada pieza y del contenedor (la caminata las altera). */
-  yInicial: Map<string, number>;
+  reposo: Map<string, { x: number; y: number }>;
   yBase: number;
 }
 
@@ -28,6 +28,7 @@ export class Personaje {
   private readonly rigs = new Map<string, Rig>();
   private poseActual: string;
   private animacion: Tweens.Tween | null = null;
+  private readonly opcionesCaminata: OpcionesCaminar;
 
   constructor(
     escena: Scene,
@@ -38,8 +39,11 @@ export class Personaje {
     apoyo: { x: number; y: number },
     poses: Record<string, DefinicionPose>,
     inicial: string,
+    /** Cómo camina este personaje (p. ej. pies bajo falda larga, duración del ciclo). */
+    opcionesCaminata: OpcionesCaminar = {},
   ) {
     this.escena = escena;
+    this.opcionesCaminata = opcionesCaminata;
     this.raiz = escena.add.container(x, ySuelo);
     for (const [nombre, def] of Object.entries(poses)) {
       const rig = armarRecorte(
@@ -54,7 +58,9 @@ export class Personaje {
       this.raiz.add(rig.contenedor);
       this.rigs.set(nombre, {
         ...rig,
-        yInicial: new Map([...rig.piezas].map(([id, p]) => [id, p.y])),
+        reposo: new Map(
+          [...rig.piezas].map(([id, p]) => [id, { x: p.x, y: p.y }]),
+        ),
         yBase: rig.contenedor.y,
       });
     }
@@ -71,7 +77,12 @@ export class Personaje {
   caminar(): number {
     this.quieto();
     const rig = this.rig();
-    const caminata = caminar(this.escena, rig.contenedor, rig.piezas);
+    const caminata = caminar(
+      this.escena,
+      rig.contenedor,
+      rig.piezas,
+      this.opcionesCaminata,
+    );
     this.animacion = caminata.tween;
     return caminata.velocidad * this.raiz.scaleX;
   }
@@ -112,7 +123,8 @@ export class Personaje {
     rig.contenedor.y = rig.yBase;
     for (const [id, pieza] of rig.piezas) {
       pieza.angle = 0;
-      pieza.y = rig.yInicial.get(id) ?? pieza.y;
+      const r = rig.reposo.get(id);
+      if (r) pieza.setPosition(r.x, r.y);
     }
   }
 

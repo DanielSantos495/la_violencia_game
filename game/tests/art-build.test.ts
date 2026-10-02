@@ -99,27 +99,34 @@ describe('rasterizar y empaquetar', () => {
     expect(buscar(atlas, 'p/fig/cabeza').frame.pivot).toBeUndefined();
   });
 
-  it('el atlas copia los píxeles de cada frame sin remuestrear', () => {
+  // Renderiza varias imágenes con resvg: bajo carga puede pasar de los 5 s por defecto.
+  it('el atlas copia los píxeles de cada frame sin remuestrear', {
+    timeout: 20_000,
+  }, () => {
     const rasters = frames.map((f) => rasterizar(f, 1));
     const atlas = empaquetar(frames, rasters, 1, 'p@1x');
+    const paginas = atlas.json.textures.map((t, i) =>
+      new Resvg(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${t.size.w}" height="${t.size.h}"><image href="data:image/png;base64,${definido(atlas.pngs[i]).toString('base64')}" width="100%" height="100%"/></svg>`,
+      ).render(),
+    );
     for (const r of rasters) {
       const { frame, pagina } = buscar(atlas, r.nombre);
-      const t = definido(atlas.json.textures[pagina]);
-      const pixAtlas = new Resvg(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="${t.size.w}" height="${t.size.h}"><image href="data:image/png;base64,${definido(atlas.pngs[pagina]).toString('base64')}" width="100%" height="100%"/></svg>`,
-      ).render();
+      const pixAtlas = definido(paginas[pagina]);
       const pixFrame = new Resvg(
         `<svg xmlns="http://www.w3.org/2000/svg" width="${r.ancho}" height="${r.alto}"><image href="data:image/png;base64,${r.png.toString('base64')}" width="${r.ancho}" height="${r.alto}"/></svg>`,
       ).render().pixels;
       const f = frame.frame;
+      let filasDistintas = 0;
       for (let y = 0; y < f.h; y++) {
         const filaAtlas = pixAtlas.pixels.subarray(
           ((f.y + y) * pixAtlas.width + f.x) * 4,
           ((f.y + y) * pixAtlas.width + f.x + f.w) * 4,
         );
         const filaFrame = pixFrame.subarray(y * f.w * 4, (y + 1) * f.w * 4);
-        expect(Buffer.compare(filaAtlas, filaFrame)).toBe(0);
+        if (Buffer.compare(filaAtlas, filaFrame) !== 0) filasDistintas++;
       }
+      expect(filasDistintas, r.nombre).toBe(0);
     }
   });
 
