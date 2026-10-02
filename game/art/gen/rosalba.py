@@ -707,3 +707,198 @@ def hoja_cabezas(nombre, titulo, rotacion, ancho, alto, dx0, dy):
 
 hoja_cabezas('rosalba-cabezas.svg', 'Rosalba Insuasty — cabezas por expresión (de pie).', 0, 90, 104, -110, -40)
 hoja_cabezas('rosalba-agachada-cabezas.svg', 'Rosalba Insuasty — cabezas por expresión (agachada, inclinada).', CAB_R, 100, 116, -104, -30)
+
+# ======================= 5. retrato en tres cuartos (viñetas y diálogos) =======================
+# Busto girado 3/4 hacia la derecha. Capas: base por variante (ropa, pelo, contorno, nariz,
+# oreja; rostro en blanco) + rasgos por expresión (ojos, cejas, boca, mejilla) + parpadeo.
+# Todas las piezas comparten el pivote (centro de la base del busto) en su ranura.
+RET_W, RET_H = 400, 480
+
+CONTORNO_34 = ('M152,150 C150,110 178,86 214,86 C250,86 272,108 270,146 C270,160 274,170 272,182 '
+               'C270,200 264,214 258,224 C252,236 246,246 236,254 C228,261 216,264 206,262 '
+               'C196,260 186,254 178,246 C168,236 160,222 156,206 C152,190 152,170 152,150 Z')
+PELO_34 = ('M157,168 C160,150 168,136 182,126 C194,119 208,117 222,118 C236,117 252,122 262,132 '
+           'C266,136 270,144 271,150 C276,134 278,110 266,92 C254,74 232,66 208,68 C180,70 158,84 146,106 '
+           'C136,126 134,154 136,176 C138,196 144,214 153,228 L161,226 C155,212 152,196 152,182 '
+           'C152,176 154,172 157,168 Z')
+
+def busto_34(variante):
+    v = []
+    # cuello con sombra bajo la mandíbula
+    v.append('<path d="M180,240 C182,262 182,282 178,304 L240,304 C236,284 236,264 238,244 Z" fill="#fff" stroke="#000" stroke-width="2.6"/>')
+    v.append('<path d="M182,252 C196,262 216,266 236,258 L236,270 C218,276 198,274 182,266 Z" fill="url(#trama-media)"/>')
+    v.append('<path d="M196,276 C200,286 202,294 202,302" stroke="#000" stroke-width="1" fill="none"/>')
+    # blusa: escote redondo con festón y pechera bordada
+    v.append('<path d="M120,320 C150,300 172,296 182,300 C196,312 222,314 238,300 C252,298 276,304 300,320 L320,480 L100,480 Z" fill="#fff" stroke="#000" stroke-width="2.8"/>')
+    v.append('<path d="M184,304 Q188,310 192,306 Q196,312 200,307 Q204,313 208,308 Q212,313 216,308 Q220,312 224,307 Q228,311 232,305 Q235,308 237,303" stroke="#000" stroke-width="0.9" fill="none"/>')
+    for (x, y) in [(190, 330), (204, 342), (220, 336), (232, 324), (196, 360), (214, 372), (230, 356), (206, 398), (224, 404)]:
+        v.append(flor(x, y, 3.2, '#000').replace('fill="#000" stroke="#000"', 'fill="#fff" stroke="#000"'))
+    v.append('<path d="M182,318 L186,326 L182,334 L186,342 L182,350 L186,358 L182,366 L186,374 L182,382 L186,390 M240,316 L236,324 L240,332 L236,340 L240,348 L236,356 L240,364 L236,372 L240,380" stroke="#000" stroke-width="1" fill="none"/>')
+    if variante == 'mercado':
+        # collar de abalorios
+        for i in range(17):
+            x, y = quad((178, 300), (209, 346), (242, 300), i / 16)
+            v.append(f'<circle cx="{f(x)}" cy="{f(y)}" r="2.6" fill="{"#000" if i % 2 == 0 else "#fff"}" stroke="#000" stroke-width="1"/>')
+        # pañolón negro con bordado y flecos (los flecos caen fuera del cuadro)
+        v.append('<path d="M182,298 C150,300 112,316 92,340 C80,380 72,430 66,480 L172,480 C176,420 180,360 186,306 Z" fill="#000" stroke="#000" stroke-width="2.4"/>')
+        v.append('<path d="M238,298 C268,300 300,314 320,336 C332,380 340,430 346,480 L250,480 C246,420 242,360 234,306 Z" fill="#000" stroke="#000" stroke-width="2.4"/>')
+        v.append('<path d="M170,312 C166,360 162,420 160,476 M248,312 C252,360 256,420 258,476" stroke="#fff" stroke-width="1.2" fill="none"/>')
+        for (x, y) in [(168, 336), (165, 380), (162, 428), (251, 340), (254, 386), (257, 432), (118, 360), (300, 352)]:
+            v.append(flor(x, y, 3.4))
+            v.append(hoja(x + 5, y + 6, 40))
+            v.append(hoja(x - 5, y - 6, 40))
+        v.append('<path d="M100,350 C96,390 92,430 90,476 M128,330 C120,380 114,430 110,476 M300,340 C308,390 312,430 316,476 M276,322 C284,370 290,420 292,476" stroke="#fff" stroke-width="1" fill="none" stroke-opacity="0.9"/>')
+    else:
+        # ruana oscura de lana, con cuello en rollo
+        v.append('<path d="M180,296 C146,300 106,318 86,346 C76,392 70,440 66,480 L354,480 C350,440 344,392 334,346 C314,318 274,300 240,296 C230,312 194,312 180,296 Z" fill="#000" stroke="#000" stroke-width="2.4"/>')
+        v.append('<path d="M180,296 C146,300 106,318 86,346 C76,392 70,440 66,480 L354,480 C350,440 344,392 334,346 C314,318 274,300 240,296 C230,312 194,312 180,296 Z" fill="url(#lana-blanca)"/>')
+        v.append('<path d="M176,300 C196,318 226,318 244,300" stroke="#000" stroke-width="9" fill="none" stroke-linecap="round"/>')
+        v.append('<path d="M178,298 C198,314 224,314 242,298" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>')
+        v.append('<path d="M120,340 C112,390 106,430 104,476 M160,326 C156,380 154,430 152,476 M262,326 C266,380 268,430 270,476 M300,340 C308,390 312,430 314,476" stroke="#fff" stroke-width="1.6" fill="none"/>')
+        v.append('<path d="M70,460 C150,468 270,468 352,460" stroke="#fff" stroke-width="1.6" fill="none" stroke-dasharray="4 3"/>')
+    # rostro: contorno, sombra de mejilla lejana y nariz (los rasgos van aparte)
+    v.append(f'<path d="{CONTORNO_34}" fill="#fff" stroke="#000" stroke-width="3" stroke-linejoin="round"/>')
+    v.append('<path d="M262,186 C262,204 256,220 248,232 C254,222 258,206 258,190 Z" fill="url(#trama-fina)"/>')
+    v.append('<path d="M226,172 C230,186 236,198 240,204" stroke="#000" stroke-width="1.2" fill="none" stroke-linecap="round"/>')
+    v.append('<path d="M232,210 C236,206 244,206 248,209 C250,212 246,215 242,214" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>')
+    v.append('<ellipse cx="238.5" cy="213" rx="2.4" ry="1.2" fill="#000"/>')
+    v.append('<path d="M250,212 C252,213 253,214 253,216" stroke="#000" stroke-width="1" fill="none"/>')
+    # pelo: raya al medio, hacia atrás, por detrás de la oreja
+    v.append(f'<path d="{PELO_34}" fill="#000"/>')
+    # raya al medio y brillos que bajan hacia las sienes
+    v.append('<path d="M222,118 C220,100 216,84 212,70" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/>')
+    v.append('<path d="M217,104 C200,104 178,114 164,134 M213,90 C193,92 170,104 154,128 M209,78 C188,80 166,92 148,116 M227,104 C243,104 256,112 264,124 M229,88 C247,88 262,98 270,112" stroke="#fff" stroke-width="1.1" fill="none" stroke-linecap="round"/>')
+    if variante == 'monte':
+        v.append('<path d="M196,80 C188,66 176,64 168,70 M150,104 C140,94 130,96 126,104 M232,78 C238,66 248,64 254,68 M140,170 C130,168 124,174 124,182" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>')
+    # oreja del lado cercano y zarcillo
+    v.append('<path d="M156,168 C146,160 136,168 137,184 C138,198 146,208 155,206 C159,205 160,201 159,198 C162,188 162,176 156,168 Z" fill="#fff" stroke="#000" stroke-width="2.2" stroke-linejoin="round"/>')
+    v.append('<path d="M153,172 C145,170 142,178 143,186 C144,194 148,199 152,200 M150,178 C147,182 148,188 151,192" stroke="#000" stroke-width="1.1" fill="none"/>')
+    v.append('<path d="M153,206 L153,212" stroke="#000" stroke-width="1.2"/>')
+    v.append(flor(153, 217, 4.2, '#000').replace('fill="#000" stroke="#000"', 'fill="#fff" stroke="#000"'))
+    v.append('<path d="M153,222 C149,228 149,233 153,236 C157,233 157,228 153,222 Z" fill="#000"/>')
+    # trenza que cae por delante del hombro cercano, con la cinta roja
+    v.append(f'<g transform="translate(-144.8 -16) scale(2.2)">{trenza()}</g>')
+    if variante == 'mercado':
+        # sombrero de caña en 3/4 con barbuquejo
+        # sombrero de caña encajado en la cabeza: trencilla gruesa (a esta escala se lee como caña)
+        v.append('<defs><pattern id="trencilla-34" width="10" height="7" patternUnits="userSpaceOnUse">'
+                 '<path d="M0,1.5 L2.5,5.5 L5,1.5 L7.5,5.5 L10,1.5" stroke="#000" stroke-width="0.8" fill="none"/></pattern></defs>')
+        v.append('<path d="M170,114 C166,86 182,62 212,60 C242,60 258,82 256,112 Z" fill="#fff" stroke="#000" stroke-width="2.6"/>')
+        v.append('<path d="M170,114 C166,86 182,62 212,60 C242,60 258,82 256,112 Z" fill="url(#trencilla-34)"/>')
+        v.append('<path d="M176,82 C198,76 228,76 252,82 M172,96 C198,90 230,90 256,96" stroke="#000" stroke-width="1.2" fill="none"/>')
+        v.append('<path d="M171,100 C196,95 232,95 256,100 L256,112 C232,106 196,106 170,112 Z" fill="#000"/>')
+        v.append('<path d="M172,106 C198,101 232,101 255,106" stroke="#fff" stroke-width="0.8" fill="none" stroke-dasharray="3 2"/>')
+        v.append('<ellipse cx="212" cy="114" rx="98" ry="21" transform="rotate(-4 212 114)" fill="#fff" stroke="#000" stroke-width="2.6"/>')
+        v.append('<ellipse cx="212" cy="114" rx="98" ry="21" transform="rotate(-4 212 114)" fill="url(#trencilla-34)"/>')
+        v.append('<ellipse cx="212" cy="114" rx="80" ry="15" transform="rotate(-4 212 114)" fill="none" stroke="#000" stroke-width="1.1"/>')
+        v.append('<path d="M170,112 C194,120 236,120 256,110 C236,124 192,126 170,112 Z" fill="#000"/>')
+        v.append('<path d="M118,122 C160,138 270,134 306,106" stroke="#000" stroke-width="1.2" fill="none"/>')
+        # barbuquejo: baja por la mejilla cercana y se ata bajo el mentón
+        v.append('<path d="M172,124 C166,156 162,186 166,214 C172,236 188,252 206,262" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>')
+        v.append('<path d="M172,124 C166,156 162,186 166,214 C172,236 188,252 206,262" stroke="#fff" stroke-width="1" fill="none" stroke-dasharray="3 2.5"/>')
+        v.append('<path d="M204,262 C200,270 198,278 200,284 M208,262 C212,270 214,276 218,280" stroke="#000" stroke-width="2.4" fill="none" stroke-linecap="round"/>')
+    return ''.join(v)
+
+def ojo_34(clave, cx, cy, ancho, arriba, abajo, iris, extra='', grosor=2.6):
+    """Ojo en 3/4: almendra con el lagrimal hacia la nariz (derecha), iris recortado."""
+    x0, x1 = cx - ancho / 2, cx + ancho / 2
+    almendra = (f'M{f(x0)},{f(cy)} C{f(x0 + ancho * 0.3)},{f(cy - arriba * 1.35)} {f(x1 - ancho * 0.25)},{f(cy - arriba * 1.3)} {f(x1)},{f(cy - 0.6)} '
+                f'C{f(x1 - ancho * 0.25)},{f(cy + abajo * 1.3)} {f(x0 + ancho * 0.3)},{f(cy + abajo * 1.3)} {f(x0)},{f(cy)} Z')
+    ix, iy, ir = iris
+    pestana = f'M{f(x0 - 1.5)},{f(cy + 0.4)} C{f(x0 + ancho * 0.3)},{f(cy - arriba * 1.4)} {f(x1 - ancho * 0.25)},{f(cy - arriba * 1.35)} {f(x1 + 0.6)},{f(cy - 0.8)}'
+    return (f'<clipPath id="r34-{clave}"><path d="{almendra}"/></clipPath>'
+            f'<path d="{almendra}" fill="#fff" stroke="#000" stroke-width="1"/>'
+            f'<g clip-path="url(#r34-{clave})"><circle cx="{f(ix)}" cy="{f(iy)}" r="{f(ir)}" fill="#000"/>'
+            f'<circle cx="{f(ix + ir * 0.35)}" cy="{f(iy - ir * 0.4)}" r="{f(ir * 0.28)}" fill="#fff"/></g>'
+            f'<path d="{pestana}" stroke="#000" stroke-width="{grosor}" fill="none" stroke-linecap="round"/>'
+            f'<path d="M{f(x0 + 2)},{f(cy + abajo * 1.1)} C{f(x0 + ancho * 0.4)},{f(cy + abajo * 1.45)} {f(x1 - ancho * 0.3)},{f(cy + abajo * 1.35)} {f(x1 - 2)},{f(cy + abajo * 0.6)}" stroke="#000" stroke-width="0.8" fill="none"/>'
+            + extra)
+
+def ceja_34(x0, y0, x1, y1, grueso=4.2, arco=-3):
+    """Ceja gruesa del lado del lagrimal (x1) y fina afuera (x0)."""
+    mx, my = (x0 + x1) / 2, (y0 + y1) / 2 + arco
+    return (f'<path d="M{f(x0)},{f(y0)} Q{f(mx)},{f(my - grueso * 0.5)} {f(x1)},{f(y1 - grueso * 0.5)} '
+            f'L{f(x1)},{f(y1 + grueso * 0.5)} Q{f(mx)},{f(my + grueso * 0.35)} {f(x0)},{f(y0 + 0.6)} Z" fill="#000"/>')
+
+OJOS_34 = {
+    #           cercano: (cx, cy, ancho, arriba, abajo, iris)                   lejano: idem
+    'neutral': ((189, 170, 28, 6, 4.5, (192, 170, 4.8)), (244, 171, 20, 5.2, 4, (246.5, 171, 4))),
+    'alerta': ((189, 169, 28, 7, 4.5, (192, 169, 4.8)), (244, 170, 20, 6, 4, (246.5, 170, 4))),
+    'miedo': ((189, 169, 30, 8.6, 6.4, (190, 169, 3.8)), (244, 170, 22, 7.6, 5.6, (245, 170, 3.2))),
+    'rabia': ((189, 171, 28, 3.4, 3.6, (192, 171.5, 4.8)), (244, 172, 20, 3, 3.2, (246.5, 172.5, 4))),
+    'duelo': ((189, 172, 28, 3.6, 4.6, (191, 174.5, 4.8)), (244, 173, 20, 3.2, 4, (245.5, 175.5, 4))),
+}
+CEJAS_34 = {
+    # cercana (x0 afuera, x1 adentro), lejana (x0 adentro, x1 afuera) → se dibuja adentro grueso
+    'neutral': ((170, 156, 205, 151), (258, 157, 233, 152)),
+    'alerta': ((170, 152, 205, 146), (258, 153, 233, 147)),
+    'miedo': ((170, 150, 205, 141), (258, 151, 233, 142)),
+    'rabia': ((170, 152, 206, 160), (258, 153, 232, 161)),
+    'duelo': ((170, 160, 205, 147), (258, 161, 233, 148)),
+}
+BOCAS_34 = {
+    'neutral': '<path d="M214,232 C222,229 230,231 234,232 C240,230 246,230 252,232" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M226,241 C232,243 240,243 246,240" stroke="#000" stroke-width="1" fill="none"/>',
+    'alerta': '<path d="M215,233 C222,231 230,232 234,233 C240,231 246,231 251,233" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M226,241 C232,243 240,243 246,240" stroke="#000" stroke-width="1" fill="none"/>',
+    'miedo': '<path d="M218,231 C226,228 242,228 250,231 C246,240 238,244 233,244 C226,244 220,239 218,231 Z" fill="#000"/><path d="M220,232 C228,231 240,231 248,232" stroke="#fff" stroke-width="1.4" fill="none"/><path d="M226,248 C232,250 240,250 246,247" stroke="#000" stroke-width="1" fill="none"/>',
+    'rabia': '<path d="M214,236 C222,233 232,233 238,233 C244,233 249,234 252,237" stroke="#000" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M227,243 C233,244 240,244 245,242" stroke="#000" stroke-width="1" fill="none"/>',
+    'duelo': '<path d="M214,237 C220,233 228,232 234,233 C240,232 247,233 252,237" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M226,243 C232,245 240,245 246,243" stroke="#000" stroke-width="1" fill="none"/><path d="M226,253 C230,255 236,255 240,253" stroke="#000" stroke-width="0.8" fill="none"/>',
+}
+RUBOR_34 = '<path d="M172,196 L168,206 M178,197 L174,207 M184,198 L180,208" stroke="#000" stroke-width="1.1" stroke-linecap="round"/><path d="M258,198 L256,205" stroke="#000" stroke-width="1" stroke-linecap="round"/>'
+
+def rasgos_34(expr):
+    (c, l) = OJOS_34[expr]
+    (cc, cl) = CEJAS_34[expr]
+    g = 3.2 if expr == 'rabia' else 2.6
+    s = []
+    if expr in ('neutral', 'alerta'):
+        s.append(RUBOR_34)
+    if expr == 'rabia':
+        s.append(RUBOR_34.replace('stroke-width="1.1"', 'stroke-width="1.6"'))
+        s.append('<path d="M216,150 C217,155 217,160 216,164 M222,150 C223,155 223,160 222,164" stroke="#000" stroke-width="1" fill="none"/>')
+        s.append('<path d="M230,209 C234,204 244,204 249,208" stroke="#000" stroke-width="2.2" fill="none" stroke-linecap="round"/>')
+    if expr == 'miedo':
+        s.append('<path d="M198,124 C212,120 228,120 242,124 M202,132 C214,129 226,129 238,132" stroke="#000" stroke-width="0.9" fill="none"/>')
+        s.append('<path d="M266,150 C263,156 262,160 263,163 C264,166 268,166 269,163 C270,160 268,156 266,150 Z" fill="#fff" stroke="#000" stroke-width="1"/>')
+    if expr == 'duelo':
+        s.append('<path d="M180,180 C186,184 194,184 200,181 M236,182 C241,185 247,185 251,182" stroke="#000" stroke-width="0.7" fill="none"/>')
+        s.append('<path d="M203,174 C204,182 205,190 205,198" stroke="#000" stroke-width="0.9" fill="none"/>')
+        s.append('<path d="M205,197 C202,202 201,206 203,209 C205,212 209,211 210,208 C211,205 208,201 205,197 Z" fill="#fff" stroke="#000" stroke-width="1.1"/>')
+    s.append(ojo_34(f'{expr}-c', c[0], c[1], c[2], c[3], c[4], c[5], grosor=g))
+    s.append(ojo_34(f'{expr}-l', l[0], l[1], l[2], l[3], l[4], l[5], grosor=g * 0.85))
+    s.append(ceja_34(*cc, grueso=5 if expr == 'rabia' else 4.2, arco=-1 if expr == 'rabia' else -3))
+    s.append(ceja_34(*cl, grueso=4.4 if expr == 'rabia' else 3.6, arco=-1 if expr == 'rabia' else -2.5))
+    s.append(BOCAS_34[expr])
+    return ''.join(s)
+
+def parpado_34(expr):
+    """Ojos cerrados: piel sobre ambos ojos, párpados cerrados y las cejas de la expresión."""
+    (c, l) = OJOS_34[expr]
+    (cc, cl) = CEJAS_34[expr]
+    s = [f'<ellipse cx="{c[0]}" cy="{c[1] + 0.5}" rx="{f(c[2] / 2 + 3.5)}" ry="11" fill="#fff"/>',
+         f'<ellipse cx="{l[0]}" cy="{l[1] + 0.5}" rx="{f(l[2] / 2 + 3)}" ry="10" fill="#fff"/>']
+    for (cx, cy, w) in [(c[0], c[1], c[2]), (l[0], l[1], l[2])]:
+        x0, x1 = cx - w / 2, cx + w / 2
+        s.append(f'<path d="M{f(x0 - 1)},{f(cy)} C{f(x0 + w * 0.3)},{f(cy + 4.5)} {f(x1 - w * 0.3)},{f(cy + 4.5)} {f(x1 + 0.5)},{f(cy - 0.5)}" stroke="#000" stroke-width="2.6" fill="none" stroke-linecap="round"/>')
+        s.append(f'<path d="M{f(cx - w * 0.2)},{f(cy + 3.8)} L{f(cx - w * 0.22)},{f(cy + 6.8)} M{f(cx + w * 0.05)},{f(cy + 4)} L{f(cx + w * 0.05)},{f(cy + 7.2)}" stroke="#000" stroke-width="1" stroke-linecap="round"/>')
+    s.append(ceja_34(*cc, grueso=5 if expr == 'rabia' else 4.2, arco=-1 if expr == 'rabia' else -3))
+    s.append(ceja_34(*cl, grueso=4.4 if expr == 'rabia' else 3.6, arco=-1 if expr == 'rabia' else -2.5))
+    return ''.join(s)
+
+def hoja_retrato():
+    ranuras = [('base-mercado', busto_34('mercado'), 'Base del retrato, traje de mercado (rostro sin rasgos)'),
+               ('base-monte', busto_34('monte'), 'Base del retrato, variante monte (rostro sin rasgos)')]
+    ranuras += [(f'rasgos-{e}', rasgos_34(e), f'Rasgos del retrato: {e}') for e in EXPRESIONES]
+    ranuras += [(f'parpado-{e}', parpado_34(e), f'Parpadeo del retrato: {e}') for e in EXPRESIONES]
+    piezas = []
+    for i, (pid, cuerpo, comentario) in enumerate(ranuras):
+        tx = i * RET_W
+        cuerpo = cuerpo.replace('id="r34-', f'id="{pid}-r34-').replace('url(#r34-', f'url(#{pid}-r34-')
+        piezas.append(piece(pid, f'{f(tx + RET_W / 2)} {RET_H}', f'<g transform="translate({tx} 0)">{cuerpo}</g>', comentario))
+    ancho = RET_W * len(ranuras)
+    cuerpo = encabezado('Rosalba Insuasty — retrato en tres cuartos (viñetas y diálogos).',
+                        'Base por variante + rasgos por expresión + parpadeo; todas las piezas con el pivote al pie del busto.')
+    cuerpo = cuerpo.replace('width="300" height="500" viewBox="0 0 300 500"', f'width="{ancho}" height="{RET_H}" viewBox="0 0 {ancho} {RET_H}"')
+    open(os.path.join(OUTDIR, 'rosalba-retrato.svg'), 'w').write(cuerpo + ''.join(piezas) + '\n</svg>\n')
+    print('ok rosalba-retrato.svg', len(ranuras), 'piezas')
+
+hoja_retrato()

@@ -70,3 +70,20 @@ describe('Rosalba mide en el SVG lo que declara', () => {
     });
   }
 });
+
+// Guarda del retrato en tres cuartos: base por variante y rasgos/parpadeo por expresión.
+describe('el retrato de Rosalba tiene todas sus capas', () => {
+  it('rosalba-retrato: bases mercado y monte, rasgos y parpadeo por expresión', () => {
+    const nombre = 'rosalba-retrato';
+    const piezas = framesDeSvg(leer(nombre), nombre).map((f) =>
+      f.nombre.slice(nombre.length + 1),
+    );
+    expect(piezas).toEqual(
+      expect.arrayContaining([
+        'base-mercado',
+        'base-monte',
+        ...EXPRESIONES.flatMap((e) => [`rasgos-${e}`, `parpado-${e}`]),
+      ]),
+    );
+  });
+});

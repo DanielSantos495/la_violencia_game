@@ -70,6 +70,12 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
   inclinada): una cabeza completa por expresión y su capa de parpadeo, con el mismo pivote del
   cuello; el juego cambia la cabeza sin mover sombrero, zarcillo ni mechones (los mechones del
   monte son pieza aparte, hija de la cabeza).
+- **Retrato en tres cuartos** (`rosalba-retrato.svg`) para viñetas de cómic y diálogos: busto
+  girado hacia la derecha, con los dos ojos visibles y la trenza (con su cinta roja) cayendo por
+  delante del hombro. Capas con el mismo pivote (pie del busto): base por variante (mercado con
+  sombrero, pañolón y collar; monte con ruana y mechones; rostro sin rasgos), rasgos por
+  expresión (ojos, cejas, boca, mejilla) y parpadeo. En el juego: `Retrato`
+  (`game/src/game/personajes/Retrato.ts`).
 
 ## 4. Animación
 
@@ -96,7 +102,7 @@ Agachada, la postura solo mueve la cabeza: la mano de apoyo sigue en el suelo.
 
 - Hex del rojo y de la paleta completa (hoja de estilo, doc 03 §6.1).
 - Fotografías de campesinas boyacenses de los años 40 que confirmen el traje.
-- Vista de frente y tres cuartos.
+- Vista de frente de cuerpo entero (hoja completa del doc 03 §6.2).
 - Hombros y torso por expresión (hoy la postura mueve cabeza, brazos y trenza; el torso no es
   padre de la cabeza, así que inclinarlo exige rehacer la jerarquía de piezas).
 - Escopeta del padre (doc 03 §2): modelo **[P]**; no se dibuja final hasta resolverlo.
