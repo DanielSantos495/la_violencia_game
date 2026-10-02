@@ -9,6 +9,7 @@ import { Personaje } from '../Personaje.ts';
 import {
   APOYO_ROSALBA,
   CAMINATA_ROSALBA,
+  ESCALA_ROSALBA,
   ROSALBA_MERCADO,
   ROSALBA_MONTE,
 } from '../personajes/rosalba.ts';
@@ -64,7 +65,7 @@ export class Prueba extends Scene {
       'de-pie',
       { caminata: CAMINATA_ROSALBA, expresion: 'neutral' },
     );
-    mercado.raiz.setScale(0.65);
+    mercado.raiz.setScale(ESCALA_ROSALBA);
     void (async () => {
       for (;;) {
         mercado.raiz.x = -200;
@@ -93,7 +94,8 @@ export class Prueba extends Scene {
       'de-pie',
       { caminata: CAMINATA_ROSALBA, expresion: 'alerta' },
     );
-    monte.raiz.setScale(0.9);
+    // Escala del contrato (planeacion/arte/tomo1/escenarios/contrato_escala.md).
+    monte.raiz.setScale(ESCALA_ROSALBA);
     if (import.meta.env.DEV) {
       // Solo en desarrollo: permite inspeccionar la secuencia desde la consola del navegador.
       Object.assign(globalThis, { __prueba: { monte, mercado } });

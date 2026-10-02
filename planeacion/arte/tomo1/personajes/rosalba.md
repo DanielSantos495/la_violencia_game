@@ -11,6 +11,16 @@ Campesina liberal de 19 años de Puente Alto (norte de Boyacá), hija de pequeñ
 sabe leer gracias a Custodia. El diseño tiene que leerse en silueta a escala de juego y
 envejecer con la historia: empieza como muchacha de mercado y termina en el monte.
 
+- **Estatura de diseño: 1,52 m.** Referencia: Meisel Roca y Vega Acevedo, "¿Cuánto crecieron
+  los colombianos en el siglo XX?", *El Emisor* n.º 58 (Banco de la República, 2004), con
+  cédulas de 4,3 millones de mujeres nacidas entre 1910 y 1984: la estatura femenina subió
+  7,87 cm (5,2 %) entre las cohortes 1910-1914 y 1980-1984, es decir de ~151 a ~159 cm.
+  Interpolando, una mujer nacida hacia 1927 mide en promedio ~153 cm; Boyacá figura entre los
+  departamentos de menor estatura y Rosalba es campesina, de ahí 1,52 m (cálculo propio a partir
+  de la fuente, no dato directo). En escena: `escalaPersonaje(1,52 m, 433 px)` según el
+  contrato de escala (`../escenarios/contrato_escala.md`); las cifras viven en
+  `game/src/game/personajes/rosalba.ts` y un test vuelve a medir el SVG.
+
 - **Silueta:** sombrero claro arriba, masa negra de pañolón o ruana en el centro, falda oscura
   ancha y casi al tobillo, alpargatas blancas abajo. Se reconoce incluso pequeña y en paralaje.
 - **Valores:** negro pleno en pelo y abrigo; grises solo por trama (falda); blanco de papel en
