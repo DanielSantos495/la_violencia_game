@@ -94,6 +94,8 @@ export const ROSALBA_MONTE: Record<string, DefinicionPose> = {
   agachada: {
     base: 'personajes/rosalba-agachada',
     cabezas: CABEZAS_AGACHADA,
+    // La mano de apoyo sigue en el suelo: la expresión solo mueve la cabeza.
+    postura: 'cabeza',
     piezas: [
       'cuerpo',
       'cabeza',

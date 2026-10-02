@@ -80,14 +80,15 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
 
 | Expresión | Ojos y cejas | Boca y rostro | Postura y parpadeo |
 |---|---|---|---|
-| Neutral | Mirada tranquila | Rubor de campo | Cabeza recta; parpadeo pausado |
-| Alerta | Ceja alzada, arruga de preocupación | Igual | Cabeza algo alzada; parpadea más |
-| Miedo | Ojo muy abierto, blanco alrededor del iris, ceja arqueada, frente arrugada | Labios entreabiertos, gota de sudor, sin rubor | Cabeza atrás; parpadeo rápido, a veces doble |
-| Rabia | Ceja baja hacia la nariz, entrecejo, párpado recto y pesado | Labios apretados, comisura abajo, aleta de la nariz abierta, rubor intenso | Mentón abajo; casi no parpadea (mirada fija) |
-| Duelo | Párpado pesado, mirada baja, ceja de tristeza, ojeras | Lágrima en tinta (sin color), comisura abajo, mentón tenso | Cabeza caída; parpadeo lento |
+| Neutral | Mirada tranquila | Rubor de campo | Cabeza recta, brazos sueltos; parpadeo pausado |
+| Alerta | Ceja alzada, arruga de preocupación | Igual | Cabeza algo alzada, brazo adelantado, listo; parpadea más |
+| Miedo | Ojo muy abierto, blanco alrededor del iris, ceja arqueada, frente arrugada | Labios entreabiertos, gota de sudor, sin rubor | Cabeza atrás, codo pegado al cuerpo y mano al pecho (se aferra al pañolón o a la ruana); parpadeo rápido, a veces doble |
+| Rabia | Ceja baja hacia la nariz, entrecejo, párpado recto y pesado | Labios apretados, comisura abajo, aleta de la nariz abierta, rubor intenso | Mentón abajo, brazos tensos hacia adelante; casi no parpadea (mirada fija) |
+| Duelo | Párpado pesado, mirada baja, ceja de tristeza, ojeras | Lágrima en tinta (sin color), comisura abajo, mentón tenso | Cabeza caída, brazos colgando sin fuerza; parpadeo lento |
 
 A la escala de juego la cabeza mide pocos píxeles: de lejos la emoción se lee sobre todo por la
-postura; el detalle del rostro rinde en planos cercanos y viñetas de cómic.
+postura (cabeza y brazos); el detalle del rostro rinde en planos cercanos y viñetas de cómic.
+Agachada, la postura solo mueve la cabeza: la mano de apoyo sigue en el suelo.
 - La violencia no se anima: lo que viva Rosalba en la noche de los chulavíes se narra en viñetas
   (doc 02 §1, doc 03 §1).
 
@@ -96,5 +97,6 @@ postura; el detalle del rostro rinde en planos cercanos y viñetas de cómic.
 - Hex del rojo y de la paleta completa (hoja de estilo, doc 03 §6.1).
 - Fotografías de campesinas boyacenses de los años 40 que confirmen el traje.
 - Vista de frente y tres cuartos.
-- Postura del cuerpo por expresión (hombros, brazos) más allá de la cabeza.
+- Hombros y torso por expresión (hoy la postura mueve cabeza, brazos y trenza; el torso no es
+  padre de la cabeza, así que inclinarlo exige rehacer la jerarquía de piezas).
 - Escopeta del padre (doc 03 §2): modelo **[P]**; no se dibuja final hasta resolverlo.

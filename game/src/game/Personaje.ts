@@ -4,6 +4,7 @@ import {
   DATOS_EXPRESION,
   type Expresion,
   intervaloParpadeo,
+  PIEZAS_POSTURA_CABEZA,
 } from '../core/animacion/expresiones.ts';
 import { caminar, type OpcionesCaminar } from './Caminata.ts';
 import { armarRecorte } from './Recorte.ts';
@@ -17,6 +18,11 @@ export interface DefinicionPose {
    * "<cabezas>/parpado-<expresión>"), con el mismo pivote que la pieza `cabeza`.
    */
   cabezas?: string;
+  /**
+   * Qué mueve la postura de la expresión en esta pose: todo el cuerpo (por defecto) o solo
+   * la cabeza (p. ej. agachada, con la mano apoyada en el suelo).
+   */
+  postura?: 'cuerpo' | 'cabeza';
 }
 
 export interface OpcionesPersonaje {
@@ -32,6 +38,9 @@ interface Rig {
   /** Posición de reposo de cada pieza y del contenedor (la caminata las altera). */
   reposo: Map<string, { x: number; y: number }>;
   yBase: number;
+  /** Postura de la expresión que admite esta pose (copia filtrada de la del personaje). */
+  postura: Record<string, number>;
+  soloCabeza: boolean;
   /** Imagen de la cabeza (cambia de frame con la expresión) y su capa de parpadeo. */
   cabezas?: string;
   cabeza?: GameObjects.Image;
@@ -89,6 +98,8 @@ export class Personaje {
           [...rig.piezas].map(([id, p]) => [id, { x: p.x, y: p.y }]),
         ),
         yBase: rig.contenedor.y,
+        postura: {},
+        soloCabeza: def.postura === 'cabeza',
       };
       if (def.cabezas) this.prepararCabezas(datos, def.cabezas);
       this.rigs.set(nombre, datos);
@@ -128,7 +139,7 @@ export class Personaje {
     this.transicionPostura = null;
     if (duracion <= 0) {
       Object.assign(this.postura, destino);
-      this.aplicarPosturaSiQuieto();
+      this.sincronizarPostura();
       return;
     }
     for (const id of Object.keys(destino)) this.postura[id] ??= 0;
@@ -137,7 +148,7 @@ export class Personaje {
       ...destino,
       duration: duracion,
       ease: 'Sine.easeOut',
-      onUpdate: () => this.aplicarPosturaSiQuieto(),
+      onUpdate: () => this.sincronizarPostura(),
     });
   }
 
@@ -147,7 +158,7 @@ export class Personaje {
     const rig = this.rig();
     const caminata = caminar(this.escena, rig.contenedor, rig.piezas, {
       ...this.opcionesCaminata,
-      postura: this.postura,
+      postura: rig.postura,
     });
     this.animacion = caminata.tween;
     return caminata.velocidad * this.raiz.scaleX;
@@ -174,8 +185,8 @@ export class Personaje {
       onUpdate: () => {
         const { angulos } = poseAcecho((this.escena.time.now - inicio) / 1000);
         for (const [id, pieza] of rig.piezas) {
-          if (id in angulos || id in this.postura) {
-            pieza.angle = (angulos[id] ?? 0) + (this.postura[id] ?? 0);
+          if (id in angulos || id in rig.postura) {
+            pieza.angle = (angulos[id] ?? 0) + (rig.postura[id] ?? 0);
           }
         }
       },
@@ -189,7 +200,7 @@ export class Personaje {
     const rig = this.rig();
     rig.contenedor.y = rig.yBase;
     for (const [id, pieza] of rig.piezas) {
-      pieza.angle = this.postura[id] ?? 0;
+      pieza.angle = rig.postura[id] ?? 0;
       const r = rig.reposo.get(id);
       if (r) pieza.setPosition(r.x, r.y);
     }
@@ -271,10 +282,21 @@ export class Personaje {
     for (const rig of this.rigs.values()) rig.parpado?.setVisible(cerrados);
   }
 
-  private aplicarPosturaSiQuieto(): void {
+  /**
+   * Copia la postura del personaje a cada pose según lo que admite, y la aplica si la pose
+   * está quieta (caminata y acecho la leen en cada cuadro).
+   */
+  private sincronizarPostura(): void {
+    for (const rig of this.rigs.values()) {
+      for (const [id, angulo] of Object.entries(this.postura)) {
+        if (rig.soloCabeza && !PIEZAS_POSTURA_CABEZA.includes(id)) continue;
+        rig.postura[id] = angulo;
+      }
+    }
     if (this.animacion) return;
-    for (const [id, pieza] of this.rig().piezas) {
-      if (id in this.postura) pieza.angle = this.postura[id] ?? 0;
+    const rig = this.rig();
+    for (const [id, pieza] of rig.piezas) {
+      if (id in rig.postura) pieza.angle = rig.postura[id] ?? 0;
     }
   }
 
