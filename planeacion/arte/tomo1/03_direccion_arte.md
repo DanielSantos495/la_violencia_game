@@ -24,6 +24,7 @@
 - **La sangre se vuelve tinta** (decisión del 01-oct-2026). La sangre es roja solo en el instante: fresca, como mancha orgánica con textura (pincel seco, salpicadura, trama) y borde irregular, sobre cuerpos, ropa o suelo. En segundos se oxida y pasa a tinta negra; en las viñetas fijas del después ya es negra. El rojo partidista, en cambio, es siempre plano, de imprenta, con borde limpio y solo en objetos (pañuelos, banderas, afiches, fachadas). La diferencia es de forma, textura y tiempo, no solo de matiz (sirve también a jugadores con daltonismo). Lectura: la violencia se convierte en registro, la tinta con la que se escribe la historia.
 - La violencia contra civiles puede ser jugable en momentos guionizados (doc 02 §1 regla 1); el después se cierra en viñetas fijas (antes/después, humo, objetos abandonados).
 - Muertos: cuerpos visibles cuando la escena lo pide; rostros de víctimas nunca identificables.
+- **Prueba de lo gratuito** (P04, 02-oct-2026): un detalle violento se queda solo si quitarlo le quita sentido a la escena; si solo le quita impacto, sobra. Nada de recrearse en la herida: sin cámara lenta, sin primer plano repetido, sin mutilación como recompensa visual.
 
 ---
 
