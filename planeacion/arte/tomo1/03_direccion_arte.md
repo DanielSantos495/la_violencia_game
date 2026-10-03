@@ -75,7 +75,7 @@ Los SVG fuente se versionan en el repo (`art/src`) y los PNG se generan en el bu
 | Elemento | Referencia | Estado |
 |---|---|---|
 | Punto del asesinato | Edificio Agustín Nieto, Carrera 7.ª con Av. Jiménez | **[V]** Fototeca Archivo de Bogotá |
-| Tranvía | Tranvías incendiados en la Séptima | **[V]** fotos de Sady González |
+| Tranvía | Tranvías incendiados en la Séptima. Aspecto en 1946: carrocería oscura, techo claro (plateado en las «Lorencitas») y franjas de ruta al frente | **[V]** fotos de Sady González; fotos de 1946 de Al Mankoff (A. Morrison, *Los tranvías de Bogotá*). Tono de la carrocería **[P]** |
 | Edificios incendiados | Palacio de San Carlos, Palacio de San Francisco (Gobernación), hoteles Regina y Atlántico, palacio arzobispal, nunciatura, Palacio de Justicia (Calle 11 con Carrera 6.ª) | **[V]** IDPC y prensa |
 | Capitolio | Sede de la IX Conferencia Panamericana | **[V]** |
 | Escala del daño | Cerca de 150 inmuebles afectados; no exagerar la destrucción | **[V]** |
@@ -97,9 +97,9 @@ En 2D la multitud se resuelve con capas de siluetas en paralaje: el riesgo técn
 ### 3.4 Fuerzas armadas y policía
 | Elemento | Estado |
 |---|---|
-| Uniforme de la Policía 1948–1953 | **[P]** Museo Histórico de la Policía Nacional / Academia de Historia de la Policía |
+| Uniforme de la Policía 1948–1953 | Oficiales en julio de 1948: «uniforme de paño de color marrón»; guardia de la Conferencia Panamericana: cascos plateados **[V]** (fuente secundaria: *Momentos de historia de la Policía Nacional*; confirmar con el Museo Histórico de la Policía Nacional). Agentes y 1950–1953 **[P]** (`paleta.md` §12) |
 | Chulavíes | Actuaban "en uniforme o en civil" **[V]**; mezcla de prendas **[P]** |
-| Ejército 1948–1953 | **[P]** uniformes y equipo |
+| Ejército 1948–1953 | Uniforme de campaña caqui **[V]** (Ejército Nacional, «Evolución histórica del uniforme de campaña»); equipo **[P]** |
 | Fusiles | Mauser en servicio **[P: modelos por año]** |
 | Guerrilla | Escopetas, revólveres, machetes, armas capturadas **[P]** |
 
