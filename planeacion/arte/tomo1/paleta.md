@@ -89,7 +89,7 @@ El umbral azul es más bajo porque, sobre papel cálido, el azul se lee como azu
 | Falda teñida con añil **[V]** | Negro azulado | `negro-anil`, por debajo del umbral azul | Hecho de época que cabe sin leerse como azul |
 | Enaguas rojas **[V]** (Ocampo: «enaguas blancas y rojas») | Rojo | Se dibujan blancas (**decisión**) | El rojo de la ropa diluiría el del partido |
 | Corocoras (garzas rojas del Llano) | Rojo | En tinta o fuera de cuadro | Ídem |
-| Uniformes **[P]** | Por verificar | `oliva` o `caqui` provisional | Si resultan azules: gris azulado bajo el umbral o decisión explícita |
+| Uniformes | Por época | Ejército en `caqui` **[V]**; oficiales de Policía en 1948 en `pano-marron` **[V]** (fuente secundaria); Policía 1950–1953 **[P]**; `oliva` solo después de 1953 | Ninguno entra en la zona azul: si un uniforme posterior resulta azul, decisión explícita |
 
 ## 4. Colores
 
@@ -127,7 +127,7 @@ OKLCH = L C h.
 | `barro` | Barro | `#644d3d` | 0.44 0.040 58° | Barro húmedo, ruedo embarrado en el monte | decisión decisión de diseño |
 | `teja` | Teja | `#ab795d` | 0.62 0.075 50° | Teja de barro cocido, cerámica de Ráquira | **[V]** doc 03 §3.1 (teja de barro cocido) |
 | `madera` | Madera | `#584330` | 0.40 0.042 64° | Portones, vigas, alero, bancas | **[V]** doc 03 §3.1 (cubierta de madera; portón [P]) |
-| `piedra` | Piedra | `#969289` | 0.66 0.013 85° | Cercas de piedra, pila de la plaza | **[P]** doc 03 §3.1 (paisaje [P]) |
+| `piedra` | Piedra | `#969289` | 0.66 0.013 85° | Cercas de piedra, pila de la plaza | **[P]** Cercas de piedra: sin fuente localizada. Pista: el altiplano es de areniscas y lutitas cretácicas (geología regional); confirmar con fotos de veredas del norte de Boyacá |
 
 ### Boyacá: campo
 
@@ -140,6 +140,7 @@ OKLCH = L C h.
 | `monte` | Monte | `#536a57` | 0.50 0.040 150° | Bosque de vertiente, matorral donde se esconde Rosalba | decisión decisión de diseño |
 | `frailejon` | Frailejón | `#abb19c` | 0.75 0.030 120° | Páramo: hoja gris plateada | **[V]** Instituto Humboldt (páramos, Espeletia) |
 | `niebla` | Niebla | `#deded9` | 0.90 0.008 110° | Páramo, monte al amanecer | **[V]** doc 03 §2 (monte al amanecer) |
+| `nube` | Nube | `#f4f2ea` | 0.96 0.010 95° | Nubes del altiplano sobre cielo de papel; la panza en niebla | decisión decisión de diseño |
 | `agua` | Quebrada | `#9aa8a3` | 0.72 0.018 170° | Agua: reflejo gris verdoso; el agua no es azul porque el azul es del partido | decisión decisión de diseño |
 
 ### Gente y vestido
@@ -155,12 +156,21 @@ OKLCH = L C h.
 | `lana-parda` | Lana parda | `#574336` | 0.40 0.035 55° | Ruana oscura (la de Rosalba en el monte) | **[V]** Ocampo López (1977) citando a Oviedo, s. XVIII: ruanas «en tonos oscuros y relativamente pequeñas» |
 | `pano-oscuro` | Paño oscuro | `#2e241f` | 0.27 0.018 48° | Faldas de frisa o paño, pantalón de pañete | **[V]** Ocampo López (1977): faldas «generalmente de tonos oscuros» |
 | `negro-anil` | Negro de añil | `#212632` | 0.27 0.024 268° | Falda de frisa teñida con añil: negro frío, por debajo del umbral de la zona azul | **[V]** Ocampo López (1977): faldas tejidas en telares caseros «y las teñían con añil. La falda generalmente es negra» |
+| `pano-marron` | Paño marrón | `#543c2f` | 0.38 0.040 50° | Uniforme de oficiales de la Policía en 1948 | **[V]** Momentos de historia de la Policía Nacional, «El Bogotazo 1948»: el 16-jul-1948 los cadetes ascendidos lucían «uniforme de paño de color marrón» (fuente secundaria; confirmar con el Museo Histórico de la Policía) |
 | `paja` | Paja | `#cbbd96` | 0.80 0.055 90° | Sombrero de caña, tapia pisada o jipa | **[V]** Ocampo López (1977); doc 03 §3.1 |
 | `cinta-amarilla` | Cinta amarilla | `#dbcb8e` | 0.84 0.080 95° | Cintas del ruedo, abalorios, flores de papel del altar | **[V]** Ocampo López (1977): cintas del ruedo «con colores vistosos»; flores amarillo claro en altares |
 | `cinta-verde` | Cinta verde | `#7a9e72` | 0.66 0.075 140° | Cintas del ruedo, abalorios | decisión Ocampo López (1977): cintas «con colores vistosos» (tono concreto: decisión) |
 | `cinta-rosa` | Cinta rosa | `#e1aeb3` | 0.80 0.060 12° | Cintas, flores del altar; el rosa es rojo sin fuerza: queda fuera de la zona roja | **[V]** Ocampo López (1977): flores «en tonos rosa» en altares |
-| `caqui` | Caqui | `#aa9d7f` | 0.70 0.045 88° | Camisa y pantalón llanero | **[V]** doc 03 §3.3 (blanca o caqui) |
-| `oliva` | Oliva | `#646648` | 0.50 0.045 112° | Reservado para uniformes cuando se verifiquen | **[P]** doc 03 §3.4 (uniformes [P]) |
+| `caqui` | Caqui | `#aa9d7f` | 0.70 0.045 88° | Uniforme de campaña del Ejército (1930–1953) y camisa y pantalón llanero | **[V]** Ejército Nacional, «Evolución histórica del uniforme de campaña»: en los años 30 «se eligió el color caqui» y tras la guerra de Corea siguió «la línea caqui»; doc 03 §3.3 (llanero) |
+| `oliva` | Oliva | `#646648` | 0.50 0.045 112° | Solo para uniformes posteriores a 1953 cuando se verifiquen; no usar en 1946–1953 | **[P]** La Policía usó verde aceituna después (fecha de adopción [P]); el Ejército vestía caqui en 1948–1953 |
+
+### Animales
+
+| Id | Nombre | Hex | OKLCH | Uso | Fuente |
+|---|---|---|---|---|---|
+| `pelaje-castano` | Castaño | `#624632` | 0.42 0.050 56° | Caballos y mulas castaños; ganado pardo | decisión decisión de diseño (colores naturales; el alazán rojizo se mantiene fuera de la zona roja) |
+| `pelaje-bayo` | Bayo | `#b39a74` | 0.70 0.060 78° | Caballos bayos, ganado claro | decisión decisión de diseño |
+| `pelaje-rucio` | Rucio | `#8f8c85` | 0.64 0.010 80° | Mulas y burros grises | decisión decisión de diseño; negro en tinta-plena y blanco en lana-cruda |
 
 ### Llano
 
@@ -176,10 +186,10 @@ OKLCH = L C h.
 
 | Id | Nombre | Hex | OKLCH | Uso | Fuente |
 |---|---|---|---|---|---|
-| `ladrillo` | Ladrillo | `#a47c65` | 0.62 0.060 52° | Muros de ladrillo | **[P]** fotos de Sady González (blanco y negro): color inferido |
-| `piedra-bogota` | Piedra y estuco | `#a29e96` | 0.70 0.012 80° | Edificios republicanos de la Séptima | **[P]** doc 03 §3.2 (inmuebles [V]; acabados [P]) |
+| `ladrillo` | Ladrillo | `#a47c65` | 0.62 0.060 52° | Ladrillo a la vista solo donde una foto concreta lo muestre; las fachadas de la Séptima en 1946 eran pañetadas | **[P]** Sin fuente de ladrillo a la vista en la Séptima de 1948; las fotos de 1946 muestran pañete |
+| `piedra-bogota` | Piedra y estuco | `#a29e96` | 0.70 0.012 80° | Fachadas pañetadas y claras de la Séptima, con cornisas | **[V]** Fotos de 1946 de Al Mankoff (Morrison, tramz.com): fachadas claras y pañetadas en la Carrera 7; valor verificado, tono decisión |
 | `gabardina` | Gabardina | `#9c917e` | 0.66 0.030 80° | Ropa urbana clara | **[P]** doc 03 §3.2 (ropa urbana [P]) |
-| `techo-plata` | Techo plateado | `#c5c4c0` | 0.82 0.006 90° | Techo de los tranvías «Lorencitas» (1936) | **[V]** El tranvía de Bogotá, 1882-1951 (Redalyc): techo plateado; color de la carrocería [P] |
+| `techo-plata` | Techo plateado | `#c5c4c0` | 0.82 0.006 90° | Techo de los tranvías «Lorencitas»; cascos plateados de la guardia de la Conferencia Panamericana (1948) | **[V]** Morrison, «Los tranvías de Bogotá» (tramz.com) y Redalyc: techo plateado; Momentos de historia de la Policía Nacional, «El Bogotazo 1948»: «vistoso uniforme con cascos plateados» |
 | `humo` | Humo | `#3b3734` | 0.34 0.008 60° | Humo de incendio; ciudad envuelta en humo el 9 de abril | **[V]** fotos de Sady González (Archivo de Bogotá) |
 | `humo-claro` | Humo claro | `#7d7a75` | 0.58 0.008 70° | Humo lejano, ceniza | **[V]** ídem |
 
@@ -196,10 +206,10 @@ OKLCH = L C h.
 
 | Id | Nombre | Hex | OKLCH | Uso | Fuente |
 |---|---|---|---|---|---|
-| `rojo-liberal` | Rojo liberal | `#ca2d23` | 0.55 0.195 29° | Pañuelos, banderas, afiches, fachadas liberales | decisión doc 03 §1; tono exacto: decisión (tinta de imprenta roja) |
+| `rojo-liberal` | Rojo liberal | `#ca2d23` | 0.55 0.195 29° | Pañuelos, banderas, afiches, fachadas liberales | decisión doc 03 §1; hex definido y aprobado el 2026-10-02 (paleta.md §2.1) |
 | `rojo-sombra` | Rojo en sombra | `#921b1a` | 0.43 0.155 27° | Pliegues del pañuelo y la bandera | decisión derivado de rojo-liberal |
 | `rojo-desvaido` | Rojo desvaído | `#dc8271` | 0.70 0.115 32° | Afiche viejo al sol; el pacto del epílogo | decisión derivado de rojo-liberal |
-| `azul-conservador` | Azul conservador | `#1d4aac` | 0.44 0.165 263° | Pañuelos, banderas, afiches, fachadas conservadoras | decisión doc 03 §1; tono exacto: decisión (tinta de imprenta azul) |
+| `azul-conservador` | Azul conservador | `#1d4aac` | 0.44 0.165 263° | Pañuelos, banderas, afiches, fachadas conservadoras | decisión doc 03 §1; hex definido y aprobado el 2026-10-02 (paleta.md §2.1) |
 | `azul-sombra` | Azul en sombra | `#153177` | 0.34 0.125 264° | Pliegues | decisión derivado de azul-conservador |
 | `azul-desvaido` | Azul desvaído | `#678dc6` | 0.64 0.095 258° | Afiche viejo al sol; el pacto del epílogo | decisión derivado de azul-conservador |
 
@@ -378,7 +388,7 @@ Decididas el 2026-10-02:
 2. ✅ Rojo `#ca2d23` y azul `#1d4aac` (§2.1).
 3. ✅ **Cinta de Rosalba en rojo liberal.** Está documentado (Ocampo) y marca a su familia liberal desde el
    primer cuadro. Con ella se aprobó la propuesta para narrativa: que la cinta pase de adorno a señal
-   peligrosa. Falta llevarla al registro de propuestas (doc 10) desde el chat de narrativa.
+   peligrosa. Está registrada en el doc 10 como P31 (aprobada); la escena concreta es la P32 (propuesta).
 4. ✅ Factores del guion de color aprobados como están, con el epílogo desvaído (§5).
 5. ✅ Modo registro sin rojo ni azul (§6.6).
 6. ✅ Implementación: (a) cada escena generada con el croma de su acto, y (b) filtro en vivo solo en momentos
@@ -386,5 +396,40 @@ Decididas el 2026-10-02:
 
 Abiertas:
 
-7. Pendientes **[P]**: uniformes, tranvía (carrocería), ladrillo y acabados de Bogotá, pañuelos de la
-   guerrilla del Llano, piedra de las cercas.
+7. Pendientes **[P]** que siguen sin fuente tras la verificación del 2026-10-02 (§12): Policía de
+   1950–1953, tono de la carrocería y de las franjas del tranvía, ladrillo a la vista en Bogotá, pañuelos de la
+   guerrilla del Llano y piedra de las cercas.
+
+## 12. Verificación de pendientes (2026-10-02)
+
+| Pendiente | Resultado | Estado | Token |
+|---|---|---|---|
+| Uniforme del Ejército, 1948–1953 | Caqui desde los años 30 (Conflicto con el Perú). Tras la guerra de Corea «siguió con la línea caqui», con guerrera más liviana, gorra y bota de caña media | **[V]** | `caqui` |
+| Uniforme de la Policía, 1948 | Los cadetes ascendidos el 16-jul-1948 llevaban «uniforme de paño de color marrón». La guardia de la Conferencia Panamericana usaba un «vistoso uniforme con cascos plateados» | **[V]**, fuente secundaria: confirmar con el Museo Histórico de la Policía | `pano-marron`, `techo-plata` |
+| Policía, 1950–1953 (M5) y 1954 (M8) | Los decretos de 1949–1951 fijan un reglamento de uniformes, pero sin color en la fuente consultada. El verde aceituna se adoptó más tarde, sin fecha verificada | **[P]** | `oliva` provisional; no se usa antes de verificar |
+| Chulavitas | «En uniforme o en civil» (doc 03 §3.4) | **[V]** | Uniforme o ropa campesina |
+| Tranvía | En las fotos de 1946 (Al Mankoff, en blanco y negro), la carrocería es de valor oscuro, con techo claro y franjas claras al frente. Las «Lorencitas» tenían techo plateado. Desde 1938 había franjas de colores por ruta | Valor y franjas **[V]**; tono de carrocería y franjas **[P]** | Se dibuja en tinta y grafito, sin lavado, hasta verificar; techo en `techo-plata` |
+| Ladrillo y acabados de la Séptima | En las fotos de 1946, fachadas claras, pañetadas y con cornisas; no aparece ladrillo a la vista | Fachadas **[V]** (valor); ladrillo **[P]** | `piedra-bogota`; `ladrillo` solo con foto concreta |
+| Pañuelos de la guerrilla del Llano | Sin fuente. Pistas: capítulo VIII («Insignias y símbolos») de Guzmán, Fals Borda y Umaña (1962) y las fotos de Monterrey de 1953 (Archivo Germán Guzmán Campos, Univalle) | **[P]** | No se dibujan rojos como final |
+| Piedra de las cercas | Sin fuente sobre las cercas. Pista: el altiplano es de areniscas y lutitas | **[P]** | `piedra` provisional |
+| Prendas rojas como identificación | Wikipedia («Corbata colombiana») dice que los liberales llevaban corbata roja como identificación, pero la fuente que cita (Espejo Olaya, Instituto Caro y Cuervo) no lo dice. Sí está documentado que «rojo» designaba a los liberales | Uso del color **[P]**; léxico **[V]** | Ninguna escena afirma que se mataba por llevar rojo |
+
+Tokens añadidos el mismo día:
+
+- **Animales** (pedido de fondos): `pelaje-castano`, `pelaje-bayo` y `pelaje-rucio`; el negro va en
+  `tinta-plena` y el blanco en `lana-cruda`.
+- **Nubes del altiplano:** `nube`, con la panza en `niebla`.
+
+Fuentes de esta sección:
+
+- Ejército Nacional, «Evolución histórica del uniforme de campaña del Ejército Nacional», reproducido en
+  Boyacá 7 Días (2022): https://boyaca7dias.com.co/2022/01/17/aqui-esta-la-evolucion-historica-del-uniforme-de-campana-del-ejercito-nacional/
+- Momentos de historia de la Policía Nacional de Colombia, «El Bogotazo 1948» (2013):
+  https://historiapolicianacionaldecolombia.blogspot.com/2013/06/el-bogotazo-1948.html
+- Academia de Historia de la Policía Nacional, *Cuaderno Histórico* n.º 6 (decretos de 1949–1951):
+  https://www.policia.gov.co/sites/default/files/publicaciones-institucionales/cuaderno-historico-edicion-6.pdf
+- Allen Morrison, «Los tranvías de Bogotá», con fotos de Al Mankoff (1946): http://www.tramz.com/co/bg/t/ts.html
+- M. B. Espejo Olaya y N. Rozo Melo, «El léxico de la Violencia en Colombia en algunas obras de la literatura
+  de violencia» (UPTC, 2012): http://www.uptc.edu.co/export/sites/default/eventos/2012/cnills/documentos/el_lexico_violencia_Colombia.pdf
+- Univalle, Archivo Germán Guzmán Campos, fotos de la entrega de armas de 1953:
+  https://bibliotecadigital.univalle.edu.co/handle/10893/15107
