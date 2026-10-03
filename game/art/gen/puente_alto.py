@@ -991,7 +991,7 @@ def nube(nombre, W, H, semilla):
         x = xn
     sombra += f' L{W},{f(base + 2)} Z'
     out = [f'<clipPath id="c-{nombre}"><path d="{d}"/></clipPath>',
-           f'<path d="{d}" fill="{PALETA["cielo-llano"]}"/>',
+           f'<path d="{d}" fill="{PALETA["nube"]}"/>',
            f'<g clip-path="url(#c-{nombre})">',
            f'<path d="{sombra}" fill="{PALETA["niebla"]}"/>',
            f'<path d="{sombra}" fill="url(#t-fina)"/>',
@@ -1152,15 +1152,15 @@ def persona(x, base, m, sw, tipo='hombre', espejo=False, k=1.0, sombrero='negro'
     return ''.join(out)
 
 
-def mula(x, base, m, sw, espejo=False, oscura=True, carga=True):
-    """Mula de carga con enjalma y costales (mercado: Hernán Díaz, BanRep). x: centro del lomo."""
+def mula(x, base, m, sw, espejo=False, pelaje='pelaje-castano', carga=True):
+    """Mula de carga con enjalma y costales (mercado: Hernán Díaz, BanRep). x: centro del lomo.
+    pelaje: token de la paleta (castaño, bayo o rucio)."""
     s = -1 if espejo else 1
 
     def P(dx, dy):
         return f'{f(x + s * dx * m)},{f(base - dy * m)}'
 
-    # pelaje: la paleta no tiene token de animales; se usa el más cercano (decisión, paleta.md §11)
-    pelo = lav('madera', m, 0.85) if oscura else lav('tapia', m)
+    pelo = lav(pelaje, m)
     out = []
 
     def pata(d, lejos_):
@@ -1859,7 +1859,7 @@ def mercado():
                  + f'<path d="M{f(90 + 1.28 * m)},{f(182 - 1.18 * m)} Q{f(240)},{f(182 - 0.7 * m)} {f(290 - 0.33 * m)},{f(182 - 1.0 * m)}" stroke="#000" stroke-width="{f(sw * 0.5)}" fill="none"/>')
     modulo_medio('mula-atada', 250, 182, 'mula atada a una estaca',
                  sombra_suelo(10, 240, 182, m) + f'<path d="M{f(40)},{f(182)} L{f(42)},{f(182 - 0.55 * m)}" stroke="#000" stroke-width="{f(sw * 1.6)}"/>'
-                 + mula(150, 182, m, sw, espejo=True, oscura=False)
+                 + mula(150, 182, m, sw, espejo=True, pelaje='pelaje-bayo')
                  + f'<path d="M{f(150 - 1.28 * m)},{f(182 - 1.18 * m)} Q{f(60)},{f(182 - 0.4 * m)} {f(42)},{f(182 - 0.5 * m)}" stroke="#000" stroke-width="{f(sw * 0.5)}" fill="none"/>')
     modulo_medio('gente-corrillo', 230, 175, 'corrillo de hombres con ruana',
                  sombra_suelo(5, 225, 175, m)
