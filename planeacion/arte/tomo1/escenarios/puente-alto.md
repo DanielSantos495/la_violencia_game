@@ -78,7 +78,8 @@ iluminada a mano. Las tramas siguen encima. Al guardar, la línea pasa a la tint
 | Cultivos de la cordillera | `trigo`, `cebada`, `sementera`, `potrero`, `tierra`, `tapia` |
 | Páramo, monte, bruma de la sierra lejana | `frailejon`, `monte`, `gris-claro` |
 | Agua de la pila | `agua` (gris verdoso: el agua no es azul) |
-| Nubes | `cielo-llano` con la panza en `niebla` |
+| Nubes | `nube` con la panza en `niebla` |
+| Mulas | `pelaje-castano` (la cargada), `pelaje-bayo` (la atada) |
 | Geranios | `cinta-rosa` (rosado: el rojo es del partido) |
 | Afiches | `papel-viejo` con la banda del partido |
 
@@ -113,7 +114,5 @@ iluminada a mano. Las tramas siguen encima. Al guardar, la línea pasa a la tint
 - 200 px/m (recomendado) o 160 px/m: con 200 se corta la cumbrera de las casas de un nivel.
 - Confirmar con fotos de los años 40: plaza empedrada o de tierra; árboles en la plaza o no; pila.
 - Pañuelos partidistas en el mercado de 1946 (uno rojo y uno azul, marcados [P]).
-- Para la sesión de paleta: no hay token de pelaje (las mulas usan `madera` y `tapia`); las nubes
-  usan `cielo-llano`, que la paleta describe para el Llano.
 - Escala de Rosalba: la escena usa 1,52 m / 433 px a mano hasta integrar `arte/rosalba`
   (`ESCALA_ROSALBA`).
