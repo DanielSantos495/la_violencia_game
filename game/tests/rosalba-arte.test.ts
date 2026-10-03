@@ -1,8 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { EXPRESIONES } from '../src/core/animacion/expresiones.ts';
-import { CAMINATA_ROSALBA } from '../src/game/personajes/rosalba.ts';
-import { framesDeSvg } from '../tools/art-build.ts';
+import {
+  ALTURA_DIBUJO_ROSALBA_PX,
+  CAMINATA_ROSALBA,
+} from '../src/game/personajes/rosalba.ts';
+import { framesDeSvg, rasterizar } from '../tools/art-build.ts';
 import { revisarPiernasBajoFalda } from '../tools/art-walk.ts';
 
 const leer = (nombre: string) =>
@@ -45,4 +48,42 @@ describe('Rosalba tiene todas sus expresiones dibujadas', () => {
       expect(frames.every((f) => f.pivote !== null)).toBe(true);
     });
   }
+});
+
+// Guarda del contrato de escala: la altura declarada coincide con el dibujo (coronilla→suela).
+describe('Rosalba mide en el SVG lo que declara', () => {
+  for (const nombre of ['rosalba', 'rosalba-monte']) {
+    it(`${nombre}: ${ALTURA_DIBUJO_ROSALBA_PX} px de la coronilla a la suela`, () => {
+      const frames = framesDeSvg(leer(nombre), nombre);
+      const recorte = (id: string) => {
+        const frame = frames.find((f) => f.nombre === `${nombre}/${id}`);
+        if (!frame) throw new Error(`Falta la pieza ${id}`);
+        return rasterizar(frame, 1).recorte;
+      };
+      const coronilla = recorte('cabeza').y;
+      const suela = Math.max(
+        ...['pierna-der', 'pierna-izq'].map(
+          (id) => recorte(id).y + recorte(id).h,
+        ),
+      );
+      expect(suela - coronilla).toBe(ALTURA_DIBUJO_ROSALBA_PX);
+    });
+  }
+});
+
+// Guarda del retrato en tres cuartos: base por variante y rasgos/parpadeo por expresión.
+describe('el retrato de Rosalba tiene todas sus capas', () => {
+  it('rosalba-retrato: bases mercado y monte, rasgos y parpadeo por expresión', () => {
+    const nombre = 'rosalba-retrato';
+    const piezas = framesDeSvg(leer(nombre), nombre).map((f) =>
+      f.nombre.slice(nombre.length + 1),
+    );
+    expect(piezas).toEqual(
+      expect.arrayContaining([
+        'base-mercado',
+        'base-monte',
+        ...EXPRESIONES.flatMap((e) => [`rasgos-${e}`, `parpado-${e}`]),
+      ]),
+    );
+  });
 });

@@ -6,9 +6,11 @@ import { Globos } from '../../ui/Globos.ts';
 import { VisorArchivo } from '../../ui/VisorArchivo.ts';
 import { cargarAtlas } from '../arte.ts';
 import { Personaje } from '../Personaje.ts';
+import { Retrato } from '../personajes/Retrato.ts';
 import {
   APOYO_ROSALBA,
   CAMINATA_ROSALBA,
+  ESCALA_ROSALBA,
   ROSALBA_MERCADO,
   ROSALBA_MONTE,
 } from '../personajes/rosalba.ts';
@@ -64,21 +66,37 @@ export class Prueba extends Scene {
       'de-pie',
       { caminata: CAMINATA_ROSALBA, expresion: 'neutral' },
     );
-    mercado.raiz.setScale(0.65);
+    mercado.raiz.setScale(ESCALA_ROSALBA);
     void (async () => {
       for (;;) {
         mercado.raiz.x = -200;
         await mercado.caminarHasta(2150);
       }
     })();
-    // Recorre las expresiones mientras camina, para revisarlas en movimiento.
+    // Viñeta con el retrato en tres cuartos (marco de tinta sobre papel).
+    const vineta = this.add.graphics();
+    vineta.fillStyle(0xffffff).fillRect(40, 40, 300, 360);
+    vineta.lineStyle(6, 0x000000).strokeRect(40, 40, 300, 360);
+    const retrato = new Retrato(
+      this,
+      190,
+      400,
+      'personajes',
+      'personajes/rosalba-retrato',
+      'mercado',
+    );
+    retrato.contenedor.setScale(0.7);
+
+    // Recorre las expresiones mientras camina, para revisarlas en movimiento y en la viñeta.
     let indiceExpresion = 0;
     this.time.addEvent({
       delay: 2400,
       loop: true,
       callback: () => {
         indiceExpresion = (indiceExpresion + 1) % EXPRESIONES.length;
-        mercado.expresion(EXPRESIONES[indiceExpresion] ?? 'neutral');
+        const expresion = EXPRESIONES[indiceExpresion] ?? 'neutral';
+        mercado.expresion(expresion);
+        retrato.expresion(expresion);
       },
     });
 
@@ -93,10 +111,11 @@ export class Prueba extends Scene {
       'de-pie',
       { caminata: CAMINATA_ROSALBA, expresion: 'alerta' },
     );
-    monte.raiz.setScale(0.9);
+    // Escala del contrato (planeacion/arte/tomo1/escenarios/contrato_escala.md).
+    monte.raiz.setScale(ESCALA_ROSALBA);
     if (import.meta.env.DEV) {
       // Solo en desarrollo: permite inspeccionar la secuencia desde la consola del navegador.
-      Object.assign(globalThis, { __prueba: { monte, mercado } });
+      Object.assign(globalThis, { __prueba: { monte, mercado, retrato } });
     }
     void (async () => {
       for (;;) {

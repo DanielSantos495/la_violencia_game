@@ -51,8 +51,8 @@ export interface PoseCaminata {
 
 export const ZANCADA_POR_DEFECTO = 12;
 export const PIES_BAJO_FALDA_POR_DEFECTO: Required<PiesBajoFalda> = {
-  adelante: 28,
-  atras: 18,
+  adelante: 35,
+  atras: 23,
   inclinacion: 8,
 };
 

@@ -1,6 +1,6 @@
 # Tomo I — Dirección de arte y estilo visual
 
-**Estilo aprobado:** novela gráfica 2D en vista lateral. Tinta negra sobre papel envejecido, grises y sepias; **rojo y azul partidistas como únicos colores de acento**.
+**Estilo aprobado:** novela gráfica 2D en vista lateral. Tinta negra sobre papel envejecido, grises y sepias, con el mundo iluminado en lavados apagados; **rojo y azul partidistas como únicos colores enteros**. Paleta: `paleta.md` (aprobada el 02-oct-2026).
 **Principio:** sencillo en imagen, exacto en época. Vestuario, arquitectura, armas y objetos siguen siendo correctos para 1946–1958; lo que no tenga fuente queda marcado **[P]** y no se dibuja en versión final hasta resolverse.
 
 ---
@@ -12,10 +12,10 @@
 | Línea | Tinta negra de grosor variable: gruesa en siluetas y primeros planos, fina en fondos |
 | Relleno | Manchas planas de negro; grises por trama (rayado o puntos de semitono), sin degradados complejos |
 | Papel | Fondo color hueso con textura leve de papel de prensa |
-| Color | Solo **rojo liberal** y **azul conservador**: pañuelos, banderas, afiches, fachadas de tiendas partidistas. El color cuenta la división. Única excepción: la sangre, roja solo un instante (ver "Violencia") |
+| Color | **Rojo liberal** (`#ca2d23`) y **azul conservador** (`#1d4aac`) como únicos colores enteros, en tinta plana de imprenta: pañuelos, banderas, afiches, fachadas de tiendas partidistas. El color cuenta la división. El mundo lleva lavados apagados con techo de intensidad, como la fotografía iluminada a mano, y nada fuera del partido entra en los tonos rojo o azul (`paleta.md`, decisión del 02-oct-2026). Única excepción: la sangre, roja solo un instante (ver "Violencia") |
 | Encuadre de juego | Plano lateral con 2–3 capas de fondo en paralaje |
 | Viñetas | Las escenas de guion se presentan como páginas de cómic: viñetas que aparecen en secuencia, globos de texto, onomatopeyas mínimas |
-| Modo registro (Custodia) | Al fotografiar, la escena se congela en una viñeta con marco de foto de época y trama de semitono más densa |
+| Modo registro (Custodia) | Al fotografiar, la escena se congela en una viñeta con marco de foto de época y trama de semitono más densa, en blanco y negro virado a sepia: sin lavados y sin rojo ni azul (la cámara registra el hecho, no el partido; decisión del 02-oct-2026) |
 | Transición al Archivo | La última viñeta de cada misión se convierte en la página del Archivo (donde luego se muestran fotos reales licenciadas) |
 
 ### Violencia (tono bélico sin espectáculo)
@@ -75,7 +75,7 @@ Los SVG fuente se versionan en el repo (`art/src`) y los PNG se generan en el bu
 | Elemento | Referencia | Estado |
 |---|---|---|
 | Punto del asesinato | Edificio Agustín Nieto, Carrera 7.ª con Av. Jiménez | **[V]** Fototeca Archivo de Bogotá |
-| Tranvía | Tranvías incendiados en la Séptima | **[V]** fotos de Sady González |
+| Tranvía | Tranvías incendiados en la Séptima. Aspecto en 1946: carrocería oscura, techo claro (plateado en las «Lorencitas») y franjas de ruta al frente | **[V]** fotos de Sady González; fotos de 1946 de Al Mankoff (A. Morrison, *Los tranvías de Bogotá*). Tono de la carrocería **[P]** |
 | Edificios incendiados | Palacio de San Carlos, Palacio de San Francisco (Gobernación), hoteles Regina y Atlántico, palacio arzobispal, nunciatura, Palacio de Justicia (Calle 11 con Carrera 6.ª) | **[V]** IDPC y prensa |
 | Capitolio | Sede de la IX Conferencia Panamericana | **[V]** |
 | Escala del daño | Cerca de 150 inmuebles afectados; no exagerar la destrucción | **[V]** |
@@ -97,9 +97,9 @@ En 2D la multitud se resuelve con capas de siluetas en paralaje: el riesgo técn
 ### 3.4 Fuerzas armadas y policía
 | Elemento | Estado |
 |---|---|
-| Uniforme de la Policía 1948–1953 | **[P]** Museo Histórico de la Policía Nacional / Academia de Historia de la Policía |
+| Uniforme de la Policía 1948–1953 | Oficiales en julio de 1948: «uniforme de paño de color marrón»; guardia de la Conferencia Panamericana: cascos plateados **[V]** (fuente secundaria: *Momentos de historia de la Policía Nacional*; confirmar con el Museo Histórico de la Policía Nacional). Agentes y 1950–1953 **[P]** (`paleta.md` §12) |
 | Chulavíes | Actuaban "en uniforme o en civil" **[V]**; mezcla de prendas **[P]** |
-| Ejército 1948–1953 | **[P]** uniformes y equipo |
+| Ejército 1948–1953 | Uniforme de campaña caqui **[V]** (Ejército Nacional, «Evolución histórica del uniforme de campaña»); equipo **[P]** |
 | Fusiles | Mauser en servicio **[P: modelos por año]** |
 | Guerrilla | Escopetas, revólveres, machetes, armas capturadas **[P]** |
 
@@ -140,7 +140,7 @@ Sin licencia, estas fuentes solo se usan como referencia interna para dibujar.
 - Grabaciones históricas reales (discursos, radio) solo en el Archivo y con licencia.
 
 ## 6. Entregables de arte de preproducción
-1. Hoja de estilo: grosores de línea, tramas, paleta exacta (hueso, grises, negro, rojo, azul en hex).
+1. Hoja de estilo: grosores de línea, tramas, paleta exacta (hueso, grises, negro, rojo, azul en hex). Paleta aprobada: `paleta.md` (grosores y tramas pendientes).
 2. Hoja de personaje de Rosalba, Aurelio y Custodia (frente, perfil, piezas de recorte). Rosalba en curso: `personajes/rosalba.md`.
 3. Kit modular de arquitectura boyacense en SVG.
 4. Prueba de escena: plaza de Puente Alto con paralaje y una página de cómic.
