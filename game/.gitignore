@@ -5,3 +5,4 @@ audio/build/
 public/generated/
 *.local
 .DS_Store
+build/ink-grafo/
