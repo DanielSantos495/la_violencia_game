@@ -89,9 +89,9 @@ Variables ocultas (se evalúan en el epílogo):
 
 **Beats**
 1. Mañana de mercado. Custodia fotografía la plaza: tiendas "rojas" y "azules" una frente a otra. Tutorial: encuadre, exposición limitada, anotar.
-2. Rosalba lleva cuajada al mercado con Efraín. Encuentro con Aurelio: bromas de infancia, tensión cuando Heliodoro aparece.
+2. Rosalba lleva cuajada al mercado con Efraín. Encuentro con Aurelio: bromas de infancia, tensión cuando Heliodoro aparece. Aurelio le jala la trenza en broma y se queda con la cinta roja en la mano justo cuando llega Heliodoro, que la ve en la mano de su hijo y se la devuelve a Rosalba sin mirarla, sin una palabra (P32).
 3. Misa dominical: el padre Evaristo predica sobre "el peligro rojo". Rosalba y Efraín salen antes. (Sin interacción; peso ambiental.)
-4. Noche: reunión liberal en la casa de los Insuasty para escuchar la radio. Llega la Seccional y disuelve la reunión. Efraín es golpeado.
+4. Noche: reunión liberal en la casa de los Insuasty para escuchar la radio. Llega la Seccional y disuelve la reunión; antes de abrir, la madre le quita la cinta a Rosalba (P32). Efraín es golpeado.
 5. Cierre: Custodia anota en su libreta. Primera entrada de Archivo.
 
 **Diálogo clave (ficticio)**
@@ -178,6 +178,8 @@ Variables ocultas (se evalúan en el epílogo):
 3. Emboscada a una patrulla (combatientes armados, no civiles). Inspirada en acciones de 1952, **no recrea una batalla específica con nombre**.
 4. Tras la emboscada, un prisionero: joven soldado boyacense. **Decisión:** liberarlo, entregarlo al Gaván (será ejecutado fuera de cuadro; `rosalba_represalia` +1) o intercambiarlo.
 5. Asamblea en un caney: se lee en voz alta el Primer Estatuto del Llano (texto parafraseado de la Ley del Llano **[V]**, cita breve si los derechos lo permiten).
+
+**Cinta (P32):** desde la M2 Rosalba va sin la cinta roja; en algún momento del Acto II vuelve a atársela por decisión propia (beat por definir). La lleva hasta el epílogo.
 
 **Diálogo clave (ficticio)**
 > **TRÁNSITO:** Aquí nadie le pregunta a uno si es rojo. Le preguntan si sabe nadar.
