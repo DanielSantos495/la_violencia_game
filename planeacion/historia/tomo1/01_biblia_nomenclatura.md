@@ -83,5 +83,6 @@
 | **Padre Julián Cárdenas** | Cura joven de pueblo vecino, protege a desplazados (contrapeso: la Iglesia no fue un bloque único) |
 | **Sargento Calixto Morales** | Superior de Aurelio en la policía |
 | **Ramiro "el Gaván" Cuéllar** | Jefe de la columna llanera de Rosalba (ficticio; no inspirado en un comandante concreto) |
+| **Anselmo** | Tendero de Puente Alto; va en la partida de la M2 (P24). Nombre pendiente de verificación (regla 6) |
 | **Tránsito Guío** | Llanera, compañera de Rosalba en la columna |
 | **Puente Alto** | Pueblo ficticio del norte de Boyacá |

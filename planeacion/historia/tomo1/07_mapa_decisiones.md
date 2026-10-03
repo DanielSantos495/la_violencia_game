@@ -13,10 +13,11 @@ la violencia. En la tabla se listan las condiciones que **fallan**.
 
 | # | Misión · beat | Jugable | Opciones | Variable | Consecuencia visible hoy | Falla |
 |---|---|---|---|---|---|---|
-| — | Prólogo (todo) | Custodia, Rosalba | **Ninguna decisión** | — | — | — |
+| DA | Prólogo · b1 | Custodia | Encuadrar la tienda roja o la azul (P26) | — | Expresiva: la foto elegida | 2 (a propósito) |
+| DB | Prólogo · b4 | Rosalba | Esconder la radio / el periódico (P27) | `prologo_escondio` | **Sí**: M2 b1–b3 | — |
 | D1 | M1 · b4 | Custodia | Fotografiar el linchamiento de Roa Serna / apartarse | `custodia_archivo` (+) | Ninguna definida; "resta salud emocional/riesgo" no existe como sistema | 2, 3 |
 | D2 | M1 · b5 | Custodia | Proteger al niño perdido / documentar | — | Ninguna | 2 |
-| — | M2 (todo) | Rosalba | **Ninguna decisión** | — | — | — |
+| DC | M2 · b4 | Rosalba | Llevarse la escopeta del padre / la libreta (P28) | `m2_se_llevo` | **Sí**: M3 b5 (Aurelio) y M4 b1 | — |
 | D3 | M3 · b5 | Aurelio | Guardar la libreta de Rosalba / entregarla a Morales | `aurelio_conciencia` +1 | Ninguna | 2 |
 | D4 | M4 · b4 | Rosalba | Liberar al prisionero / entregarlo al Gaván / intercambiarlo | `rosalba_represalia` +1 (entregar) | Ninguna antes del epílogo | 2 |
 | D5 | M5 · b2 | Aurelio | Avisar a la familia / quedarse en el perímetro / avanzar con la columna | `aurelio_conciencia` +2 / 0 / −1 | Solo el corte a negro en "avanzar"; el amanecer (b3) es igual en las tres | 2 |
@@ -40,6 +41,8 @@ Sin decisión pero con variable: M6 · b2, cruce con la niña → `lazos_puente_
 | `custodia_archivo` | 0–100 | Fotos y testimonios (M1, M6, M9) | Sin escala de puntos | M9, epílogo de Custodia | Epílogo de Custodia | ⚠ Falta la escala |
 | `custodia_publica` | 0–3 | D6 | 1 | **Ninguno** | Ninguna | ✖ Decorativa; rango inalcanzable |
 | `lazos_puente_alto` | 0–3 | M6 · b2 (automático) | 1 | **Ninguno** | Ninguna | ✖ Decorativa; sin decisión |
+| `prologo_escondio` | radio / periódico | DB | — | M2 b1–b3 | Pregunta por "el que lee" o celebración sin noticias | ✔ |
+| `m2_se_llevo` | escopeta / libreta | DC | — | M3 b5, M4 b1 | Lo que encuentra Aurelio; Rosalba armada o no | ✔ |
 
 ## 3. Finales: condiciones
 
@@ -73,7 +76,7 @@ real (Roa Serna, doc 01) suma Archivo. Revisar el incentivo.
 
 ## 5. Huecos (para el registro, doc 10)
 
-- **H1.** El vertical slice (Prólogo + M2) no tiene decisiones, aunque el doc 00 §4 lo justifica por cubrirlas.
+- **H1.** ~~El vertical slice (Prólogo + M2) no tiene decisiones.~~ Resuelto el 02-oct-2026 con P26–P28.
 - **H2.** Cuatro variables sin consecuencia visible: `aurelio_conciencia`, `custodia_publica`, `lazos_puente_alto` y, hasta el epílogo, `rosalba_represalia`.
 - **H3.** Rangos inalcanzables o mal acotados: `rosalba_represalia`, `custodia_publica`, `lazos_puente_alto`, `aurelio_conciencia` (bajo 0).
 - **H4.** Finales sin condición y combinaciones sin final (§3).

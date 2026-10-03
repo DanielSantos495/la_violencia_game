@@ -12,7 +12,7 @@
 | may–jun 1946 | — | **Prólogo**: mercado, misa, reunión de radio en su casa | Prólogo: encuentro en el mercado; Heliodoro le prohíbe entrar a casa de Efraín | **Prólogo**: fotografía la plaza; primera entrada de Archivo |
 | 9-abr-1948 | Asesinato de Gaitano, Bogotazo [V]; hora y cifra de muertos [P]; lluvia en la noche [P] | Puente Alto (implícito) | Puente Alto (implícito) | **M1**: Bogotá, Carrera Séptima |
 | 10-abr-1948 | Contingentes del norte de Boyacá enviados a Bogotá [V] | — | **M3** b1–3: concentración y traslado; combate en azoteas [P: participación de reservistas contra francotiradores, sin marca en doc 02] | M1 b7: ve llegar los camiones; reconoce a Aurelio (**cruce 1**) |
-| Días después del 9-abr | Violencia en el norte de Boyacá [P: cronología] | **M2**: noche de los chulavíes; muere Efraín; casa quemada; toma la escopeta | **En Bogotá** (ausente de Puente Alto) | **Sin ubicar** |
+| Días después del 9-abr | Violencia en el norte de Boyacá [P: cronología] | **M2**: noche de los chulavíes; muere Efraín; casa quemada; se lleva la escopeta o la libreta (P28) | **En Bogotá** (ausente de Puente Alto) | Regresa de Bogotá y anota la noche con lo que le contaron (P30) |
 | may–jun 1948 | — | **Sin ubicar** (desplazada) | M3 b4–5: regresa con uniforme; encuentra la libreta de Rosalba | Sin ubicar |
 | 1948–1951 | — | **Sin escenas** (paso de civil a insurgente fuera de pantalla) | — | — |
 | 9-nov-1949 | Estado de sitio y cierre del Congreso [P] | — | — | — |
@@ -37,16 +37,16 @@
 
 | Hecho | Rosalba | Aurelio | Custodia |
 |---|---|---|---|
-| Muerte de Efraín (M2) | La escucha; no la ve | Ausente; **cuándo se entera: sin definir** | Ausente; **cuándo se entera: sin definir** |
-| Quién guio a la partida de la M2 | No sabe | No sabe | No sabe |
-| Libreta de Rosalba | La perdió con la casa | La tiene si la guarda (D3) | Le enseñó a leer; podría reconocerla |
+| Muerte de Efraín (M2) | La escucha; no la ve | Ausente; **cuándo se entera: sin definir** | Se entera al regresar, por relatos incompletos: anota "sin muertos" (P30) |
+| Heliodoro iba en la partida de la M2 (P25) | Reconoce su voz | No sabe | No sabe |
+| Libreta o escopeta (P28) | Se lleva una y deja la otra | Encuentra lo que dejó (M3) | Le enseñó a leer; podría reconocer la libreta |
 | La niña de la M5 | — | La salvó | La conoce en la M6; **no sabe que fue Aurelio** |
 | Cruce del 10-abr en Bogotá | — | **Sin definir si vio a Custodia** | Lo vio en el camión |
 
 ## 3. Huecos e incoherencias
 
 1. **Rosalba 1948–1951:** la transformación de civil a insurgente no tiene escenas.
-2. **Custodia entre la M1 (abr-1948) y la M6 (1950):** no está ubicada; tampoco dónde estaba la noche de la M2.
+2. **Custodia entre la M1 (abr-1948) y la M6 (1950):** no está ubicada después de su regreso de Bogotá (P30).
 3. **Aurelio en 1953–1954:** pasa de chulaví (1948) a una unidad en Bogotá (1954) después de la clausura de los chulavitas en 1953. Su trayectoria depende del [P] de la M8.
 4. **Rosalba después de la M7:** sin ubicar entre 1956 y el 6-jun-1957.
 5. **Posibles [P] sin marcar en el doc 02:**
@@ -56,7 +56,7 @@
 
 ## 4. Oportunidades de cruce (sin desarrollar; propuestas en el doc 10)
 
-- **La libreta** como objeto que pasa por los tres: Rosalba → (casa quemada) → Aurelio → ¿Custodia?
-- **La noche de la M2 vista desde Heliodoro**: qué sabía o hizo el padre de Aurelio, que estaba en Puente Alto.
+- **La libreta** como objeto que pasa por los tres: Rosalba → (casa quemada) → Aurelio → ¿Custodia? Avanza con P28.
+- ~~La noche de la M2 vista desde Heliodoro~~ → resuelto con P25.
 - **El 6-jun-1957** escuchado por los tres en lugares distintos, como eco del 7-ago-1958.
 - **El cruce del 10-abr** devuelto: que Aurelio sepa (o no) que Custodia lo vio.

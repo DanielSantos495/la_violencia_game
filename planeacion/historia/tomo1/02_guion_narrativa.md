@@ -78,6 +78,8 @@ Variables ocultas (se evalúan en el epílogo):
 | `custodia_archivo` | 0–100 | Fotos y testimonios de valor documental registrados |
 | `custodia_publica` | 0–3 | Veces que publica pese a la censura (sube riesgo) |
 | `lazos_puente_alto` | 0–3 | Momentos en que los tres personajes se ayudan indirectamente |
+| `prologo_escondio` | radio / periódico | Decisión del Prólogo b4 (P27); se lee en la M2 b1–b3 |
+| `m2_se_llevo` | escopeta / libreta | Decisión de la M2 b4 (P28); se lee en la M3 b5 y la M4 b1 |
 
 ---
 
@@ -88,16 +90,31 @@ Variables ocultas (se evalúan en el epílogo):
 **Jugable:** Custodia (tutorial de cámara/notas) → Rosalba (exploración del pueblo).
 
 **Beats**
-1. Mañana de mercado. Custodia fotografía la plaza: tiendas "rojas" y "azules" una frente a otra. Tutorial: encuadre, exposición limitada, anotar.
+1. Mañana de mercado. Custodia fotografía la plaza: tiendas "rojas" y "azules" una frente a otra. Tutorial: encuadre, exposición limitada, anotar. El encuadre no deja meter en la misma foto la tienda roja y la azul: el jugador elige cuál entra (P26).
 2. Rosalba lleva cuajada al mercado con Efraín. Encuentro con Aurelio: bromas de infancia, tensión cuando Heliodoro aparece. Aurelio le jala la trenza en broma y se queda con la cinta roja en la mano justo cuando llega Heliodoro, que la ve en la mano de su hijo y se la devuelve a Rosalba sin mirarla, sin una palabra (P32).
-3. Misa dominical: el padre Evaristo predica sobre "el peligro rojo". Rosalba y Efraín salen antes. (Sin interacción; peso ambiental.)
-4. Noche: reunión liberal en la casa de los Insuasty para escuchar la radio. Llega la Seccional y disuelve la reunión; antes de abrir, la madre le quita la cinta a Rosalba (P32). Efraín es golpeado.
-5. Cierre: Custodia anota en su libreta. Primera entrada de Archivo.
+3. Misa dominical: el padre Evaristo predica sobre "el peligro rojo". Rosalba y Efraín salen antes. (Sin interacción; peso ambiental.) El sermón cierra con "no les abran la puerta de noche", que Heliodoro repite casi igual esa noche (eco, P29).
+4. Noche: reunión liberal en la casa de los Insuasty para escuchar la radio; mientras llega la señal, Efraín lee el periódico en voz alta (P24). Llega la Seccional **[P: existencia y presencia de la policía política en Boyacá en 1946 (P15)]** y disuelve la reunión; antes de abrir, la madre le quita la cinta a Rosalba (P32). Efraín es golpeado. **Decisión (P27):** Rosalba esconde la radio o el periódico. Radio escondida → Efraín queda señalado como "el que lee"; en la M2 la partida pregunta por él por su nombre. Periódico escondido → la Seccional se lleva la radio; en la M2 la familia no se entera del 9 de abril por radio. Variable: `prologo_escondio`.
+5. Cierre: Custodia anota en su libreta (texto en el diálogo clave, P29). Primera entrada de Archivo.
 
 **Diálogo clave (ficticio)**
+
+*Mercado (b2, P29):*
+> **AURELIO:** ¿Esa cuajada es para vender o para que Efraín se la coma en el camino?
+> **EFRAÍN:** Para vender. A los azules se la dejo más cara.
+> **ROSALBA:** Efraín.
+> **AURELIO:** Entonces a mí me la deja a mitad de precio, que yo soy medio azul.
+> *(Aurelio le jala la trenza y se queda con la cinta. Llega Heliodoro. Globo vacío; P32.)*
+
+*Misa (b3, P29):*
+> **PADRE EVARISTO:** Recen por los que se fueron detrás de los que no creen. Yo también rezo por ellos. Pero no les abran la puerta de noche.
+
+*Noche:*
 > **HELIODORO:** Aurelio, a esa casa no se entra de noche.
 > **AURELIO:** Es la casa de Efraín, papá.
 > **HELIODORO:** Ya no es la casa de Efraín. Es la casa de un rojo.
+
+*Cierre (b5, P29):*
+> **CUSTODIA** *(libreta)*: Junio de 1946. Puente Alto. Reunión en casa de los Insuasty, disuelta por la Seccional. ~~Un herido.~~ Un muchacho golpeado. Herido no lo vi.
 
 **Archivo desbloqueado:** Elecciones de 1946 y división liberal · El bipartidismo en Boyacá · Vestido campesino boyacense.
 
@@ -132,18 +149,20 @@ Variables ocultas (se evalúan en el epílogo):
 **Mecánica:** sigilo y huida. Rosalba no tiene arma al inicio.
 
 **Beats**
-1. En el pueblo, liberales celebran un breve "levantamiento" que dura horas; conservadores se arman.
+1. En el pueblo, liberales celebran un breve "levantamiento" que dura horas; conservadores se arman. Si en el Prólogo se llevaron la radio, Rosalba se entera del 9 de abril por la celebración (P27).
 2. Noche: llega una partida de chulavíes (policías uniformados mezclados con civiles armados **[P: vestimenta mixta según fotos de época]**).
-3. Rosalba y Efraín esconden a la madre. Efraín sale a distraerlos. Ella escucha, no ve.
-4. Huida por los cultivos y la quebrada. Quema de la casa vista a distancia.
-5. Amanecer en el monte. Encuentra a otros desplazados. Toma la escopeta de su padre.
+3. Rosalba y Efraín esconden a la madre. Si escondieron la radio en el Prólogo, la partida pregunta por "el que lee" (P27). Efraín reconoce en la partida a Anselmo, el de la tienda, y sale a hablarle confiando en la vecindad (P24); su frase queda sin terminar. Ella escucha, no ve. Desde el escondite reconoce la voz de Heliodoro Mesa (globo sin rostro), que impide que quemen la casa vecina (P25) **[P: presencia de jefes locales en las partidas; depende de la cronología de esta misión]**.
+4. Huida por los cultivos y la quebrada. **Decisión (P28):** solo puede llevarse una cosa, la escopeta del padre o su libreta escolar; lo que deja queda en la casa y lo encuentra Aurelio en la M3. Variable: `m2_se_llevo`. Quema de la casa vista a distancia.
+5. Amanecer en el monte. Encuentra a otros desplazados. Si se llevó la escopeta, la empuña por primera vez; si se llevó la libreta, sigue desarmada.
+6. Cierre (P30, "El registro que falta"): Custodia, de regreso de Bogotá, anota la noche con lo que le contaron: "Casa Insuasty quemada. Sin muertos." El jugador sabe que no fue así. La entrada del Archivo explica el subregistro de víctimas de La Violencia. La libreta (ficción) y el Archivo (capa documental) deben verse claramente distintos (doc 03).
 
-**Diálogo clave (ficticio)**
-> **EFRAÍN:** Sumercé se lleva a mi mamá por la quebrada. Yo los entretengo.
-> **ROSALBA:** No, Efraín.
-> **EFRAÍN:** Si nos cogen a los tres, no queda nadie que cuente.
+**Diálogo clave (ficticio, P29)**
+> **EFRAÍN:** El que viene adelante es Anselmo, el de la tienda. A Anselmo yo le hablo.
+> **ROSALBA:** Anselmo trae escopeta.
+> **EFRAÍN:** Llévese a mi mamá por la quebrada. Ya la alcanzo.
+> *(Detrás:)* **EFRAÍN:** Don Anselmo, buenas noches, ¿qué es lo que…
 
-**Archivo:** Los chulavitas de Boavita · Desplazamiento en La Violencia · Vivienda campesina (tapia pisada, teja de barro).
+**Archivo:** Los chulavitas de Boavita · Desplazamiento en La Violencia · Vivienda campesina (tapia pisada, teja de barro) · Subregistro de víctimas en La Violencia **[P: fuente CNMH o Comisión de la Verdad]** (P30).
 
 #### Misión 3 — "Reservistas" (Aurelio)
 **Fecha/lugar:** 10-abr-1948: concentración en Soatá/Duitama/Tunja y traslado a Bogotá **[V]**; mayo–junio 1948: regreso a Boyacá como policía.
@@ -152,9 +171,9 @@ Variables ocultas (se evalúan en el epílogo):
 **Beats**
 1. Heliodoro inscribe a Aurelio como reservista. Bendición de armas en la iglesia **[P: bendición de armas documentada en testimonios; confirmar para Boyacá]**.
 2. Camión a Bogotá. Llegada a la ciudad humeante. Cruce visual con Custodia.
-3. Guardia de edificios en Bogotá: enfrentamiento breve con francotiradores en azoteas (combate contra armados).
+3. Guardia de edificios en Bogotá: enfrentamiento breve con francotiradores en azoteas (combate contra armados) **[P: participación de reservistas boyacenses contra francotiradores (P15)]**.
 4. Regreso a Boyacá con uniforme. Primer patrullaje en Puente Alto, a casas de antiguos vecinos.
-5. **Decisión:** en la casa quemada de los Insuasty, Aurelio encuentra la libreta escolar de Rosalba. Guardarla (conciencia +1) o entregarla al sargento.
+5. **Decisión:** en la casa quemada de los Insuasty, Aurelio encuentra lo que Rosalba dejó en la huida (P28): la libreta escolar o la escopeta del padre. Guardarlo (conciencia +1) o entregarlo al sargento; entregada, la escopeta sirve de prueba contra los Insuasty.
 
 **Diálogo clave (ficticio)**
 > **SARGENTO MORALES:** Aquí no hay vecinos, Mesa. Hay azules y hay rojos.
@@ -173,7 +192,7 @@ Variables ocultas (se evalúan en el epílogo):
 **Mecánica:** combate de emboscada con recursos escasos, navegación a caballo, protección de civiles.
 
 **Beats**
-1. Rosalba llega al Llano con desplazados boyacenses. Tránsito la recibe. Choque cultural (clima, dieta, formas de hablar).
+1. Rosalba llega al Llano con desplazados boyacenses. Tránsito la recibe. Choque cultural (clima, dieta, formas de hablar). Si dejó la escopeta en la M2 (P28), llega desarmada y el Gaván le da un arma.
 2. Entrenamiento con la columna del Gaván.
 3. Emboscada a una patrulla (combatientes armados, no civiles). Inspirada en acciones de 1952, **no recrea una batalla específica con nombre**.
 4. Tras la emboscada, un prisionero: joven soldado boyacense. **Decisión:** liberarlo, entregarlo al Gaván (será ejecutado fuera de cuadro; `rosalba_represalia` +1) o intercambiarlo.
@@ -273,7 +292,7 @@ Detalle visual verificado: Salgado portaba un casco alemán con estrella amarill
 
 **Finales (según variables)**
 1. **Reconciliación frágil:** `rosalba_desmovilizada` y sobrevive + `aurelio_deserta`. Rosalba vuelve a una parcela ajena como jornalera; Aurelio vive en Bogotá con otro nombre. Cruce final en un bus: se reconocen y no se hablan. Nota de Archivo: muchos excombatientes asesinados pese a la amnistía.
-2. **Ciclo de venganza:** Rosalba sigue en armas con `rosalba_represalia` alto. Su grupo se desplaza al sur del Tolima. Enlaza con el Tomo II.
+2. **Ciclo de venganza:** Rosalba sigue en armas con `rosalba_represalia` alto. Su grupo se desplaza al sur del Tolima **[P: plausibilidad de una columna llanera en el sur del Tolima (P15)]**. Enlaza con el Tomo II.
 3. **Costo total:** muerte de uno o más personajes. El Archivo muestra que ese destino corresponde al de miles de personas reales del periodo.
 - **Custodia en todos los finales:** su archivo sobrevive (en mayor o menor medida). Escena post-créditos: una estudiante en los años 60 encuentra la caja en la sacristía — puente al Tomo II.
 

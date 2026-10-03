@@ -2,9 +2,8 @@
 
 > Fuente: doc 02 §3 (personajes y arcos) y §6 (voz); nombres según doc 01. Todos los
 > personajes de este documento son ficticios.
-> Cada campo indica su **origen**: **doc 02** (ya aprobado) o **propuesta** (nueva, pendiente de
-> aprobación de Daniel; se registra en el doc 10). Ninguna propuesta toca un hecho histórico.
-> Mientras una propuesta no se apruebe, manda el doc 02. Estado: 01-oct-2026.
+> Cada campo indica su **origen**: **doc 02** (ya aprobado) o **propuesta** (aprobada por Daniel el
+> 02-oct-2026, P18). Ninguna toca un hecho histórico. Estado: 02-oct-2026.
 
 ## Jugables
 
@@ -78,7 +77,7 @@ Base común: todos con deseo propio, no solo función (diagnóstico doc 06, Bloq
 | Personaje | Base (doc 02) | Deseo (propuesta) | Miedo / contradicción (propuesta) | Secreto (propuesta) | Nunca diría (propuesta) | Cambio por acto |
 |---|---|---|---|---|---|---|
 | **Efraín Insuasty** | Hermano de Rosalba; muere en el Acto I | Ser él quien lee el periódico en voz alta en las reuniones: quiere hablar en público como los tribunistas | Le teme más a quedar como cobarde que a morir | Iba a irse a trabajar a otra ciudad sin decirle a la familia | Una frase de discurso político completa: las empieza y no las termina | Prólogo: golpeado por la Seccional · Acto I: muere (M2) |
-| **Heliodoro Mesa** | Jefe conservador de vereda; teme sinceramente "la revolución roja" | Mantener el orden de la vereda y su lugar en él | Contradicción: cree que protege a su gente mientras la expone | **Pendiente de decisión** (doc 10): qué sabía o hizo la noche de la M2 | Que tiene miedo | Prólogo: autoridad · Acto I: inscribe a Aurelio · luego: según la propuesta |
+| **Heliodoro Mesa** | Jefe conservador de vereda; teme sinceramente "la revolución roja" | Mantener el orden de la vereda y su lugar en él | Contradicción: cree que protege a su gente mientras la expone | Va en la partida de la M2 e impide que quemen la casa vecina; Rosalba reconoce su voz (P25) | Que tiene miedo | Prólogo: autoridad · Acto I: inscribe a Aurelio · luego: según la propuesta |
 | **Sgto. Calixto Morales** | Superior de Aurelio; profesional frío | Ascender y mandar el sueldo a su familia | La violencia es su oficio, no su convicción | Desprecia en privado a los jefes políticos que le dan órdenes | Un insulto partidista: no le hace falta | Acto I a III: sin cambio (personaje plano a propósito) |
 | **Ramiro "el Gaván" Cuéllar** | Jefe de la columna llanera; justo con los suyos, implacable con sospechosos | Que el comando del Llano lo reconozca como jefe | Teme que la paz lo deje sin lugar | Ejecutó a un inocente por sospecha y lo sabe | Que la entrega de armas es un triunfo | Acto II: jefe · Acto III: se fragmenta con la columna |
 | **Tránsito Guío** | Llanera, amiga de Rosalba; población civil que sostenía la guerrilla | Que la guerra pase y le deje el hato y los hijos | Apoya a la columna por necesidad, no por fe | Le vende a los dos lados cuando no hay más remedio | Una consigna | Acto II: anfitriona · Acto III: la que paga la paz rota |
