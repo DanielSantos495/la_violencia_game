@@ -1,10 +1,6 @@
 import { type GameObjects, Scene } from 'phaser';
 import { color, colorNumero } from '../../core/arte/paleta.ts';
-import {
-  escalaPersonaje,
-  VIEWPORT,
-  Y_SUELO,
-} from '../../core/escena/escala.ts';
+import { VIEWPORT, Y_SUELO } from '../../core/escena/escala.ts';
 import { PUENTE_ALTO } from '../../core/escenarios/puente-alto.ts';
 import { cargarAtlas } from '../arte.ts';
 import { Escenario, precargarEscenario } from '../escenarios/Escenario.ts';
@@ -12,13 +8,9 @@ import { Personaje } from '../Personaje.ts';
 import {
   APOYO_ROSALBA,
   CAMINATA_ROSALBA,
+  ESCALA_ROSALBA,
   ROSALBA_MERCADO,
 } from '../personajes/rosalba.ts';
-
-// Provisional hasta integrar arte/rosalba, que exporta ESCALA_ROSALBA con estas cifras
-// (1,52 m de estatura; 433 px de coronilla a suela en su SVG).
-const ESTATURA_ROSALBA_M = 1.52;
-const ALTURA_DIBUJO_ROSALBA = 433;
 
 /**
  * Escena de prueba de escenarios: la plaza de Puente Alto en sus cinco capas (planeacion/arte/
@@ -53,9 +45,7 @@ export class PruebaEscenario extends Scene {
       'de-pie',
       { caminata: CAMINATA_ROSALBA },
     );
-    rosalba.raiz.setScale(
-      escalaPersonaje(ESTATURA_ROSALBA_M, ALTURA_DIBUJO_ROSALBA),
-    );
+    rosalba.raiz.setScale(ESCALA_ROSALBA);
     escenario.capa('juego').add(rosalba.raiz);
 
     const camara = this.cameras.main;

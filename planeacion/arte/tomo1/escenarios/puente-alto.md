@@ -114,5 +114,3 @@ iluminada a mano. Las tramas siguen encima. Al guardar, la línea pasa a la tint
 - 200 px/m (recomendado) o 160 px/m: con 200 se corta la cumbrera de las casas de un nivel.
 - Confirmar con fotos de los años 40: plaza empedrada o de tierra; árboles en la plaza o no; pila.
 - Pañuelos partidistas en el mercado de 1946 (uno rojo y uno azul, marcados [P]).
-- Escala de Rosalba: la escena usa 1,52 m / 433 px a mano hasta integrar `arte/rosalba`
-  (`ESCALA_ROSALBA`).
