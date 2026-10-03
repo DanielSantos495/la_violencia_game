@@ -53,7 +53,7 @@ de un traje tradicional de larga duración: confirmar con fotografías de los a�
 | Ruana | Oscura y relativamente pequeña; terciada sobre el hombro derecho para dejar libre el brazo (decisión de diseño, no dato) | Doc 03 [V]; Ocampo | Monte |
 | Sombrero | De caña o tapia pisada (trencilla), cinta negra, barbuquejo atado bajo el mentón | Doc 03 [V]; Ocampo | Mercado |
 | Zarcillos | Flor con gota | Ocampo ("zarcillos muy vistosos") | Todas |
-| Peinado | Trenzas con cinta roja al extremo | Ocampo | Todas |
+| Peinado | Trenzas con cinta roja al extremo; sin cinta desde la M2 hasta que vuelve a atársela en el Acto II (doc 10 P31–P32) | Ocampo; doc 02 | Con cinta: Prólogo, Acto II tras atarla, epílogo. Sin cinta: M2 en adelante |
 | Alpargatas | Blancas, suela de fique trenzado, capellada labrada, galones negros de lana anudados en rosa | Doc 03 [V]; Ocampo | Todas |
 
 Variantes previstas: **mercado** (prólogo y Acto I antes del ataque) y **monte** (Misión 2 en
@@ -117,6 +117,11 @@ Agachada, la postura solo mueve la cabeza: la mano de apoyo sigue en el suelo.
 - Color por acto (`../paleta.md` §11): sigue abierta la forma de apagarlo. Si se genera cada
   escena con el croma de su acto, Rosalba necesitará variantes por acto; si se usa un filtro en
   vivo, la cinta roja tendrá que salir de la pieza `trenza` a una pieza propia para no apagarse.
+- Cinta roja en el guion (doc 10 P31–P32, `../paleta.md` §11.3), sin fecha, cuando Daniel lo
+  pida: trenza sin cinta para la variante monte y la pose agachada de 1948, sus cabezas y el
+  retrato monte (parámetro de `trenza()` o la cinta como pieza propia), y la cinta suelta como
+  objeto para el Prólogo b2 (en la mano de Aurelio y luego de Heliodoro): `rojo-liberal` plano con
+  borde de tinta.
 - Fotografías de campesinas boyacenses de los años 40 que confirmen el traje.
 - Vista de frente de cuerpo entero (hoja completa del doc 03 §6.2).
 - Hombros y torso por expresión (hoy la postura mueve cabeza, brazos y trenza; el torso no es
