@@ -388,7 +388,7 @@ Decididas el 2026-10-02:
 2. ✅ Rojo `#ca2d23` y azul `#1d4aac` (§2.1).
 3. ✅ **Cinta de Rosalba en rojo liberal.** Está documentado (Ocampo) y marca a su familia liberal desde el
    primer cuadro. Con ella se aprobó la propuesta para narrativa: que la cinta pase de adorno a señal
-   peligrosa. Está registrada en el doc 10 como P31 (aprobada); la escena concreta es la P32 (propuesta).
+   peligrosa. Está registrada en el doc 10 como P31 (aprobada); la escena concreta es la P32 (aprobada y llevada al doc 02): sin cinta desde la M2 hasta que la ata en el Acto II.
 4. ✅ Factores del guion de color aprobados como están, con el epílogo desvaído (§5).
 5. ✅ Modo registro sin rojo ni azul (§6.6).
 6. ✅ Implementación: (a) cada escena generada con el croma de su acto, y (b) filtro en vivo solo en momentos
