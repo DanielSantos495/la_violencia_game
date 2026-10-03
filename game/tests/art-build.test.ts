@@ -87,6 +87,16 @@ describe('rasterizar y empaquetar', () => {
     expect([r2.ancho, r2.alto]).toEqual([60, 60]);
   });
 
+  it('el recorte no pasa de los bordes del viewBox (lo de fuera no se ve)', () => {
+    const [fondo] = framesDeSvg(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50"><clipPath id="c"><rect width="100" height="50"/></clipPath><g clip-path="url(#c)"><rect x="-40" y="10" width="200" height="80"/></g></svg>`,
+      'fondo',
+    );
+    const r = rasterizar(definido(fondo), 2);
+    expect(r.recorte).toEqual({ x: 0, y: 10, w: 100, h: 40 });
+    expect([r.ancho, r.alto]).toEqual([200, 80]);
+  });
+
   it('genera un multiatlas de Phaser con trim, tamaño de origen y pivote normalizado', () => {
     const rasters = frames.map((f) => rasterizar(f, 2));
     const atlas = empaquetar(frames, rasters, 2, 'p@2x');

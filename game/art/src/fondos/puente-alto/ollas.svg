@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="130" viewBox="0 0 300 130">
+  <!--
+    Puente Alto · loza de barro
+    Capa: juego (paralaje 1.0, 200 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Loza de barro genérica [P: tipos de loza en el mercado de 1946].
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (tinta), rojo y azul enteros.
+    GENERADO por game/art/gen/puente_alto.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="t-fina" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#1d1713" stroke-width="0.7"/></pattern>
+    <pattern id="t-media" width="3.6" height="3.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="3.6" stroke="#1d1713" stroke-width="0.9"/></pattern>
+    <pattern id="t-cruz" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#1d1713" stroke-width="0.9"/><line x1="0" y1="0" x2="4" y2="0" stroke="#1d1713" stroke-width="0.9"/></pattern>
+    <pattern id="t-densa" width="2.8" height="2.8" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><line x1="0" y1="0" x2="0" y2="2.8" stroke="#1d1713" stroke-width="1.2"/><line x1="0" y1="0" x2="2.8" y2="0" stroke="#1d1713" stroke-width="1"/></pattern>
+    <pattern id="t-horiz" width="8" height="4" patternUnits="userSpaceOnUse"><line x1="0" y1="2" x2="8" y2="2" stroke="#1d1713" stroke-width="0.8"/></pattern>
+    <pattern id="t-vert" width="4" height="8" patternUnits="userSpaceOnUse"><line x1="2" y1="0" x2="2" y2="8" stroke="#1d1713" stroke-width="0.8"/></pattern>
+    <pattern id="t-puntos" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.8" fill="#1d1713"/></pattern>
+    <pattern id="t-puntos-ralos" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.7" fill="#1d1713"/><circle cx="5.5" cy="5.5" r="0.6" fill="#1d1713"/></pattern>
+    <pattern id="t-madera" width="40" height="6" patternUnits="userSpaceOnUse"><path d="M0,3 C10,2 20,4 40,3" stroke="#1d1713" stroke-width="0.6" fill="none"/></pattern>
+    <pattern id="t-tejido" width="6.5" height="6.5" patternUnits="userSpaceOnUse"><path d="M0,3.2 H6.5 M3.2,0 V6.5" stroke="#1d1713" stroke-width="0.4"/></pattern>
+    <pattern id="t-madera-v" width="6" height="40" patternUnits="userSpaceOnUse"><path d="M3,0 C2,10 4,20 3,40" stroke="#1d1713" stroke-width="0.6" fill="none"/></pattern>
+  </defs>
+<path d="M21,46 L109,46 Q126.6,83.8 95.8,125.8 Q65,132.5 34.2,125.8 Q3.4,83.8 21,46 Z" fill="#ab795d" stroke="#1d1713" stroke-width="1.8"/><path d="M21,46 L109,46 Q126.6,83.8 95.8,125.8 Q65,132.5 34.2,125.8 Q3.4,83.8 21,46 Z" fill="url(#t-fina)"/><path d="M40.8,67 Q32,92.2 43,113.2" stroke="#eee6d2" stroke-width="3.1" fill="none" stroke-linecap="round"/><path d="M23.2,71.2 Q65,77.9 106.8,71.2" stroke="#1d1713" stroke-width="1" fill="none" stroke-dasharray="4 3"/><ellipse cx="65" cy="46" rx="44" ry="7" fill="#1d1713"/><path d="M155.4,20 L174.6,20 L173,42 Q209,61.8 190.6,121.2 Q165,132.2 139.4,121.2 Q121,61.8 157,42 Z" fill="#ab795d" stroke="#1d1713" stroke-width="1.8"/><path d="M155.4,20 L174.6,20 L173,42 Q209,61.8 190.6,121.2 Q165,132.2 139.4,121.2 Q121,61.8 157,42 Z" fill="url(#t-fina)"/><path d="M147.4,47.5 Q141,80.5 149,108" stroke="#eee6d2" stroke-width="3.1" fill="none" stroke-linecap="round"/><path d="M134.6,53 Q165,61.8 195.4,53" stroke="#1d1713" stroke-width="1" fill="none" stroke-dasharray="4 3"/><path d="M209,62 L281,62 Q295.4,92.6 270.2,126.6 Q245,132 219.8,126.6 Q194.6,92.6 209,62 Z" fill="#ab795d" stroke="#1d1713" stroke-width="1.8"/><path d="M209,62 L281,62 Q295.4,92.6 270.2,126.6 Q245,132 219.8,126.6 Q194.6,92.6 209,62 Z" fill="url(#t-fina)"/><path d="M225.2,79 Q218,99.4 227,116.4" stroke="#eee6d2" stroke-width="3.1" fill="none" stroke-linecap="round"/><path d="M210.8,82.4 Q245,87.8 279.2,82.4" stroke="#1d1713" stroke-width="1" fill="none" stroke-dasharray="4 3"/><ellipse cx="245" cy="62" rx="36" ry="7" fill="#1d1713"/>
+</svg>
