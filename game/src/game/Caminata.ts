@@ -1,6 +1,7 @@
 import type { GameObjects, Scene, Tweens } from 'phaser';
 import {
   type OpcionesCaminata,
+  type PoseCaminata,
   poseCaminata,
   velocidadCaminata,
 } from '../core/animacion/caminata.ts';
@@ -38,30 +39,50 @@ export function caminar(
     ...opciones
   }: OpcionesCaminar = {},
 ): Caminata {
+  const tween = animarCiclo(
+    escena,
+    contenedor,
+    piezas,
+    ciclo,
+    (fase) => poseCaminata(fase, opciones),
+    postura,
+  );
+  return { tween, velocidad: velocidadCaminata(ciclo, opciones, largoPierna) };
+}
+
+/**
+ * Repite en bucle una pose cíclica (caminata, carrera…): un solo contador de fase 0..2π mueve
+ * ángulos, desplazamientos de pieza y rebote del contenedor. Las piezas ausentes se ignoran.
+ */
+export function animarCiclo(
+  escena: Scene,
+  contenedor: GameObjects.Container,
+  piezas: Map<string, GameObjects.Container>,
+  ciclo: number,
+  pose: (fase: number) => PoseCaminata,
+  postura: Readonly<Record<string, number>> = {},
+): Tweens.Tween {
   const yBase = contenedor.y;
   const reposo = new Map(
     [...piezas].map(([id, p]) => [id, { x: p.x, y: p.y }]),
   );
-
-  const tween = escena.tweens.addCounter({
+  return escena.tweens.addCounter({
     from: 0,
     to: 1,
     duration: ciclo,
     repeat: -1,
     onUpdate: (tw: Tweens.Tween) => {
-      const pose = poseCaminata((tw.getValue() ?? 0) * Math.PI * 2, opciones);
+      const p = pose((tw.getValue() ?? 0) * Math.PI * 2);
       for (const [id, pieza] of piezas) {
-        if (id in pose.angulos || id in postura) {
-          pieza.angle = (pose.angulos[id] ?? 0) + (postura[id] ?? 0);
+        if (id in p.angulos || id in postura) {
+          pieza.angle = (p.angulos[id] ?? 0) + (postura[id] ?? 0);
         }
         const r = reposo.get(id);
         if (!r) continue;
-        pieza.x = r.x + (pose.avance[id] ?? 0);
-        pieza.y = r.y - (pose.levante[id] ?? 0);
+        pieza.x = r.x + (p.avance[id] ?? 0);
+        pieza.y = r.y - (p.levante[id] ?? 0);
       }
-      contenedor.y = yBase - pose.rebote;
+      contenedor.y = yBase - p.rebote;
     },
   });
-
-  return { tween, velocidad: velocidadCaminata(ciclo, opciones, largoPierna) };
 }

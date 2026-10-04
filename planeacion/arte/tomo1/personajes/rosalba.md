@@ -76,7 +76,14 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
   pañolón o ruana, trenza y cinta.
 - **Agachada** (`rosalba-agachada.svg`, variante monte): pose dibujada aparte para el sigilo,
   con cuerpo, ruana, trenza y cinta, brazo y antebrazo apoyados en el suelo, y cabeza con zarcillo.
-- **Cinta roja** (doc 10 P31–P32): pieza propia `cinta`, hija de `trenza`, en las tres poses, y
+- **Corriendo** (`rosalba-corriendo.svg`, variante monte; huida de la M2, doc 02 beat 4): con la
+  falda de frisa casi al tobillo no se corre, así que la mano derecha la recoge por delante, a la
+  altura del muslo, y el ruedo sube hasta la rodilla: se ven la enagua y las canillas. Torso
+  inclinado 14° y cuerpo agachado; cabeza derecha (sirven las cabezas por expresión de pie y la
+  postura solo la mueve a ella); trenza echada atrás. Las piernas son la canilla entera con su
+  alpargata y pivote en la rodilla, oculta siempre bajo la falda o la enagua (guarda:
+  `pnpm art:walk <svg> --carrera`). El brazo izquierdo bracea con el puño cerrado.
+- **Cinta roja** (doc 10 P31–P32): pieza propia `cinta`, hija de `trenza`, en las cuatro poses, y
   capa `cinta` en el retrato. Sin ella, la trenza termina en un amarre de hilo oscuro. En el
   juego: `Personaje.mostrarPieza('cinta', …)` o la opción `ocultas: [PIEZA_CINTA]`, y
   `Retrato.cinta(…)`. Va sin cinta desde la M2 hasta que vuelve a atársela en el Acto II.
@@ -109,6 +116,11 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
 
 - Caminata procedural: `game/src/core/animacion/caminata.ts` (revisión con `pnpm art:walk`).
 - Agacharse y acechar: cambio de pose con un aplastamiento breve y mirada alrededor.
+- Carrera procedural (`game/src/core/animacion/carrera.ts`; `Personaje.correrHasta`): cada pie
+  apoya el 38 % del ciclo y hay dos fases de vuelo; el pie de apoyo no patina ni se despega del
+  suelo (el cuerpo se hunde a mitad del apoyo y la rodilla sube lo mismo); el talón sube atrás
+  y la rodilla se alza para que el pie libre el suelo. Ciclo de 0,62 s: unos 2 m/s en escena.
+  Revisión con `pnpm art:walk art/src/personajes/rosalba-corriendo.svg --carrera`.
 - Expresiones (`game/src/core/animacion/expresiones.ts`): el dibujo cambia de golpe, como en una
   viñeta; la postura de la cabeza se interpola y se suma a la caminata y al acecho.
 

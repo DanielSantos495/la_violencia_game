@@ -7,6 +7,7 @@ import {
   PIEZAS_POSTURA_CABEZA,
 } from '../core/animacion/expresiones.ts';
 import { caminar, type OpcionesCaminar } from './Caminata.ts';
+import { correr, type OpcionesCorrer } from './Carrera.ts';
 import { armarRecorte } from './Recorte.ts';
 
 /** Una pose dibujada del personaje: frames "<base>/<pieza>" del atlas, en orden de dibujo. */
@@ -28,6 +29,8 @@ export interface DefinicionPose {
 export interface OpcionesPersonaje {
   /** Cómo camina (p. ej. pies bajo falda larga, duración del ciclo). */
   caminata?: OpcionesCaminar;
+  /** Cómo corre en su pose de correr (largo de canilla, duración del ciclo…). */
+  carrera?: OpcionesCorrer;
   /** Expresión inicial. */
   expresion?: Expresion;
   /** Piezas que empiezan ocultas en todas las poses (p. ej. la cinta de Rosalba). */
@@ -63,6 +66,7 @@ export class Personaje {
   private poseActual: string;
   private animacion: Tweens.Tween | null = null;
   private readonly opcionesCaminata: OpcionesCaminar;
+  private readonly opcionesCarrera: OpcionesCorrer;
   private expresionActual: Expresion = 'neutral';
   /** Ángulos de la expresión que se suman a la pose; se interpola al cambiar de expresión. */
   private readonly postura: Record<string, number> = {};
@@ -82,6 +86,7 @@ export class Personaje {
     this.escena = escena;
     this.atlas = atlas;
     this.opcionesCaminata = opciones.caminata ?? {};
+    this.opcionesCarrera = opciones.carrera ?? {};
     this.raiz = escena.add.container(x, ySuelo);
     for (const [nombre, def] of Object.entries(poses)) {
       const rig = armarRecorte(
@@ -182,6 +187,30 @@ export class Personaje {
   /** Camina hasta la x indicada a la velocidad que no hace patinar los pies, y se detiene. */
   async caminarHasta(x: number): Promise<void> {
     const velocidad = this.caminar();
+    const duracion = (Math.abs(x - this.raiz.x) / velocidad) * 1000;
+    await this.interpolar({ x }, duracion, 'Linear');
+    this.quieto();
+  }
+
+  /** Corre en la pose actual (debe ser la de correr); devuelve la velocidad en px/s. */
+  correr(): number {
+    this.quieto();
+    const rig = this.rig();
+    const carrera = correr(this.escena, rig.contenedor, rig.piezas, {
+      ...this.opcionesCarrera,
+      postura: rig.postura,
+    });
+    this.animacion = carrera.tween;
+    return carrera.velocidad * this.raiz.scaleX;
+  }
+
+  /**
+   * Pasa a la pose de correr y corre hasta la x indicada a la velocidad que no hace patinar
+   * los pies; se queda en esa pose (quien llama decide si vuelve a estar de pie).
+   */
+  async correrHasta(x: number, pose = 'corriendo'): Promise<void> {
+    if (this.poseActual !== pose) await this.cambiarPose(pose, 180);
+    const velocidad = this.correr();
     const duracion = (Math.abs(x - this.raiz.x) / velocidad) * 1000;
     await this.interpolar({ x }, duracion, 'Linear');
     this.quieto();
