@@ -68,8 +68,19 @@ def trenza(x0=134.0, y0=110.0, x1=124.0, y1=214.0, n=14):
         out.append(f'<g transform="rotate({rot} {f(ex)} {f(cy)})">'
                    f'<ellipse cx="{f(ex)}" cy="{f(cy)}" rx="{f(rx)}" ry="{f(ry)}" fill="#000" stroke="#fff" stroke-width="0.6"/>'
                    f'</g>')
-    # moño de cinta al final (cintas rojas en las trenzas: Ocampo López, cap. 4)
+    # amarre de hilo oscuro: la trenza queda atada aunque no lleve la cinta (doc 10 P31–P32)
     bx, by = x1 + 0.5, y1 + 3
+    out.append(f'<path d="M{f(bx-3)},{f(by-0.6)} C{f(bx-1)},{f(by-1.6)} {f(bx+1)},{f(by-1.6)} {f(bx+3)},{f(by-0.6)} '
+               f'L{f(bx+2.6)},{f(by+2.4)} C{f(bx+1)},{f(by+1.6)} {f(bx-1)},{f(by+1.6)} {f(bx-2.6)},{f(by+2.4)} Z" fill="#000"/>')
+    # puntas del pelo que asoman bajo el moño
+    out.append(f'<path d="M{f(bx-1)},{f(by+4)} C{f(bx-3)},{f(by+10)} {f(bx-2)},{f(by+14)} {f(bx-4)},{f(by+17)} M{f(bx)},{f(by+4)} C{f(bx)},{f(by+10)} {f(bx+1)},{f(by+14)} {f(bx)},{f(by+18)} M{f(bx+1)},{f(by+4)} C{f(bx+3)},{f(by+9)} {f(bx+3)},{f(by+12)} {f(bx+4)},{f(by+15)}" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>')
+    return ''.join(out)
+
+def cinta(x1=124.0, y1=214.0):
+    """Moño de cinta roja al final de la trenza (cintas rojas en las trenzas: Ocampo López, cap. 4).
+    Pieza propia, hija de `trenza`: en la historia se la quitan y ella vuelve a atársela (doc 10 P31–P32)."""
+    bx, by = x1 + 0.5, y1 + 3
+    out = []
     out.append(
         '<g>'
         f'<path d="M{f(bx)},{f(by)} C{f(bx-10)},{f(by-9)} {f(bx-14)},{f(by+2)} {f(bx-4)},{f(by+3)} Z" fill="{R}" stroke="#000" stroke-width="1.3" stroke-linejoin="round"/>'
@@ -79,8 +90,6 @@ def trenza(x0=134.0, y0=110.0, x1=124.0, y1=214.0, n=14):
         f'<ellipse cx="{f(bx)}" cy="{f(by+1)}" rx="2.6" ry="2.2" fill="{R}" stroke="#000" stroke-width="1.3"/>'
         f'<path d="M{f(bx-9)},{f(by-1)} C{f(bx-7)},{f(by-4)} {f(bx-4)},{f(by-4)} {f(bx-3)},{f(by-1)} M{f(bx+9)},{f(by-1)} C{f(bx+7)},{f(by-4)} {f(bx+4)},{f(by-4)} {f(bx+3)},{f(by-1)}" stroke="#fff" stroke-width="0.8" fill="none"/>'
         f'</g>')
-    # puntas del pelo que asoman bajo el moño
-    out.append(f'<path d="M{f(bx-1)},{f(by+4)} C{f(bx-3)},{f(by+10)} {f(bx-2)},{f(by+14)} {f(bx-4)},{f(by+17)} M{f(bx)},{f(by+4)} C{f(bx)},{f(by+10)} {f(bx+1)},{f(by+14)} {f(bx)},{f(by+18)} M{f(bx+1)},{f(by+4)} C{f(bx+3)},{f(by+9)} {f(bx+3)},{f(by+12)} {f(bx+4)},{f(by+15)}" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>')
     return ''.join(out)
 
 # ---------- collar de abalorios ----------
@@ -578,7 +587,8 @@ guardar('rosalba.svg', encabezado('Rosalba Insuasty — de pie, traje de mercado
 {piece('brazo-der', '153 140', bd_up, 'Brazo derecho: manga abullonada (queda bajo el pañolón)')}
 {piece('antebrazo-der', '157 200', bd_fore, 'Antebrazo derecho con puño bordado y mano; hijo de brazo-der', extra=' data-padre="brazo-der"')}
 {piece('panolon', '148 130', panolon, 'Pañolón negro de paño con bordado claro y flecos largos')}
-{piece('trenza', '134 110', trenza(), 'Trenza con cinta roja al extremo (acento liberal)')}''')
+{piece('trenza', '134 110', trenza(), 'Trenza atada con hilo oscuro')}
+{piece('cinta', '124.5 217', cinta(), 'Cinta roja de la trenza (rojo liberal); hija de trenza: se quita y se pone (doc 10 P31–P32)', extra=' data-padre="trenza"')}''')
 
 # ======================= 2. de pie, monte =======================
 guardar('rosalba-monte.svg', encabezado('Rosalba Insuasty — de pie, variante monte (Misión 2 en adelante).',
@@ -594,7 +604,8 @@ guardar('rosalba-monte.svg', encabezado('Rosalba Insuasty — de pie, variante m
 {piece('zarcillo', '143.6 100.8', zarcillo, 'Zarcillo; hijo de cabeza', extra=' data-padre="cabeza"')}
 {piece('mechones', '150 130', MECHONES, 'Mechones sueltos tras la noche de huida; hijo de cabeza', extra=' data-padre="cabeza"')}
 {piece('ruana', '145 128', ruana_pie, 'Ruana oscura de lana (doc 03 [V]; Ocampo: tonos oscuros, pequeña)')}
-{piece('trenza', '134 110', trenza(), 'Trenza con cinta roja')}
+{piece('trenza', '134 110', trenza(), 'Trenza atada con hilo oscuro')}
+{piece('cinta', '124.5 217', cinta(), 'Cinta roja; hija de trenza (sin ella desde la M2 hasta el Acto II)', extra=' data-padre="trenza"')}
 {piece('brazo-der', '153 140', bd_up, 'Brazo derecho libre')}
 {piece('antebrazo-der', '157 200', bd_fore, 'Antebrazo y mano derechos; hijo de brazo-der', extra=' data-padre="brazo-der"')}
 {piece('ruana-doblez', '145 128', doblez_pie, 'Doblez de la ruana terciada sobre el hombro derecho')}''')
@@ -685,6 +696,7 @@ guardar('rosalba-agachada.svg', encabezado('Rosalba Insuasty — agachada (sigil
 {piece('mechones', f'{f(cuello[0])} {f(cuello[1])}', mechones_ag, 'Mechones sueltos; hijo de cabeza', extra=' data-padre="cabeza"')}
 {piece('ruana', '182 310', ruana_ag, 'Ruana sobre la espalda curvada')}
 {piece('trenza', f'{f(nuca[0])} {f(nuca[1])}', trenza(nuca[0], nuca[1] + 1, nuca[0] - 4, nuca[1] + 96, 12), 'Trenza colgando por gravedad')}
+{piece('cinta', f'{f(nuca[0] - 3.5)} {f(nuca[1] + 99)}', cinta(nuca[0] - 4, nuca[1] + 96), 'Cinta roja; hija de trenza', extra=' data-padre="trenza"')}
 {piece('brazo-der', f'{HOMBRO[0]} {HOMBRO[1]}', brazo_ag, 'Brazo derecho hacia el suelo')}
 {piece('antebrazo-der', f'{CODO[0]} {CODO[1]}', antebrazo_ag, 'Antebrazo y mano apoyada; hijo de brazo-der', extra=' data-padre="brazo-der"')}
 {piece('ruana-doblez', '182 310', doblez_ag, 'Doblez de la ruana sobre el hombro derecho')}''')
@@ -1036,6 +1048,13 @@ def borde_bordado(camino, paso, lado, color='#fff', semilla=0, flores=None, hoja
         k += 1
     return ''.join(s)
 
+TRENZA_34 = ([(166, 252), (150, 284), (146, 300), (142, 330), (138, 360), (136, 400), (134, 432)], 26, 16, 13)
+
+def cinta_34():
+    """Capa del retrato con la cinta roja al final de la trenza (se quita y se pone: doc 10 P31–P32)."""
+    _, fin = trenza_34(*TRENZA_34)
+    return mono_34(fin[0], fin[1] + 2)
+
 def busto_34(variante):
     v = ['<clipPath id="r34-cara"><path d="' + CARA_34 + '"/></clipPath>',
          f'<clipPath id="r34-cuello"><path d="{CUELLO_34}"/></clipPath>']
@@ -1122,9 +1141,10 @@ def busto_34(variante):
                 fill = '#000' if (i % 2 == 0) == oscura else CINTAS[(i // 2) % 3]
                 v.append(f'<circle cx="{f(x)}" cy="{f(y)}" r="{f(rr)}" fill="{fill}" stroke="#000" stroke-width="0.9"/>')
     # trenza por delante del hombro cercano, con la cinta roja
-    trz, fin = trenza_34([(166, 252), (150, 284), (146, 300), (142, 330), (138, 360), (136, 400), (134, 432)], 26, 16, 13)
+    trz, fin = trenza_34(*TRENZA_34)
     v.append(trz)
-    v.append(mono_34(fin[0], fin[1] + 2))
+    v.append(f'<path d="M{f(fin[0] - 6)},{f(fin[1] - 1)} C{f(fin[0] - 2)},{f(fin[1] - 3)} {f(fin[0] + 2)},{f(fin[1] - 3)} {f(fin[0] + 6)},{f(fin[1] - 1)} '
+             f'L{f(fin[0] + 5)},{f(fin[1] + 5)} C{f(fin[0] + 2)},{f(fin[1] + 3.4)} {f(fin[0] - 2)},{f(fin[1] + 3.4)} {f(fin[0] - 5)},{f(fin[1] + 5)} Z" fill="#000" stroke="#fff" stroke-width="0.8"/>')
     for (dx, dy, cx) in [(-7, 30, -4), (-3, 34, -1), (1, 33, 1), (5, 29, 4), (8, 24, 6)]:
         v.append(pincel([(fin[0] + dx * 0.3, fin[1] + 6), (fin[0] + cx, fin[1] + dy * 0.5), (fin[0] + dx, fin[1] + dy * 0.8), (fin[0] + dx, fin[1] + dy)], 2.2, 0.8, 0.05))
     # rostro, sombras y contorno de tinta variable
@@ -1355,6 +1375,7 @@ def parpado_34(expr):
 def hoja_retrato():
     ranuras = [('base-mercado', busto_34('mercado'), 'Base del retrato, traje de mercado (rostro sin rasgos)'),
                ('base-monte', busto_34('monte'), 'Base del retrato, variante monte (rostro sin rasgos)')]
+    ranuras += [('cinta', cinta_34(), 'Cinta roja de la trenza, sobre la base (se quita y se pone)')]
     ranuras += [(f'rasgos-{e}', rasgos_34(e), f'Rasgos del retrato: {e}') for e in EXPRESIONES]
     ranuras += [(f'parpado-{e}', parpado_34(e), f'Parpadeo del retrato: {e}') for e in EXPRESIONES]
     piezas = []
@@ -1370,3 +1391,58 @@ def hoja_retrato():
     print('ok rosalba-retrato.svg', len(ranuras), 'piezas')
 
 hoja_retrato()
+
+# ======================= 6. la cinta suelta (objeto del Prólogo b2) =======================
+# Aurelio le jala la trenza y se queda con la cinta; Heliodoro se la devuelve (doc 02 Prólogo b2,
+# doc 10 P32). Cinta desatada, cogida por un punto: dos tiras que cuelgan con alguna vuelta,
+# tinta plana de partido (rojo liberal, revés en rojo-sombra) con borde de tinta (paleta.md).
+ROJO_SOMBRA = PALETA['rojo-sombra']
+
+def cinta_suelta(escala, ox, oy):
+    """Cinta cogida por (ox, oy); escala 1 = la del personaje en escena, 2,2 = la del retrato."""
+    tiras = [  # (eje que pasa por los puntos, vueltas en t, ancho)
+        ([(0, 0), (-2, 12), (-7, 24), (-4, 38), (2, 50), (-1, 63), (-6, 76)], (0.42, 0.8), 3.8),
+        ([(0, 0), (3, 10), (9, 20), (7, 32), (10, 44), (15, 53)], (0.58,), 3.6),
+    ]
+    out = []
+    for eje, vueltas, ancho in tiras:
+        pts = cadena(suave([(ox + x * escala, oy + y * escala) for x, y in eje]), 10)
+        m = len(pts)
+        tramos, actual, cara = [], [], True
+        for i, (x, y) in enumerate(pts):
+            t = i / (m - 1)
+            a, b = pts[max(i - 1, 0)], pts[min(i + 1, m - 1)]
+            l = math.dist(a, b) or 1.0
+            nx, ny = -(b[1] - a[1]) / l, (b[0] - a[0]) / l
+            fase = min([abs(t - v) for v in vueltas] + [1])
+            w = ancho * escala / 2 * min(1.0, 0.12 + fase / 0.07)
+            actual.append(((x + nx * w, y + ny * w), (x - nx * w, y - ny * w)))
+            if fase < 0.004 and len(actual) > 2:
+                tramos.append((actual, cara))
+                actual, cara = [actual[-1]], not cara
+        tramos.append((actual, cara))
+        for k, (par, frente) in enumerate(tramos):
+            izq = [p for p, _ in par]
+            der = [q for _, q in par]
+            if k == len(tramos) - 1:  # punta cortada en cola de golondrina
+                (x, y) = pts[-1]
+                medio = (x - (pts[-1][0] - pts[-3][0]) * 0.6, y - (pts[-1][1] - pts[-3][1]) * 0.6)
+                izq = izq + [medio]
+            out.append(f'<path d="{polilinea(izq + der[::-1], True)}" fill="{R if frente else ROJO_SOMBRA}" stroke="#000" '
+                       f'stroke-width="{f(1.1 * escala ** 0.6)}" stroke-linejoin="round"/>')
+    # la arruga donde estuvo el nudo, entre los dedos
+    out.append(f'<ellipse cx="{f(ox)}" cy="{f(oy + 1 * escala)}" rx="{f(2.2 * escala)}" ry="{f(1.5 * escala)}" fill="{R}" stroke="#000" stroke-width="{f(1.1 * escala ** 0.6)}"/>'
+               f'<path d="M{f(ox - 1.6 * escala)},{f(oy)} C{f(ox - 0.4 * escala)},{f(oy + 1.4 * escala)} {f(ox + 0.6 * escala)},{f(oy + 1.4 * escala)} {f(ox + 1.6 * escala)},{f(oy + 0.2 * escala)}" '
+               f'stroke="{ROJO_SOMBRA}" stroke-width="{f(0.9 * escala ** 0.6)}" fill="none"/>')
+    return ''.join(out)
+
+def hoja_cinta():
+    piezas = [piece('cinta-suelta', '40 10', cinta_suelta(1, 40, 10), 'Cinta suelta a la escala del personaje; pivote donde se coge'),
+              piece('cinta-suelta-vineta', '168 22', cinta_suelta(2.2, 168, 22), 'Cinta suelta a la escala del retrato (viñetas)')]
+    cuerpo = encabezado('Cinta roja de Rosalba, suelta (objeto del Prólogo b2).',
+                        'Doc 02 Prólogo b2 y doc 10 P31–P32: Aurelio se queda con la cinta y Heliodoro se la devuelve.')
+    cuerpo = cuerpo.replace('width="300" height="500" viewBox="0 0 300 500"', 'width="256" height="200" viewBox="0 0 256 200"')
+    escribir(os.path.join(OUTDIR, 'cinta-roja.svg'), cuerpo + ''.join(piezas) + '\n</svg>\n')
+    print('ok cinta-roja.svg', len(piezas), 'piezas')
+
+hoja_cinta()

@@ -73,9 +73,16 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
 
 - **De pie** (`rosalba.svg`, `rosalba-monte.svg`): brazos y antebrazos (el antebrazo cuelga del
   brazo), piernas con alpargata, enagua, falda, torso, cabeza (con zarcillo y sombrero como hijos),
-  pañolón o ruana, trenza.
+  pañolón o ruana, trenza y cinta.
 - **Agachada** (`rosalba-agachada.svg`, variante monte): pose dibujada aparte para el sigilo,
-  con cuerpo, ruana, trenza, brazo y antebrazo apoyados en el suelo, y cabeza con zarcillo.
+  con cuerpo, ruana, trenza y cinta, brazo y antebrazo apoyados en el suelo, y cabeza con zarcillo.
+- **Cinta roja** (doc 10 P31–P32): pieza propia `cinta`, hija de `trenza`, en las tres poses, y
+  capa `cinta` en el retrato. Sin ella, la trenza termina en un amarre de hilo oscuro. En el
+  juego: `Personaje.mostrarPieza('cinta', …)` o la opción `ocultas: [PIEZA_CINTA]`, y
+  `Retrato.cinta(…)`. Va sin cinta desde la M2 hasta que vuelve a atársela en el Acto II.
+  La cinta suelta del Prólogo b2 (en la mano de Aurelio y luego de Heliodoro) está en
+  `cinta-roja.svg`: `cinta-suelta` a la escala del personaje y `cinta-suelta-vineta` a la del
+  retrato, con el pivote donde se coge; `rojo-liberal` plano, revés en `rojo-sombra`, borde de tinta.
 - **Cabezas por expresión** (`rosalba-cabezas.svg` de pie, `rosalba-agachada-cabezas.svg`
   inclinada): una cabeza completa por expresión y su capa de parpadeo, con el mismo pivote del
   cuello; el juego cambia la cabeza sin mover sombrero, zarcillo ni mechones (los mechones del
@@ -124,11 +131,6 @@ Agachada, la postura solo mueve la cabeza: la mano de apoyo sigue en el suelo.
 - Color por acto (`../paleta.md` §11): sigue abierta la forma de apagarlo. Si se genera cada
   escena con el croma de su acto, Rosalba necesitará variantes por acto; si se usa un filtro en
   vivo, la cinta roja tendrá que salir de la pieza `trenza` a una pieza propia para no apagarse.
-- Cinta roja en el guion (doc 10 P31–P32, `../paleta.md` §11.3), sin fecha, cuando Daniel lo
-  pida: trenza sin cinta para la variante monte y la pose agachada de 1948, sus cabezas y el
-  retrato monte (parámetro de `trenza()` o la cinta como pieza propia), y la cinta suelta como
-  objeto para el Prólogo b2 (en la mano de Aurelio y luego de Heliodoro): `rojo-liberal` plano con
-  borde de tinta.
 - Fotografías de campesinas boyacenses de los años 40 que confirmen el traje.
 - Vista de frente de cuerpo entero (hoja completa del doc 03 §6.2).
 - Hombros y torso por expresión (hoy la postura mueve cabeza, brazos y trenza; el torso no es

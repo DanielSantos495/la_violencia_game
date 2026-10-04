@@ -30,6 +30,8 @@ export interface OpcionesPersonaje {
   caminata?: OpcionesCaminar;
   /** Expresión inicial. */
   expresion?: Expresion;
+  /** Piezas que empiezan ocultas en todas las poses (p. ej. la cinta de Rosalba). */
+  ocultas?: readonly string[];
 }
 
 interface Rig {
@@ -107,6 +109,7 @@ export class Personaje {
     if (!this.rigs.has(inicial))
       throw new Error(`Pose inicial inexistente: ${inicial}`);
     this.poseActual = inicial;
+    for (const id of opciones.ocultas ?? []) this.mostrarPieza(id, false);
     this.expresion(opciones.expresion ?? 'neutral', 0);
     this.programarParpadeo();
   }
@@ -117,6 +120,18 @@ export class Personaje {
 
   get gesto(): Expresion {
     return this.expresionActual;
+  }
+
+  /** Muestra u oculta una pieza (y lo que cuelga de ella) en todas las poses. */
+  mostrarPieza(id: string, visible: boolean): void {
+    let hallada = false;
+    for (const rig of this.rigs.values()) {
+      const pieza = rig.piezas.get(id);
+      if (!pieza) continue;
+      pieza.setVisible(visible);
+      hallada = true;
+    }
+    if (!hallada) throw new Error(`Pieza inexistente: ${id}`);
   }
 
   /**

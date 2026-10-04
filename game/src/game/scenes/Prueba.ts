@@ -11,6 +11,7 @@ import {
   APOYO_ROSALBA,
   CAMINATA_ROSALBA,
   ESCALA_ROSALBA,
+  PIEZA_CINTA,
   ROSALBA_MERCADO,
   ROSALBA_MONTE,
 } from '../personajes/rosalba.ts';
@@ -86,6 +87,18 @@ export class Prueba extends Scene {
       'mercado',
     );
     retrato.contenedor.setScale(0.7);
+    // La cinta suelta (Prólogo b2), a la escala del personaje y a la de la viñeta.
+    this.add
+      .image(420, 120, 'personajes', 'personajes/cinta-roja/cinta-suelta')
+      .setScale(ESCALA_ROSALBA);
+    this.add
+      .image(
+        470,
+        120,
+        'personajes',
+        'personajes/cinta-roja/cinta-suelta-vineta',
+      )
+      .setScale(0.7);
 
     // Recorre las expresiones mientras camina, para revisarlas en movimiento y en la viñeta.
     let indiceExpresion = 0;
@@ -109,7 +122,12 @@ export class Prueba extends Scene {
       APOYO_ROSALBA,
       ROSALBA_MONTE,
       'de-pie',
-      { caminata: CAMINATA_ROSALBA, expresion: 'alerta' },
+      // Desde la M2 va sin la cinta (doc 10 P31–P32).
+      {
+        caminata: CAMINATA_ROSALBA,
+        expresion: 'alerta',
+        ocultas: [PIEZA_CINTA],
+      },
     );
     // Escala del contrato (planeacion/arte/tomo1/escenarios/contrato_escala.md).
     monte.raiz.setScale(ESCALA_ROSALBA);
