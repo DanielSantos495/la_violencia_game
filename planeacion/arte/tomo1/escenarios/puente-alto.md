@@ -23,21 +23,27 @@ pila, pañuelos partidistas en 1946, productos concretos del mercado. Los módul
 
 ## 2. Composición por capas
 
-El paralaje cuenta la historia: al salir de la tienda roja se ve la azul enfrente, al otro
-lado de la plaza.
+El paralaje cuenta la historia: al salir de la tienda roja, la azul asoma al otro lado de la
+plaza, junto a la casa cural, pero las dos no caben en una misma foto (P26, abajo).
 
 | Capa | Ancho | Contenido | Estado |
 |---|---|---|---|
 | cielo (0) | 1920, fijo | `nube-a/b/c` que derivan a 4–9 px/s y vuelven a entrar por la derecha. `cordillera`: sierra lejana en bruma, cerro mayor (cumbre en x≈1170, y≈250) con páramo arriba y franjas de cultivo abajo (trigo, cebada, papa, potrero, barbecho), cercas de piedra, cercos vivos, cañadas con monte, dos caminos de herradura y fincas; dos estribos cercanos. Se ve por encima de los tejados lejanos (y≈250–500) y por las bocas de calle | Hecho |
-| lejos (0,15; 30 px/m; suelo 628) | 2784 | `lejos-oeste` (0–1340): casa de corredor, casa de dos pisos con balcón corrido, boca de calle, **tienda azul** (lx 790–1150, tres parroquianos en el corredor) y otra boca de calle. `iglesia` (1340–1760): fachada encalada con portada de piedra, hornacina y óculo; torre a la derecha con campanario y cupulín de teja (≈17,5 m); atrio de piedra con gradas, cruz atrial y dos feligresas. `lejos-este` (1750–2784): casa cural de balcón, boca de calle, casas. `suelo-lejos` en mosaico | Hecho |
-| medio (0,45; 90 px/m; suelo 724) | 4512 | Mercado en mx≈960–3770: mula cargada con arriero, toldo de papas, tendido de papas, **pila** (centro mx≈2420, con una mujer que viene por agua y un niño), corrillo de hombres (un pañuelo rojo), tendido de cubios con compradora, toldo de loza, mujeres con paraguas. **Hueco mx≈1300–1600** para que se vea la tienda azul al salir de la roja. En los extremos del nivel asoman una pareja (pañuelo azul) y la mula atada. `suelo-medio` en mosaico | Hecho |
+| lejos (0,15; 30 px/m; suelo 628) | 2784 | `lejos-oeste` (0–1340): casa de corredor, casa de dos pisos con balcón corrido, boca de calle, casa de corredor con una mujer y otra boca de calle. `iglesia` (1340–1760): fachada encalada con portada de piedra, hornacina y óculo; torre a la derecha con campanario y cupulín de teja (≈17,5 m); atrio de piedra con gradas, cruz atrial y dos feligresas. `lejos-este` (1750–2784): casa cural de balcón, hueco para la tienda azul, boca de calle y casa a cuatro aguas. **`tienda-azul`** (lx 1990–2370, fachada 2000–2360): módulo aparte en el hueco, junto a la casa cural, con tres parroquianos en el corredor. `suelo-lejos` en mosaico | Hecho |
+| medio (0,45; 90 px/m; suelo 724) | 4512 | Mercado en mx≈960–3770: mula cargada con arriero, toldo de papas, tendido de papas, **pila** (centro mx≈2420, con una mujer que viene por agua y un niño), corrillo de hombres (un pañuelo rojo), tendido de cubios con compradora, toldo de loza, mujeres con paraguas. **Hueco mx≈1300–1600**: respiro a la salida de la tienda roja. En los extremos del nivel asoman una pareja (pañuelo azul) y la mula atada. `suelo-medio` en mosaico | Hecho |
 | juego (1; 200 px/m; suelo 900) | 7680 (4 pantallas) | **tienda-roja** en x 200–2100; plaza abierta con costales, ollas y canastos (algunos en espejo); **casa-porton** en 5800–7500; **empedrado** en mosaico (1024 × 180, arriba en y=900) | Hecho |
 | frente (1,3; 260 px/m; suelo 996) | 9408 | Siluetas de tinta con luces de papel: canastos y costales con la base bajo el cuadro (nunca suben de y=900), borde de toldo con ristra de cebollas arriba | Hecho |
 
-Lectura por posiciones de cámara (comprobada con `art:escena`): en 0 domina la tienda roja; hacia
-1460 Rosalba sale y la tienda azul queda detrás de ella, al otro lado de la plaza; entre 2600 y
-3900 la iglesia queda al centro, con la pila delante y la cordillera detrás; en 5760 cierra la casa
-del portón.
+Lectura por posiciones de cámara (comprobada con `art:escena`): en 0 domina la tienda roja; entre
+1270 y 1980 la roja sale por la izquierda mientras la azul asoma por la derecha, junto a la casa
+cural; entre 2600 y 3900 la iglesia queda al centro, con la pila delante y la cordillera detrás, y
+la tienda azul a su derecha; en 5760 cierra la casa del portón.
+
+**P26 (doc 02 Prólogo b1):** el encuadre no deja fotografiar a la vez la tienda roja y la azul.
+Mientras se ven las dos (cámara ≈1270–1980), la foto más estrecha que mostraría 120 px de cada una
+mide más de 1200 px. El test `P26` de `tests/escenarios.test.ts` lo comprueba con un encuadre
+**provisional** de 1080 × 1080 (foto cuadrada del alto de la pantalla; 12 exposiciones es el rollo
+120 en formato 6×6). Cuando exista `Camara.ts`, el test debe usar su encuadre real.
 
 Ajuste al contrato: la cordillera va en **cielo** (a kilómetros prácticamente no se mueve);
 en esta escena "lejos" es el otro lado de la plaza.
@@ -81,7 +87,8 @@ cámara. Ahora:
 ### Color (paleta del Tomo I, `planeacion/arte/tomo1/paleta.md`)
 
 El generador carga `game/art/paleta.json` y dibuja con lavados planos bajo la línea, como una foto
-iluminada a mano. Las tramas siguen encima. Al guardar, la línea pasa a la tinta de la capa.
+iluminada a mano. Las sombras van encima, en aguada de tinta (rayado solo en las grandes y
+cercanas). Al guardar, la línea pasa a la tinta de la capa.
 
 | Material | Token |
 |---|---|
@@ -121,8 +128,8 @@ iluminada a mano. Las tramas siguen encima. Al guardar, la línea pasa a la tint
 - Definición pura: `game/src/core/escenarios/escenario.ts` (tipos y ayudas) y `puente-alto.ts`
   (capas → mosaicos y colocaciones con frame, x, y, ancla `suelo|arriba`, espejo y deriva). Test
   `tests/escenarios.test.ts`: módulos existentes y ≤ 2048 px, todo dentro de su capa, suelos desde
-  el suelo de la capa y sin huecos, hilera lejana continua, solo derivan las nubes y el frente no
-  tapa al personaje.
+  el suelo de la capa y sin huecos, hilera lejana continua, P26 (la tienda roja y la azul no caben
+  en una foto), solo derivan las nubes y el frente no tapa al personaje.
 - Phaser: `game/src/game/escenarios/Escenario.ts` (un contenedor por capa con el factor del
   contrato; los hijos heredan el factor al dibujarse) y `PruebaEscenario` (la plaza con Rosalba
   en ropa de mercado; fondo de cámara `papel`).
@@ -134,3 +141,5 @@ iluminada a mano. Las tramas siguen encima. Al guardar, la línea pasa a la tint
 - 200 px/m (recomendado) o 160 px/m: con 200 se corta la cumbrera de las casas de un nivel.
 - Confirmar con fotos de los años 40: plaza empedrada o de tierra; árboles en la plaza o no; pila.
 - Pañuelos partidistas en el mercado de 1946 (uno rojo y uno azul, marcados [P]).
+- Encuadre de la foto de Custodia (`Camara.ts`, Sprint 1): P26 se comprobó con 1080 × 1080,
+  provisional. Si la foto es más ancha que ≈1200 px, hay que alejar más la tienda azul.

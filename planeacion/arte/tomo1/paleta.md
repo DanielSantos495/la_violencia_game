@@ -1,7 +1,8 @@
 # Tomo I — Paleta de color
 
 **Estado:** v1.0, **aprobada por Daniel el 2026-10-02**, incluidos el guion de color y su implementación (§5).
-Es la parte de color del entregable 1 del doc 03 §6 (hoja de estilo); grosores y tramas siguen pendientes.
+Es la parte de color del entregable 1 del doc 03 §6 (hoja de estilo); las tramas están en el doc 03 §1 «Relleno»
+(detalle limpio, 04-oct-2026) y los grosores siguen pendientes.
 **Datos:** `game/art/paleta.json` es la fuente de los valores para el código y los generadores. Si esta hoja
 y el JSON difieren en un hex, manda el JSON.
 **Método y validación:** skill `paleta-tematica` (`.claude/skills/paleta-tematica/`).
@@ -44,8 +45,8 @@ Los valores están en OKLCH: L es la luz (0–1), C la intensidad o croma y h el
 | `partido` | Tinta plana, opaca, borde limpio de tinta | Sin techo | Pañuelos, banderas, afiches, fachadas, la cinta de Rosalba |
 | `sangre` | Mancha orgánica con textura | 0,16; tono 10–40° | Solo el instante; pasa a tinta (doc 03 §1 «Violencia») |
 
-Las tramas siguen siendo tinta y van encima del lavado: el color acompaña a la trama, no la reemplaza. Los
-lavados son planos, sin degradados (doc 03 §1).
+Las sombras chicas van en aguada de tinta sobre el lavado; la trama, solo en sombras grandes y cercanas
+(doc 03 §1 «Relleno»). Los lavados son planos, sin degradados (doc 03 §1).
 
 ### 2.1 Rojo y azul (definidos el 2026-10-02)
 
@@ -273,8 +274,9 @@ Qué implica para cada área:
 
 1. **Rojo y azul:** planos, opacos, con borde limpio de tinta, solo en objetos que cuentan la división. En la
    UI solo para datos de partido (Archivo).
-2. **Lavados:** planos, bajo la línea; tramas encima. Sin degradados.
-3. **Sombras:** bajar luz *y* croma (variantes `-sombra` o trama). Nunca oscurecer manteniendo el croma.
+2. **Lavados:** planos, bajo la línea; la aguada de tinta y la trama de sombra, encima. Sin degradados.
+3. **Sombras:** bajar luz *y* croma (variantes `-sombra`, aguada de tinta o, en sombras grandes y cercanas,
+   trama). Nunca oscurecer manteniendo el croma.
 4. **Paralaje:** cuanto más lejos, más papel y menos croma (`gris-claro`, `gris-trama`; línea en `grafito`).
 5. **Sangre:** `sangre-fresca` → `sangre-oxidada` → `tinta-plena`, en segundos (doc 03 §1).
 6. **Modo registro (Custodia):** foto en blanco y negro virada a sepia, sin lavados y sin rojo ni azul. La

@@ -22,16 +22,18 @@ export const PUENTE_ALTO: DefinicionEscenario = {
     lejos: {
       mosaicos: [{ modulo: 'suelo-lejos', y: ySueloCapa(PARALAJE.lejos) }],
       colocaciones: [
-        // La tienda azul (lx 790–1150) queda detrás de Rosalba cuando sale de la tienda roja.
         { modulo: 'lejos-oeste', x: 0 },
         { modulo: 'iglesia', x: 1340 },
         { modulo: 'lejos-este', x: 1750 },
+        // Junto a la casa cural, en el hueco de lejos-este. P26 (doc 02 Prólogo b1): asoma por la
+        // derecha mientras la roja sale por la izquierda, pero no caben juntas en una foto.
+        { modulo: 'tienda-azul', x: 1990 },
       ],
     },
     medio: {
       mosaicos: [{ modulo: 'suelo-medio', y: ySueloCapa(PARALAJE.medio) }],
       // Por la plaza abierta se ve el medio entre mx≈945 y ≈3666: ahí va el mercado. El hueco
-      // mx≈1300–1600 deja ver la tienda azul al salir de la tienda roja (cámara ≈1460).
+      // mx≈1300–1600 deja respirar la salida de la tienda roja (cámara ≈1460).
       // Al empezar y al terminar el nivel asoman los extremos (mx 0–200 y 4332–4512).
       colocaciones: [
         { modulo: 'gente-pareja', x: 40 },
