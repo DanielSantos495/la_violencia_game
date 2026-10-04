@@ -80,11 +80,11 @@ Por qué: cubre las mecánicas núcleo (movimiento lateral, cámara de Custodia,
 **Arte (Claude)**
 - [ ] Hoja de estilo con paleta en hex, grosores y tramas.
 - [ ] Hoja de personaje de Rosalba (piezas de recorte).
-- [ ] Fondo de prueba: plaza de Puente Alto en 3 capas de paralaje (provisional; se perdió con el código borrado).
+- [x] Fondo de prueba: plaza de Puente Alto en capas de paralaje (2-oct-2026): cinco capas según el contrato de escala, con lo [P] marcado. Detalle en `planeacion/arte/tomo1/escenarios/puente-alto.md`.
 - [ ] Prueba de audio: tema de Puente Alto (torbellino) + 5 efectos + 2 expresiones no verbales, para validar calidad antes de producir en masa.
 
 ### Sprint 1 — Primer jugable del slice
-- [ ] Escena lateral con movimiento, paralaje y cámara que sigue al personaje.
+- [ ] Escena lateral con movimiento, paralaje y cámara que sigue al personaje. Avance (2-oct-2026): `PruebaEscenario` tiene el paralaje y la cámara que sigue a Rosalba, pero ella camina sola; falta el control del jugador.
 - [ ] `Camara.ts`: rollo de 12 exposiciones, viñeta de foto, guardado en archivo del jugador.
 - [ ] `PaginaComic`: viñetas en secuencia con globos desde Ink.
 - [ ] `ArchivoStore` leyendo 3 entradas de prueba.
