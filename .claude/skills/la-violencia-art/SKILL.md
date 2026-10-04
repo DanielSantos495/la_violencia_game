@@ -36,7 +36,12 @@ que Daniel pida editarla.
 
 - Tinta negra de grosor variable (gruesa en siluetas y primer plano, fina en fondo) sobre
   papel hueso con textura leve.
-- Grises solo por **trama** (rayado o semitono, con `<pattern>`), sin degradados complejos.
+- **Detalle limpio** (doc 03 §1 «Relleno»): el color de la paleta da el valor y la trama solo
+  dice sombra. Nada de trama como textura (semitono, rayas, cuadrícula, veta de relleno).
+  Sombras chicas en aguada plana de tinta (`fill-opacity`); rayado abierto (paso ≥ 9 px ya en
+  pantalla, medido después de escalar el personaje) solo en sombras grandes cercanas; capas
+  lejanas sin trama. Textura con pocas marcas dibujadas e irregulares. Las marcas interiores
+  se recortan a la silueta (`clipPath`): nada se sale del borde. Sin degradados.
 - Únicos acentos de color: **rojo liberal** y **azul conservador**, y solo en lo que cuenta
   la división (pañuelos, banderas, afiches, fachadas). Ningún otro color de acento. El resto
   del mundo, si lleva color, va en lavados apagados de la paleta (ver "Paleta").
@@ -72,7 +77,7 @@ Lo esencial: el mundo va en lavados apagados (registro `iluminacion`, con techo 
 y el azul son tinta plana de imprenta y nada más puede entrar en sus zonas de tono. Por eso el
 fuego es ocre, y el cielo, el agua y la noche no son azules. Un `id` no se renombra sin avisar.
 
-Grosores de línea y tramas siguen pendientes (doc 03 §6.1) **[P]**.
+Las tramas están en el doc 03 §1 «Relleno»; los grosores de línea siguen pendientes (doc 03 §6.1) **[P]**.
 
 ## Personajes por piezas (cut-out)
 
@@ -138,9 +143,12 @@ art/src/**/*.svg → SVGO → PNG @1x/@2x → un multiatlas por carpeta (art/bui
 1. ¿Cada elemento de época está [V] en el doc 03 §3? Lo [P] queda como placeholder marcado.
 2. ¿Solo tinta, trama, lavados de `paleta.json` y los dos acentos partidistas? ¿Sin
    degradados, sin hex sueltos y sin nada fuera del partido en las zonas roja o azul?
-3. ¿Violencia con peso y no como espectáculo? ¿Sangre orgánica que se oxida a negro (nunca roja plana)? ¿Sin rostros de víctimas identificables?
-4. ¿Silueta de arma/uniforme/vehículo correcta para el año?
-5. Personajes: ¿piezas con ids de la convención, pivotes en articulaciones, orden de capas?
-6. `pnpm run art:build` sin errores y PNG de revisión inspeccionado.
-7. ¿Se ve bien a escala de juego (1920×1080) sobre su fondo y con el paralaje?
-8. Si es la figura de una persona real: ¿sin rasgos inventados presentados como documentales?
+3. ¿Detalle limpio? Trama solo en sombras (paso ≥ 9 px en pantalla), ninguna textura de relleno
+   y ninguna marca que se salga de la silueta del objeto.
+4. ¿Violencia con peso y no como espectáculo? ¿Sangre orgánica que se oxida a negro (nunca roja plana)? ¿Sin rostros de víctimas identificables?
+5. ¿Silueta de arma/uniforme/vehículo correcta para el año?
+6. Personajes: ¿piezas con ids de la convención, pivotes en articulaciones, orden de capas?
+7. `pnpm run art:build` sin errores y PNG de revisión inspeccionado.
+8. ¿Se ve bien a escala de juego (1920×1080) sobre su fondo y con el paralaje, también reducido
+   al 50–75 % (pantalla de portátil) y con la cámara en movimiento, sin hormigueo?
+9. Si es la figura de una persona real: ¿sin rasgos inventados presentados como documentales?
