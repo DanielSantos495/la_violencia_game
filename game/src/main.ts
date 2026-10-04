@@ -12,6 +12,13 @@ const config: Types.Core.GameConfig = {
   width: 1920,
   height: 1080,
   backgroundColor: '#000000',
+  // Detalle limpio en movimiento (doc 03 §1): lo que solo se desplaza (fondos, capas de paralaje)
+  // se dibuja en píxeles enteros, sin hormigueo subpíxel; lo que se reduce (personajes) usa
+  // mipmaps, que Phaser solo aplica a texturas potencia de dos como las páginas del atlas.
+  render: {
+    roundPixels: true,
+    mipmapFilter: 'LINEAR_MIPMAP_LINEAR',
+  },
   scale: {
     mode: Scale.FIT,
     autoCenter: Scale.CENTER_BOTH,
