@@ -9,12 +9,14 @@ import { Personaje } from '../Personaje.ts';
 import { Retrato } from '../personajes/Retrato.ts';
 import {
   APOYO_ROSALBA,
+  atlasRosalba,
   CAMINATA_ROSALBA,
   CARRERA_ROSALBA,
   ESCALA_ROSALBA,
   PIEZA_CINTA,
   ROSALBA_MERCADO,
   ROSALBA_MONTE,
+  retratoRosalba,
 } from '../personajes/rosalba.ts';
 import { armarRecorte } from '../Recorte.ts';
 
@@ -27,7 +29,8 @@ export class Prueba extends Scene {
   preload(): void {
     this.load.json('ink-prueba', 'generated/ink/prueba.json');
     this.load.json('archivo', 'generated/archivo/indice.json');
-    cargarAtlas(this, 'personajes', 'prueba');
+    // Mercado del Prólogo y monte del Acto I (M2): cada acto tiene su atlas (paleta.md §5).
+    cargarAtlas(this, atlasRosalba('prologo'), atlasRosalba('acto1'), 'prueba');
   }
 
   create(): void {
@@ -62,7 +65,7 @@ export class Prueba extends Scene {
       this,
       -200,
       640,
-      'personajes',
+      atlasRosalba('prologo'),
       APOYO_ROSALBA,
       ROSALBA_MERCADO,
       'de-pie',
@@ -83,8 +86,8 @@ export class Prueba extends Scene {
       this,
       190,
       400,
-      'personajes',
-      'personajes/rosalba-retrato',
+      atlasRosalba('prologo'),
+      retratoRosalba('prologo'),
       'mercado',
     );
     retrato.contenedor.setScale(0.7);
@@ -119,7 +122,7 @@ export class Prueba extends Scene {
       this,
       -200,
       850,
-      'personajes',
+      atlasRosalba('acto1'),
       APOYO_ROSALBA,
       ROSALBA_MONTE,
       'de-pie',

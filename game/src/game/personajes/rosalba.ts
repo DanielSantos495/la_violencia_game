@@ -32,23 +32,41 @@ export const ESCALA_ROSALBA = escalaPersonaje(
  * pies se deslizan bajo el ruedo (pivote en el tobillo) con pasos cortos y rápidos.
  * La guarda tests/rosalba-arte.test.ts comprueba que ninguna pierna salga de la falda.
  */
-/**
- * Cómo corre (huida de la M2): falda recogida con la mano derecha, canillas de 128 px con
- * pivote en la rodilla (rosalba-corriendo.svg). Ciclo de 0,62 s: ~2 m/s en escena.
- */
-export const CARRERA_ROSALBA: OpcionesCorrer = { largo: 128, ciclo: 620 };
-
 export const CAMINATA_ROSALBA: OpcionesCaminar = {
   faldaLarga: true,
   ciclo: 740,
 };
 
 /**
- * Cabezas por expresión (neutral, alerta, miedo, rabia, duelo) y su capa de parpadeo:
- * de pie y agachada (inclinada). Ver core/animacion/expresiones.ts.
+ * Cómo corre (huida de la M2): falda recogida con la mano derecha, canillas de 128 px con
+ * pivote en la rodilla (rosalba-corriendo.svg). Ciclo de 0,62 s: ~2 m/s en escena.
  */
-const CABEZAS_DE_PIE = 'personajes/rosalba-cabezas';
-const CABEZAS_AGACHADA = 'personajes/rosalba-agachada-cabezas';
+export const CARRERA_ROSALBA: OpcionesCorrer = { largo: 128, ciclo: 620 };
+
+/**
+ * Actos del guion de color (planeacion/arte/tomo1/paleta.md §5; ids de `guion` en
+ * game/art/paleta.json). Rosalba cruza todos: art/gen/rosalba.py la genera una vez por acto con
+ * el croma del mundo de ese acto. La cinta roja (partido) no cambia en ningún acto.
+ */
+export type ActoRosalba = 'prologo' | 'acto1' | 'acto2' | 'acto3' | 'epilogo';
+/** Actos con el traje de mercado: Prólogo y Acto I antes del ataque. */
+export type ActoMercado = Extract<ActoRosalba, 'prologo' | 'acto1'>;
+/** Actos con la variante monte: desde la M2 (Acto I). */
+export type ActoMonte = Exclude<ActoRosalba, 'prologo'>;
+
+/**
+ * Atlas de Rosalba en un acto (clave de textura y carpeta de art/src): el Prólogo, con la paleta
+ * entera, en personajes/; los demás actos en personajes/<acto>/, solo con los dibujos que usan.
+ * Cada escena carga el de su acto: `cargarAtlas(this, atlasRosalba('acto2'))`.
+ */
+export function atlasRosalba(acto: ActoRosalba): string {
+  return acto === 'prologo' ? 'personajes' : `personajes/${acto}`;
+}
+
+/** Base del retrato en tres cuartos de un acto, para `Retrato`. */
+export function retratoRosalba(acto: ActoRosalba = 'prologo'): string {
+  return `${atlasRosalba(acto)}/rosalba-retrato`;
+}
 
 /** Punto de apoyo entre los pies, común a todas las poses (coordenadas del SVG). */
 export const APOYO_ROSALBA = { x: 150, y: 474 };
@@ -61,93 +79,112 @@ export const APOYO_ROSALBA = { x: 150, y: 474 };
  */
 export const PIEZA_CINTA = 'cinta';
 
-export const ROSALBA_MERCADO: Record<string, DefinicionPose> = {
-  'de-pie': {
-    base: 'personajes/rosalba',
-    cabezas: CABEZAS_DE_PIE,
-    piezas: [
-      'brazo-izq',
-      'antebrazo-izq',
-      'pierna-izq',
-      'pierna-der',
-      'enagua',
-      'falda',
-      'torso',
-      'cabeza',
-      'zarcillo',
-      'sombrero',
-      'brazo-der',
-      'antebrazo-der',
-      'panolon',
-      'trenza',
-      'cinta',
-    ],
-  },
-};
+/**
+ * Traje de mercado, de pie. Las cabezas por expresión (core/animacion/expresiones.ts) tienen
+ * el mismo pivote que la pieza `cabeza`.
+ */
+export function rosalbaMercado(
+  acto: ActoMercado = 'prologo',
+): Record<string, DefinicionPose> {
+  const atlas = atlasRosalba(acto);
+  return {
+    'de-pie': {
+      base: `${atlas}/rosalba`,
+      cabezas: `${atlas}/rosalba-cabezas`,
+      piezas: [
+        'brazo-izq',
+        'antebrazo-izq',
+        'pierna-izq',
+        'pierna-der',
+        'enagua',
+        'falda',
+        'torso',
+        'cabeza',
+        'zarcillo',
+        'sombrero',
+        'brazo-der',
+        'antebrazo-der',
+        'panolon',
+        'trenza',
+        'cinta',
+      ],
+    },
+  };
+}
 
-export const ROSALBA_MONTE: Record<string, DefinicionPose> = {
-  'de-pie': {
-    base: 'personajes/rosalba-monte',
-    cabezas: CABEZAS_DE_PIE,
-    piezas: [
-      'brazo-izq',
-      'antebrazo-izq',
-      'pierna-izq',
-      'pierna-der',
-      'enagua',
-      'falda',
-      'torso',
-      'cabeza',
-      'zarcillo',
-      'mechones',
-      'ruana',
-      'trenza',
-      'cinta',
-      'brazo-der',
-      'antebrazo-der',
-      'ruana-doblez',
-    ],
-  },
-  // Huida (M2): la mano derecha recoge la falda; la expresión solo mueve la cabeza.
-  corriendo: {
-    base: 'personajes/rosalba-corriendo',
-    cabezas: CABEZAS_DE_PIE,
-    postura: 'cabeza',
-    piezas: [
-      'brazo-izq',
-      'antebrazo-izq',
-      'pierna-izq',
-      'pierna-der',
-      'enagua',
-      'falda',
-      'torso',
-      'cabeza',
-      'zarcillo',
-      'mechones',
-      'ruana',
-      'trenza',
-      'cinta',
-      'brazo-der',
-      'antebrazo-der',
-      'ruana-doblez',
-    ],
-  },
-  agachada: {
-    base: 'personajes/rosalba-agachada',
-    cabezas: CABEZAS_AGACHADA,
-    // La mano de apoyo sigue en el suelo: la expresión solo mueve la cabeza.
-    postura: 'cabeza',
-    piezas: [
-      'cuerpo',
-      'cabeza',
-      'zarcillo',
-      'mechones',
-      'ruana',
-      'trenza',
-      'cinta',
-      'brazo-der',
-      'antebrazo-der',
-      'ruana-doblez',
-    ],
-  },
-};
+/** Variante monte: de pie, corriendo (huida) y agachada (sigilo). */
+export function rosalbaMonte(
+  acto: ActoMonte = 'acto1',
+): Record<string, DefinicionPose> {
+  const atlas = atlasRosalba(acto);
+  return {
+    'de-pie': {
+      base: `${atlas}/rosalba-monte`,
+      cabezas: `${atlas}/rosalba-cabezas`,
+      piezas: [
+        'brazo-izq',
+        'antebrazo-izq',
+        'pierna-izq',
+        'pierna-der',
+        'enagua',
+        'falda',
+        'torso',
+        'cabeza',
+        'zarcillo',
+        'mechones',
+        'ruana',
+        'trenza',
+        'cinta',
+        'brazo-der',
+        'antebrazo-der',
+        'ruana-doblez',
+      ],
+    },
+    // Huida (M2): la mano derecha recoge la falda; la expresión solo mueve la cabeza.
+    corriendo: {
+      base: `${atlas}/rosalba-corriendo`,
+      cabezas: `${atlas}/rosalba-cabezas`,
+      postura: 'cabeza',
+      piezas: [
+        'brazo-izq',
+        'antebrazo-izq',
+        'pierna-izq',
+        'pierna-der',
+        'enagua',
+        'falda',
+        'torso',
+        'cabeza',
+        'zarcillo',
+        'mechones',
+        'ruana',
+        'trenza',
+        'cinta',
+        'brazo-der',
+        'antebrazo-der',
+        'ruana-doblez',
+      ],
+    },
+    agachada: {
+      base: `${atlas}/rosalba-agachada`,
+      cabezas: `${atlas}/rosalba-agachada-cabezas`,
+      // La mano de apoyo sigue en el suelo: la expresión solo mueve la cabeza.
+      postura: 'cabeza',
+      piezas: [
+        'cuerpo',
+        'cabeza',
+        'zarcillo',
+        'mechones',
+        'ruana',
+        'trenza',
+        'cinta',
+        'brazo-der',
+        'antebrazo-der',
+        'ruana-doblez',
+      ],
+    },
+  };
+}
+
+/** Atajos: el mercado del Prólogo y el monte del Acto I (M2). */
+export const ROSALBA_MERCADO = rosalbaMercado('prologo');
+export const ROSALBA_MONTE = rosalbaMonte('acto1');
