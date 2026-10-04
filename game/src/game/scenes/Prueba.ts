@@ -10,6 +10,7 @@ import { Retrato } from '../personajes/Retrato.ts';
 import {
   APOYO_ROSALBA,
   CAMINATA_ROSALBA,
+  CARRERA_ROSALBA,
   ESCALA_ROSALBA,
   PIEZA_CINTA,
   ROSALBA_MERCADO,
@@ -113,7 +114,7 @@ export class Prueba extends Scene {
       },
     });
 
-    // Rosalba del monte: camina, se agacha a acechar, se levanta y sigue (sigilo, M2).
+    // Rosalba del monte (M2): camina, se agacha a acechar y huye corriendo.
     const monte = new Personaje(
       this,
       -200,
@@ -125,6 +126,7 @@ export class Prueba extends Scene {
       // Desde la M2 va sin la cinta (doc 10 P31–P32).
       {
         caminata: CAMINATA_ROSALBA,
+        carrera: CARRERA_ROSALBA,
         expresion: 'alerta',
         ocultas: [PIEZA_CINTA],
       },
@@ -144,9 +146,8 @@ export class Prueba extends Scene {
         monte.expresion('miedo');
         monte.acechar();
         await this.esperar(3500);
-        monte.expresion('alerta');
+        await monte.correrHasta(2150);
         await monte.cambiarPose('de-pie');
-        await monte.caminarHasta(2150);
       }
     })();
 

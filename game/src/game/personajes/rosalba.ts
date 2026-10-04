@@ -1,5 +1,6 @@
 import { escalaPersonaje } from '../../core/escena/escala.ts';
 import type { OpcionesCaminar } from '../Caminata.ts';
+import type { OpcionesCorrer } from '../Carrera.ts';
 import type { DefinicionPose } from '../Personaje.ts';
 
 /**
@@ -31,6 +32,12 @@ export const ESCALA_ROSALBA = escalaPersonaje(
  * pies se deslizan bajo el ruedo (pivote en el tobillo) con pasos cortos y rápidos.
  * La guarda tests/rosalba-arte.test.ts comprueba que ninguna pierna salga de la falda.
  */
+/**
+ * Cómo corre (huida de la M2): falda recogida con la mano derecha, canillas de 128 px con
+ * pivote en la rodilla (rosalba-corriendo.svg). Ciclo de 0,62 s: ~2 m/s en escena.
+ */
+export const CARRERA_ROSALBA: OpcionesCorrer = { largo: 128, ciclo: 620 };
+
 export const CAMINATA_ROSALBA: OpcionesCaminar = {
   faldaLarga: true,
   ciclo: 740,
@@ -82,6 +89,30 @@ export const ROSALBA_MONTE: Record<string, DefinicionPose> = {
   'de-pie': {
     base: 'personajes/rosalba-monte',
     cabezas: CABEZAS_DE_PIE,
+    piezas: [
+      'brazo-izq',
+      'antebrazo-izq',
+      'pierna-izq',
+      'pierna-der',
+      'enagua',
+      'falda',
+      'torso',
+      'cabeza',
+      'zarcillo',
+      'mechones',
+      'ruana',
+      'trenza',
+      'cinta',
+      'brazo-der',
+      'antebrazo-der',
+      'ruana-doblez',
+    ],
+  },
+  // Huida (M2): la mano derecha recoge la falda; la expresión solo mueve la cabeza.
+  corriendo: {
+    base: 'personajes/rosalba-corriendo',
+    cabezas: CABEZAS_DE_PIE,
+    postura: 'cabeza',
     piezas: [
       'brazo-izq',
       'antebrazo-izq',

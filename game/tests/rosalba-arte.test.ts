@@ -6,7 +6,7 @@ import {
   CAMINATA_ROSALBA,
 } from '../src/game/personajes/rosalba.ts';
 import { framesDeSvg, rasterizar } from '../tools/art-build.ts';
-import { revisarPiernasBajoFalda } from '../tools/art-walk.ts';
+import { revisarPiernasBajoFalda, revisarRodillas } from '../tools/art-walk.ts';
 
 const leer = (nombre: string) =>
   readFileSync(
@@ -115,4 +115,18 @@ describe('la cinta roja de Rosalba se quita y se pone', () => {
       ]),
     );
   });
+});
+
+// Guarda de la huida (M2): en la pose de correr la canilla está cortada en la rodilla, que
+// nunca debe asomar bajo la falda recogida ni bajo la enagua.
+describe('Rosalba corre con las rodillas bajo la falda', () => {
+  it('rosalba-corriendo: sin rodilla a la vista en ninguna fase', () => {
+    const fugas = revisarRodillas(
+      leer('rosalba-corriendo'),
+      'rosalba-corriendo',
+      {},
+      16,
+    ).filter((f) => f.rodilla > 0);
+    expect(fugas).toEqual([]);
+  }, 60_000);
 });
