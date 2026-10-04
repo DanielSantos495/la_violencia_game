@@ -1415,9 +1415,13 @@ def calle_lejos(x0, w_m, base, rnd):
     return ''.join(out)
 
 
-def tienda_azul(x0, base, rnd):
-    """Tienda de los azules (conservadores), al otro lado de la plaza, frente a la roja."""
+def tienda_azul():
+    """Tienda de los azules (conservadores), al otro lado de la plaza, junto a la casa cural. Va en su
+    propio módulo para que puente-alto.ts la coloque lejos de la tienda roja: las dos no deben caber
+    en la misma foto (P26, doc 02 Prólogo b1)."""
+    rnd = random.Random(1830)
     m, sw = ppm('lejos'), TRAZO['lejos']
+    W, base, x0 = 380, 260, 10  # 10 px de margen para el vuelo del tejado
     y_piso = base - 0.25 * m
     rotulo = letras_pintadas('TIENDA', x0 + 3.55 * m, y_piso - 2.42 * m, 0.42 * m, sw * 2.0, AZUL)
     cartel = afiche(x0 + 1.0 * m, y_piso - 2.0 * m, 0.7 * m, 0.95 * m, m, sw, rnd, color=AZUL, estrella=False)
@@ -1425,11 +1429,14 @@ def tienda_azul(x0, base, rnd):
     gente = (persona(x0 + 6.4 * m, y_piso, m, sw, 'hombre', ruana='oscura', sombrero='negro', panuelo=AZUL)
              + persona(x0 + 7.3 * m, y_piso, m, sw, 'hombre', espejo=True, ruana='clara', sombrero='paja')
              + persona(x0 + 11.2 * m, y_piso, m, sw, 'hombre', ruana='gris', sombrero='negro'))
-    return casa_lejos(x0, 12.0, base, rnd, muro_m=3.65, techo_m=1.4, corredor=True, color=AZUL,
+    casa = casa_lejos(x0, 12.0, base, rnd, muro_m=3.65, techo_m=1.4, corredor=True, color=AZUL,
                       puertas=[(3.3, 1.9, 2.15, True), (9.5, 1.0, 2.05, False)],
                       ventanas=[(6.9 - 0.3, 1.2, 1.1, 0.95)],
                       pilares=[x0 + 0.2 * m, x0 + 2.6 * m, x0 + 5.6 * m, x0 + 8.6 * m, x0 + 11.8 * m],
                       encima=rotulo + cartel + gente)
+    archivo('tienda-azul', W, base, 'lejos', 'tienda de los azules (conservadores), con corredor', casa,
+            notas='Azul en zócalo, puertas, postigos, rótulo, afiche y un pañuelo: tienda conservadora (doc 03 §1). '
+                  'Fachada de x=10 a 370; se coloca en lx 1990, en el hueco que deja lejos-este junto a la casa cural.')
 
 
 def iglesia():
@@ -1594,26 +1601,26 @@ def lejos_oeste():
                          puertas=[(1.4, 1.1, 2.1, False), (5.2, 1.1, 2.1, True)], ventanas=[(3.0, 0.9, 1.0, 1.0)]),
               casa_balcon_lejos(230, 380 / m, base, rnd, puertas=[(2.0, 1.2, 2.2, False), (8.6, 1.0, 2.1, True)],
                                 ventanas=[(4.6, 1.0, 1.1, 0.95), (11.0, 0.9, 1.1, 0.95)]),
-              tienda_azul(790, base, rnd)]
-    archivo('lejos-oeste', W, base, 'lejos', 'otro lado de la plaza (oeste): casas, boca de calle y tienda azul',
-            '\n'.join(cuerpo), notas='Azul en zócalo, puertas, postigos, rótulo, afiche y un pañuelo: tienda conservadora (doc 03 §1). '
-                                     'Va de lx 0 a 1340; la iglesia sigue en lx 1340.')
+              casa_lejos(790, 360 / m, base, rnd, muro_m=3.4, techo_m=1.35,
+                         puertas=[(2.6, 1.1, 2.1, False), (8.6, 1.2, 2.15, True)], ventanas=[(5.3, 1.0, 1.1, 0.95)],
+                         encima=persona(790 + 7.4 * m, base - 0.25 * m, m, TRAZO['lejos'], 'mujer', sombrero='negro', lleva='canasto'))]
+    archivo('lejos-oeste', W, base, 'lejos', 'otro lado de la plaza (oeste): casas y bocas de calle',
+            '\n'.join(cuerpo), notas='Va de lx 0 a 1340; la iglesia sigue en lx 1340.')
 
 
 def lejos_este():
     rnd = random.Random(1820)
     m = ppm('lejos')
     W, base = 1034, 260
-    cuerpo = [calle_lejos(300, 150 / m, base, rnd),
-              casa_balcon_lejos(0, 300 / m, base, rnd, puertas=[(4.2, 1.4, 2.3, False)], ventanas=[(1.4, 1.0, 1.1, 0.95), (7.6, 1.0, 1.1, 0.95)]),
-              casa_lejos(450, 310 / m, base, rnd, muro_m=2.9, techo_m=1.25, cuatro_aguas=True,
-                         puertas=[(2.2, 1.0, 2.0, True), (7.4, 1.0, 2.0, False)], ventanas=[(4.6, 1.0, 1.0, 1.0)]),
-              casa_lejos(760, 274 / m, base, rnd, muro_m=3.2, techo_m=1.3, corredor=False,
+    # de x=250 a 610 (lx 2000–2360) queda el hueco de la tienda azul, que es un módulo aparte (P26)
+    cuerpo = [calle_lejos(610, 150 / m, base, rnd),
+              casa_balcon_lejos(0, 250 / m, base, rnd, puertas=[(3.5, 1.4, 2.3, False)], ventanas=[(1.1, 1.0, 1.1, 0.95), (6.3, 1.0, 1.1, 0.95)]),
+              casa_lejos(760, 274 / m, base, rnd, muro_m=3.2, techo_m=1.3, corredor=False, cuatro_aguas=True,
                          puertas=[(3.6, 1.1, 2.1, False)], ventanas=[(1.2, 0.9, 1.1, 0.95), (6.0, 0.9, 1.1, 0.95)]),
-              persona(560, base, m, TRAZO['lejos'], 'mujer', espejo=True, sombrero='negro', lleva='paraguas'),
+              persona(690, base, m, TRAZO['lejos'], 'mujer', espejo=True, sombrero='negro', lleva='paraguas'),
               persona(890, base, m, TRAZO['lejos'], 'hombre', ruana='gris', sombrero='paja', lleva='vara')]
-    archivo('lejos-este', W, base, 'lejos', 'otro lado de la plaza (este): casa cural, boca de calle y casas',
-            '\n'.join(cuerpo), notas='Va de lx 1750 a 2784, junto a la torre.')
+    archivo('lejos-este', W, base, 'lejos', 'otro lado de la plaza (este): casa cural, boca de calle y casa',
+            '\n'.join(cuerpo), notas='Va de lx 1750 a 2784, junto a la torre. De x=250 a 610 queda libre para la tienda azul (lx 1990).')
 
 
 def suelo_plaza(nombre, capa, H, semilla):
@@ -1962,6 +1969,7 @@ frente_toldo()
 suelo_plaza('suelo-medio', 'medio', 200, 34)
 lejos_oeste()
 lejos_este()
+tienda_azul()
 suelo_plaza('suelo-lejos', 'lejos', 110, 21)
 nube('nube-a', 620, 170, 3)
 nube('nube-b', 420, 120, 5)

@@ -7,6 +7,7 @@ import {
   LADO_MAXIMO_MODULO,
   ORDEN_CAPAS,
   PARALAJE,
+  VIEWPORT,
   Y_SUELO,
   ySueloCapa,
 } from '../src/core/escena/escala.ts';
@@ -121,6 +122,46 @@ describe('Puente Alto', () => {
         if (id === 'juego') expect(yColocacion(col, id)).toBe(Y_SUELO);
       }
     }
+  });
+
+  it('P26: la tienda roja y la azul no caben juntas en una foto', () => {
+    // Encuadre provisional hasta que exista Camara.ts: foto cuadrada del alto de la pantalla (12
+    // exposiciones es el rollo 120 en formato 6×6). Una tienda entra si se ven 120 px de ella.
+    const FOTO = VIEWPORT.alto;
+    const VISIBLE = 120;
+    const tramo = (capa: IdCapa, modulo: string) => {
+      const col = PUENTE_ALTO.capas[capa]?.colocaciones.find(
+        (c) => c.modulo === modulo,
+      );
+      if (!col) throw new Error(`falta ${modulo} en ${capa}`);
+      return { capa, desde: col.x, hasta: col.x + tamano(modulo).w };
+    };
+    const enPantalla = (
+      t: ReturnType<typeof tramo>,
+      scroll: number,
+    ): [number, number] => [
+      Math.max(0, xEnPantalla(t.desde, t.capa, scroll)),
+      Math.min(VIEWPORT.ancho, xEnPantalla(t.hasta, t.capa, scroll)),
+    ];
+    const roja = tramo('juego', 'tienda-roja');
+    const azul = tramo('lejos', 'tienda-azul');
+    let juntas = 0;
+    for (let s = 0; s <= PUENTE_ALTO.anchoNivel - VIEWPORT.ancho; s += 10) {
+      const [r0, r1] = enPantalla(roja, s);
+      let [a0, a1] = enPantalla(azul, s);
+      // la roja, en el plano de juego, tapa lo que la azul tenga detrás
+      if (a0 < r1 && a1 > r0) {
+        if (a1 > r1) a0 = Math.max(a0, r1);
+        else a1 = Math.min(a1, r0);
+      }
+      if (r1 - r0 < VISIBLE || a1 - a0 < VISIBLE) continue;
+      juntas++;
+      // la foto más estrecha que muestra VISIBLE px de cada una
+      const minima = r0 < a0 ? a0 - r1 + 2 * VISIBLE : r0 - a1 + 2 * VISIBLE;
+      expect(minima, `cámara en x=${s}`).toBeGreaterThan(FOTO);
+    }
+    // y en algún momento se ven las dos a la vez: el jugador elige cuál entra
+    expect(juntas).toBeGreaterThan(0);
   });
 
   it('el primer plano no tapa el cuerpo del personaje (queda bajo su suelo o arriba del todo)', () => {
