@@ -45,16 +45,36 @@ en esta escena "lejos" es el otro lado de la plaza.
 ## 3. Estilo compartido (cohesión)
 
 - Mismo vocabulario en todas las capas, en `puente_alto.py`: `tejado_frente` (lomos de teja con
-  cara en sombra, velo de trama: la teja es más oscura que la cal), `alero` (tablazón negra,
-  canecillos tallados, viga), `pilar` (madera con veta y grieta, zapata, basa de piedra),
-  `muro_cal` (juntas de los cajones del tapial, humedad al pie, grietas, desconchados oscuros),
+  cara en sombra, alguna junta suelta), `alero` (tablazón negra, canecillos tallados, viga con
+  unas vetas), `pilar` (madera con cara en sombra, grieta y veta, zapata, basa de piedra),
+  `muro_cal` (juntas sueltas del tapial, grietas, desconchados donde asoma la tapia),
   `zocalo` (pintura gastada, borde a mano), `puerta_tablas`, `ventana_reja` (balaustres y
   postigos), `letras_pintadas` (rótulos de brocha sin fuentes), `afiche` (sin consignas ni
   nombres reales), `maceta`, `costal`, `canasto`, `olla`.
 - Trazo por capa: frente 3,6 · juego 2,6 · medio 1,7 · lejos 1,1 · cielo 1,0. Lo lejano con menos
-  contraste y menos trama (perspectiva aérea en tinta).
-- Tramas comunes: `t-fina`, `t-media`, `t-cruz`, `t-densa`, `t-horiz`, `t-vert`, `t-puntos`,
-  `t-puntos-ralos`, `t-madera`, `t-madera-v`.
+  contraste y sin trama (perspectiva aérea en tinta).
+
+### Detalle limpio (doc 03 §1 «Relleno», aprobado el 04-oct-2026)
+
+Antes había casi 1.900 rellenos de trama fina (paso de 3 a 8 px) usados como textura en todo.
+Con el color ya dando el valor, el conjunto hormigueaba al reducir la pantalla y al mover la
+cámara. Ahora:
+
+- **Sombra, no textura.** Constantes `SOMBRA_SUAVE`, `SOMBRA`, `SOMBRA_FUERTE` y `SOMBRA_HONDA`:
+  aguada plana de tinta (`fill-opacity` 0,1 / 0,18 / 0,26 / 0,4), en grafito lejos. Una sola
+  trama dibujada, `rayado` (paso 9 px, línea 1,2 px), y solo en tres sombras grandes: bajo el
+  alero, la franja alta del tejado y el envés de los toldos.
+- **Menos repetición.** Empedrado en tramos de piedra con claros de tierra (densidad que varía y se
+  repite sin costura cada 1024 px; las piedras con `canto()`, sin punta); suelos medio y lejano
+  casi lisos; menos canales de teja lejana, barrotes, balaústres, matas de páramo y flecos;
+  cercas lisas; los cultivos, lavado plano con tres surcos dibujados en una de cada cuatro
+  parcelas.
+- **Marcas que no se salen.** `recortar(silueta, marcas)` mete franjas, pliegues, costuras,
+  listas y sombras dentro del `clipPath` de su objeto (olla, costal, canasto, ruana, falda,
+  pañolón, siluetas del primer plano).
+- **En movimiento:** `render.roundPixels` (los fondos, que solo se trasladan, en píxeles enteros;
+  las piezas rotadas o escaladas no se redondean) y `mipmapFilter` (`LINEAR_MIPMAP_LINEAR`) para
+  lo que se dibuja reducido, como los personajes. Ambos en `game/src/main.ts`.
 - Figuras de fondo con `persona()` (sin rostro: perfil, sombrero, ruana o pañolón) y `mula()`, a la
   escala de cada capa.
 

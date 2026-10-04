@@ -89,6 +89,21 @@ PARALAJE = {'cielo': 0, 'lejos': 0.15, 'medio': 0.45, 'juego': 1.0, 'frente': 1.
 # Trazo base por capa: grueso cerca, fino lejos (doc 03 §1). Lo lejano se entinta en grafito (paleta.md §6.4).
 TRAZO = {'cielo': 1.0, 'lejos': 1.1, 'medio': 1.7, 'juego': 2.6, 'frente': 3.6}
 LINEA = {'cielo': GRAFITO, 'lejos': GRAFITO, 'medio': TINTA, 'juego': TINTA, 'frente': TINTA}
+# Detalle limpio (doc 03 §1): el color da el valor y la trama solo dice sombra. Las sombras
+# chicas son aguada plana de tinta (en grafito, lejos); el rayado queda para las grandes.
+SOMBRA_SUAVE = 'fill="#000" fill-opacity="0.1"'
+SOMBRA = 'fill="#000" fill-opacity="0.18"'
+SOMBRA_FUERTE = 'fill="#000" fill-opacity="0.26"'
+SOMBRA_HONDA = 'fill="#000" fill-opacity="0.4"'
+_RECORTES = [0]
+
+
+def recortar(silueta, marcas):
+    """Marcas interiores (franjas, pliegues, listas, sombras) recortadas a la silueta del objeto:
+    ninguna línea se sale del borde."""
+    _RECORTES[0] += 1
+    cid = f'r{_RECORTES[0]}'
+    return f'<clipPath id="{cid}"><path d="{silueta}"/></clipPath><g clip-path="url(#{cid})">{marcas}</g>'
 
 
 def ppm(capa):
@@ -103,22 +118,23 @@ def pts(lista):
     return ' '.join(f"{f(x)},{f(y)}" for x, y in lista)
 
 
+def canto(p):
+    """Contorno cerrado y suave de una piedra a partir de sus vértices: empieza en un punto medio
+    para que no quede punta."""
+    n = len(p)
+    medio = [((p[i][0] + p[(i + 1) % n][0]) / 2, (p[i][1] + p[(i + 1) % n][1]) / 2) for i in range(n)]
+    return (f'M{f(medio[-1][0])},{f(medio[-1][1])} '
+            + ' '.join(f'Q{f(p[i][0])},{f(p[i][1])} {f(medio[i][0])},{f(medio[i][1])}' for i in range(n)) + ' Z')
+
+
 def tramas(esc=1.0):
-    """Tramas compartidas por todos los módulos: la cohesión empieza aquí."""
+    """La única trama dibujada: rayado abierto para las sombras grandes de juego y medio (doc 03
+    §1, detalle limpio). Paso de 9 px a escala de juego: no hormiguea al reducir la pantalla ni al
+    mover la cámara. Las demás sombras son aguada plana (SOMBRA_*)."""
     s = esc
     return f'''
   <defs>
-    <pattern id="t-fina" width="{f(6*s)}" height="{f(6*s)}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="{f(6*s)}" stroke="#000" stroke-width="{f(0.7*s)}"/></pattern>
-    <pattern id="t-media" width="{f(3.6*s)}" height="{f(3.6*s)}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="{f(3.6*s)}" stroke="#000" stroke-width="{f(0.9*s)}"/></pattern>
-    <pattern id="t-cruz" width="{f(4*s)}" height="{f(4*s)}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="{f(4*s)}" stroke="#000" stroke-width="{f(0.9*s)}"/><line x1="0" y1="0" x2="{f(4*s)}" y2="0" stroke="#000" stroke-width="{f(0.9*s)}"/></pattern>
-    <pattern id="t-densa" width="{f(2.8*s)}" height="{f(2.8*s)}" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><line x1="0" y1="0" x2="0" y2="{f(2.8*s)}" stroke="#000" stroke-width="{f(1.2*s)}"/><line x1="0" y1="0" x2="{f(2.8*s)}" y2="0" stroke="#000" stroke-width="{f(1*s)}"/></pattern>
-    <pattern id="t-horiz" width="{f(8*s)}" height="{f(4*s)}" patternUnits="userSpaceOnUse"><line x1="0" y1="{f(2*s)}" x2="{f(8*s)}" y2="{f(2*s)}" stroke="#000" stroke-width="{f(0.8*s)}"/></pattern>
-    <pattern id="t-vert" width="{f(4*s)}" height="{f(8*s)}" patternUnits="userSpaceOnUse"><line x1="{f(2*s)}" y1="0" x2="{f(2*s)}" y2="{f(8*s)}" stroke="#000" stroke-width="{f(0.8*s)}"/></pattern>
-    <pattern id="t-puntos" width="{f(4*s)}" height="{f(4*s)}" patternUnits="userSpaceOnUse"><circle cx="{f(2*s)}" cy="{f(2*s)}" r="{f(0.75*s)}" fill="#000"/></pattern>
-    <pattern id="t-puntos-ralos" width="{f(7*s)}" height="{f(7*s)}" patternUnits="userSpaceOnUse"><circle cx="{f(2*s)}" cy="{f(2*s)}" r="{f(0.7*s)}" fill="#000"/><circle cx="{f(5.5*s)}" cy="{f(5.5*s)}" r="{f(0.6*s)}" fill="#000"/></pattern>
-    <pattern id="t-madera" width="{f(40*s)}" height="{f(6*s)}" patternUnits="userSpaceOnUse"><path d="M0,{f(3*s)} C{f(10*s)},{f(2*s)} {f(20*s)},{f(4*s)} {f(40*s)},{f(3*s)}" stroke="#000" stroke-width="{f(0.6*s)}" fill="none"/></pattern>
-    <pattern id="t-tejido" width="{f(6.5*s)}" height="{f(6.5*s)}" patternUnits="userSpaceOnUse"><path d="M0,{f(3.2*s)} H{f(6.5*s)} M{f(3.2*s)},0 V{f(6.5*s)}" stroke="#000" stroke-width="{f(0.4*s)}"/></pattern>
-    <pattern id="t-madera-v" width="{f(6*s)}" height="{f(40*s)}" patternUnits="userSpaceOnUse"><path d="M{f(3*s)},0 C{f(2*s)},{f(10*s)} {f(4*s)},{f(20*s)} {f(3*s)},{f(40*s)}" stroke="#000" stroke-width="{f(0.6*s)}" fill="none"/></pattern>
+    <pattern id="rayado" width="{f(9*s)}" height="{f(9*s)}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="{f(9*s)}" stroke="#000" stroke-width="{f(1.2*s)}"/></pattern>
   </defs>'''
 
 
@@ -156,9 +172,9 @@ def tejado_frente(x0, x1, y_borde, y_arriba, m, sw, rnd, oscuro=True):
     teja, teja_sol = lav('teja', m), lav('teja', m, 0.85)
     out = [f'<rect x="{f(x0)}" y="{f(y_arriba)}" width="{f(x1-x0)}" height="{f(alto)}" fill="{teja}"/>']
     # canales en sombra entre las cobijas; arriba, el tejado se aleja y se oscurece
-    out.append(f'<rect x="{f(x0)}" y="{f(y_arriba)}" width="{f(x1-x0)}" height="{f(alto)}" fill="url(#t-media)"/>')
+    out.append(f'<rect x="{f(x0)}" y="{f(y_arriba)}" width="{f(x1-x0)}" height="{f(alto)}" {SOMBRA}/>')
     if oscuro:
-        out.append(f'<rect x="{f(x0)}" y="{f(y_arriba)}" width="{f(x1-x0)}" height="{f(alto*0.45)}" fill="url(#t-fina)"/>')
+        out.append(f'<rect x="{f(x0)}" y="{f(y_arriba)}" width="{f(x1-x0)}" height="{f(alto*0.45)}" fill="url(#rayado)"/>')
     # cobijas: lomos convexos con su sombra a la derecha; canales: surcos entre ellas
     x = x0
     while x < x1:
@@ -167,10 +183,10 @@ def tejado_frente(x0, x1, y_borde, y_arriba, m, sw, rnd, oscuro=True):
         lomo = (f'M{f(xc-paso*0.3+dx)},{f(y_arriba)} L{f(xc-paso*0.3)},{f(y_borde-0.08*m)} '
                 f'Q{f(xc)},{f(y_borde-0.16*m)} {f(xc+paso*0.3)},{f(y_borde-0.08*m)} L{f(xc+paso*0.3+dx)},{f(y_arriba)} Z')
         out.append(f'<path d="{lomo}" fill="{teja_sol}" stroke="#000" stroke-width="{f(sw*0.45)}"/>')
-        out.append(f'<path d="M{f(xc+paso*0.08+dx)},{f(y_arriba)} L{f(xc+paso*0.08)},{f(y_borde-0.12*m)} L{f(xc+paso*0.3)},{f(y_borde-0.08*m)} L{f(xc+paso*0.3+dx)},{f(y_arriba)} Z" fill="url(#t-media)"/>')
-        # juntas entre piezas de teja a lo largo del lomo
-        for k in range(1, 6):
-            yy = y_arriba + alto * k / 6 + rnd.uniform(-0.03, 0.03) * m
+        out.append(f'<path d="M{f(xc+paso*0.08+dx)},{f(y_arriba)} L{f(xc+paso*0.08)},{f(y_borde-0.12*m)} L{f(xc+paso*0.3)},{f(y_borde-0.08*m)} L{f(xc+paso*0.3+dx)},{f(y_arriba)} Z" {SOMBRA}/>')
+        # alguna junta suelta entre piezas de teja (detalle, no textura)
+        for k in range(rnd.randint(1, 2) if rnd.random() < 0.3 else 0):
+            yy = y_arriba + alto * rnd.uniform(0.25, 0.75)
             if yy < y_borde - 0.2 * m:
                 out.append(f'<path d="M{f(xc-paso*0.3)},{f(yy)} Q{f(xc)},{f(yy-0.05*m)} {f(xc+paso*0.3)},{f(yy)}" stroke="#000" stroke-width="{f(sw*0.35)}" fill="none"/>')
         x += paso
@@ -184,7 +200,6 @@ def tejado_frente(x0, x1, y_borde, y_arriba, m, sw, rnd, oscuro=True):
         x += paso
     out.append(f'<path d="{" ".join(bocas)}" fill="#000"/>')
     out.append(f'<rect x="{f(x0)}" y="{f(y_borde-0.08*m)}" width="{f(x1-x0)}" height="{f(0.08*m)}" fill="{teja}" stroke="#000" stroke-width="{f(sw*0.7)}"/>')
-    out.append(f'<rect x="{f(x0)}" y="{f(y_borde-0.08*m)}" width="{f(x1-x0)}" height="{f(0.08*m)}" fill="url(#t-vert)"/>')
     out.append(f'<line x1="{f(x0)}" y1="{f(y_borde)}" x2="{f(x1)}" y2="{f(y_borde)}" stroke="#000" stroke-width="{f(sw*1.2)}"/>')
     return ''.join(out)
 
@@ -207,12 +222,16 @@ def alero(x0, x1, y_viga, m, sw, rnd):
                f'Q{f(x+w)},{f(y0+0.26*m)} {f(x+w*0.55)},{f(y0+0.26*m)} Q{f(x+w*0.2)},{f(y0+0.26*m)} {f(x+w*0.2)},{f(y0+0.19*m)} '
                f'Q{f(x)},{f(y0+0.19*m)} {f(x)},{f(y0+0.12*m)} Z')
         canes.append(f'<path d="{cab}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw*0.6)}"/>')
-        canes.append(f'<path d="M{f(x+w*0.62)},{f(y0)} L{f(x+w)},{f(y0)} L{f(x+w)},{f(y0+0.16*m)} Q{f(x+w)},{f(y0+0.26*m)} {f(x+w*0.62)},{f(y0+0.255*m)} Z" fill="url(#t-media)"/>')
+        canes.append(f'<path d="M{f(x+w*0.62)},{f(y0)} L{f(x+w)},{f(y0)} L{f(x+w)},{f(y0+0.16*m)} Q{f(x+w)},{f(y0+0.26*m)} {f(x+w*0.62)},{f(y0+0.255*m)} Z" {SOMBRA}/>')
         x += paso
     out.extend(canes)
     # viga
     out.append(f'<rect x="{f(x0)}" y="{f(y_viga-0.12*m)}" width="{f(x1-x0)}" height="{f(0.14*m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw*0.8)}"/>')
-    out.append(f'<rect x="{f(x0)}" y="{f(y_viga-0.12*m)}" width="{f(x1-x0)}" height="{f(0.14*m)}" fill="url(#t-madera)"/>')
+    # unas vetas sueltas en la viga
+    for _ in range(int((x1 - x0) / (1.6 * m))):
+        vx = rnd.uniform(x0 + 0.1 * m, x1 - 0.6 * m)
+        vy = y_viga - rnd.uniform(0.04, 0.08) * m
+        out.append(f'<path d="M{f(vx)},{f(vy)} q{f(0.2*m)},{f(-0.012*m)} {f(0.45*m)},{f(0.004*m)}" stroke="#000" stroke-width="{f(sw*0.35)}" fill="none"/>')
     return ''.join(out)
 
 
@@ -225,17 +244,16 @@ def pilar(x, y_piso, y_viga, m, sw, color=None):
     piedra = lav('piedra', m)
     alto_fuste = y_piso - basa_h - y_viga
     out = [
-        # fuste de madera: veta, cara en sombra y una grieta
+        # fuste de madera: cara en sombra, una grieta y una veta
         f'<rect x="{f(x-w/2)}" y="{f(y_viga+0.02*m)}" width="{f(w)}" height="{f(alto_fuste)}" fill="{relleno}" stroke="#000" stroke-width="{f(sw*0.9)}"/>',
-        f'<rect x="{f(x-w/2)}" y="{f(y_viga+0.02*m)}" width="{f(w)}" height="{f(alto_fuste)}" fill="url(#t-madera-v)"/>',
-        f'<rect x="{f(x+w*0.12)}" y="{f(y_viga+0.02*m)}" width="{f(w*0.38)}" height="{f(alto_fuste)}" fill="url(#t-cruz)"/>',
+        f'<rect x="{f(x+w*0.12)}" y="{f(y_viga+0.02*m)}" width="{f(w*0.38)}" height="{f(alto_fuste)}" {SOMBRA_FUERTE}/>',
         f'<path d="M{f(x-w*0.22)},{f(y_viga+0.35*m)} L{f(x-w*0.18)},{f(y_viga+0.8*m)} L{f(x-w*0.24)},{f(y_viga+1.1*m)}" stroke="#000" stroke-width="{f(sw*0.45)}" fill="none"/>',
+        f'<path d="M{f(x-w*0.05)},{f(y_viga+1.5*m)} q{f(-w*0.08)},{f(0.4*m)} {f(w*0.02)},{f(0.8*m)}" stroke="#000" stroke-width="{f(sw*0.3)}" fill="none"/>',
         # zapata
         f'<path d="M{f(x-zap_w/2)},{f(y_viga+0.02*m)} L{f(x+zap_w/2)},{f(y_viga+0.02*m)} L{f(x+zap_w/2)},{f(y_viga+0.06*m)} Q{f(x+zap_w/2-0.08*m)},{f(y_viga+zap_h)} {f(x+w/2)},{f(y_viga+zap_h)} L{f(x-w/2)},{f(y_viga+zap_h)} Q{f(x-zap_w/2+0.08*m)},{f(y_viga+zap_h)} {f(x-zap_w/2)},{f(y_viga+0.06*m)} Z" fill="{relleno}" stroke="#000" stroke-width="{f(sw*0.7)}"/>',
-        f'<path d="M{f(x-zap_w/2)},{f(y_viga+0.02*m)} L{f(x+zap_w/2)},{f(y_viga+0.02*m)} L{f(x+zap_w/2)},{f(y_viga+0.06*m)} Q{f(x+zap_w/2-0.08*m)},{f(y_viga+zap_h)} {f(x+w/2)},{f(y_viga+zap_h)} L{f(x-w/2)},{f(y_viga+zap_h)} Q{f(x-zap_w/2+0.08*m)},{f(y_viga+zap_h)} {f(x-zap_w/2)},{f(y_viga+0.06*m)} Z" fill="url(#t-madera)"/>',
         # basa de piedra
         f'<path d="M{f(x-basa_w/2)},{f(y_piso)} L{f(x-basa_w/2+0.03*m)},{f(y_piso-basa_h)} L{f(x+basa_w/2-0.03*m)},{f(y_piso-basa_h)} L{f(x+basa_w/2)},{f(y_piso)} Z" fill="{piedra}" stroke="#000" stroke-width="{f(sw*0.8)}"/>',
-        f'<path d="M{f(x)},{f(y_piso-basa_h)} L{f(x+basa_w/2)},{f(y_piso)} L{f(x+basa_w/2-0.08*m)},{f(y_piso)} Z" fill="url(#t-media)"/>',
+        f'<path d="M{f(x)},{f(y_piso-basa_h)} L{f(x+basa_w/2)},{f(y_piso)} L{f(x+basa_w/2-0.08*m)},{f(y_piso)} Z" {SOMBRA}/>',
     ]
     return ''.join(out)
 
@@ -243,13 +261,13 @@ def pilar(x, y_piso, y_viga, m, sw, color=None):
 def muro_cal(x0, x1, y_arriba, y_abajo, m, sw, rnd, grietas=4, desconchados=3):
     """Tapia encalada: blanco con grietas finas y desconchados donde asoma la tierra (doc 03 §3.1 [V])."""
     out = [f'<rect x="{f(x0)}" y="{f(y_arriba)}" width="{f(x1-x0)}" height="{f(y_abajo-y_arriba)}" fill="{lav("cal", m)}" stroke="#000" stroke-width="{f(sw)}"/>']
-    # juntas de los cajones del tapial, apenas visibles bajo la cal
+    # juntas de los cajones del tapial: trazos sueltos bajo la cal, no líneas de lado a lado
     y = y_abajo - 0.85 * m
     while y > y_arriba + 0.3 * m:
-        out.append(f'<line x1="{f(x0)}" y1="{f(y)}" x2="{f(x1)}" y2="{f(y+rnd.uniform(-0.02,0.02)*m)}" stroke="#000" stroke-width="{f(sw*0.25)}" stroke-dasharray="{f(0.5*m)} {f(0.12*m)} {f(0.2*m)} {f(0.25*m)}" opacity="0.7"/>')
+        for _ in range(max(1, int((x1 - x0) / (3.5 * m)))):
+            xa = rnd.uniform(x0, x1 - 0.8 * m)
+            out.append(f'<line x1="{f(xa)}" y1="{f(y)}" x2="{f(xa + rnd.uniform(0.4, 0.9) * m)}" y2="{f(y+rnd.uniform(-0.02,0.02)*m)}" stroke="#000" stroke-width="{f(sw*0.25)}" opacity="0.6"/>')
         y -= 0.85 * m
-    # humedad que sube del suelo y polvo bajo el alero
-    out.append(f'<rect x="{f(x0)}" y="{f(y_abajo-0.45*m)}" width="{f(x1-x0)}" height="{f(0.45*m)}" fill="url(#t-puntos-ralos)" opacity="0.8"/>')
     for _ in range(grietas):
         x = rnd.uniform(x0 + 0.3 * m, x1 - 0.3 * m)
         y = rnd.uniform(y_arriba + 0.2 * m, y_abajo - 0.8 * m)
@@ -270,17 +288,17 @@ def muro_cal(x0, x1, y_arriba, y_abajo, m, sw, rnd, grietas=4, desconchados=3):
             rr = r * rnd.uniform(0.45, 1.2)
             pts_.append((cx + math.cos(a) * rr, cy + math.sin(a) * rr * 0.55))
         out.append(f'<polygon points="{pts(pts_)}" fill="{lav("tapia", m)}" stroke="#000" stroke-width="{f(sw*0.3)}"/>'
-                   f'<polygon points="{pts(pts_)}" fill="url(#t-fina)"/>')
+                   f'<polygon points="{pts(pts_)}" {SOMBRA_SUAVE}/>')
     return ''.join(out)
 
 
 def zocalo(x0, x1, y_abajo, alto, m, sw, rnd, color=None):
-    """Zócalo de la fachada: franja baja pintada, gastada (color de tienda partidista o trama)."""
+    """Zócalo de la fachada: franja baja pintada y gastada (color de tienda partidista) o tapia a la vista."""
     y = y_abajo - alto
     # sin partido, la tapia queda a la vista; con partido, pintura plana (paleta.md §6.1)
     out = [f'<rect x="{f(x0)}" y="{f(y)}" width="{f(x1-x0)}" height="{f(alto)}" fill="{color or lav("tapia", m)}" stroke="#000" stroke-width="{f(sw*0.8)}"/>']
     if not color:
-        out.append(f'<rect x="{f(x0)}" y="{f(y)}" width="{f(x1-x0)}" height="{f(alto)}" fill="url(#t-fina)"/>')
+        out.append(f'<rect x="{f(x0)}" y="{f(y)}" width="{f(x1-x0)}" height="{f(alto)}" {SOMBRA_SUAVE}/>')
     # borde superior pintado a mano, irregular
     borde = f'M{f(x0)},{f(y)}'
     x = x0
@@ -296,26 +314,22 @@ def zocalo(x0, x1, y_abajo, alto, m, sw, rnd, color=None):
         p = [(cx + math.cos(k * 2 * math.pi / 7) * r * rnd.uniform(0.5, 1.3),
               cy + math.sin(k * 2 * math.pi / 7) * r * rnd.uniform(0.3, 0.7)) for k in range(7)]
         out.append(f'<polygon points="{pts(p)}" fill="{lav("cal", m)}" stroke="#000" stroke-width="{f(sw*0.25)}"/>')
-    # barro salpicado al pie
-    out.append(f'<rect x="{f(x0)}" y="{f(y_abajo-0.1*m)}" width="{f(x1-x0)}" height="{f(0.1*m)}" fill="url(#t-puntos)"/>')
     return ''.join(out)
 
 
 def puerta_tablas(x0, y0, w, h, m, sw, rnd, color=None, hojas=1):
-    """Puerta de tablas con clavos (portón de madera: doc 03 §3.1 [P])."""
+    """Puerta de tablas con dos travesaños (portón de madera: doc 03 §3.1 [P])."""
     out = [f'<rect x="{f(x0)}" y="{f(y0)}" width="{f(w)}" height="{f(h)}" fill="{color or lav("madera", m)}" stroke="#000" stroke-width="{f(sw*0.9)}"/>']
-    if not color:
-        out.append(f'<rect x="{f(x0)}" y="{f(y0)}" width="{f(w)}" height="{f(h)}" fill="url(#t-madera-v)"/>')
     n = max(3, int(w / (0.16 * m)))
     for i in range(1, n):
         x = x0 + w * i / n
         out.append(f'<line x1="{f(x)}" y1="{f(y0)}" x2="{f(x)}" y2="{f(y0+h)}" stroke="#000" stroke-width="{f(sw*0.4)}"/>')
     if hojas == 2:
         out.append(f'<line x1="{f(x0+w/2)}" y1="{f(y0)}" x2="{f(x0+w/2)}" y2="{f(y0+h)}" stroke="#000" stroke-width="{f(sw*0.9)}"/>')
-    # travesaños y clavos
-    for ty in (0.18, 0.5, 0.82):
+    # travesaños
+    for ty in (0.18, 0.82):
         yy = y0 + h * ty
-        out.append(f'<line x1="{f(x0)}" y1="{f(yy)}" x2="{f(x0+w)}" y2="{f(yy)}" stroke="#000" stroke-width="{f(sw*0.35)}" stroke-dasharray="{f(0.02*m)} {f(0.13*m)}"/>')
+        out.append(f'<line x1="{f(x0)}" y1="{f(yy)}" x2="{f(x0+w)}" y2="{f(yy)}" stroke="#000" stroke-width="{f(sw*0.35)}"/>')
     # aldaba / cerrojo
     out.append(f'<circle cx="{f(x0+w*(0.46 if hojas==2 else 0.85))}" cy="{f(y0+h*0.52)}" r="{f(0.035*m)}" fill="none" stroke="#000" stroke-width="{f(sw*0.5)}"/>')
     return ''.join(out)
@@ -340,7 +354,7 @@ def ventana_reja(x0, y0, w, h, m, sw, color=None):
         out.append(puerta_tablas(xx, y0, pw, h, m, sw * 0.8, random.Random(1), color=color))
     # alféizar y sombra
     out.append(f'<rect x="{f(x0-0.06*m)}" y="{f(y0+h)}" width="{f(w+0.12*m)}" height="{f(0.06*m)}" fill="{lav("cal", m)}" stroke="#000" stroke-width="{f(sw*0.6)}"/>')
-    out.append(f'<rect x="{f(x0-0.06*m)}" y="{f(y0+h+0.06*m)}" width="{f(w+0.12*m)}" height="{f(0.09*m)}" fill="url(#t-fina)"/>')
+    out.append(f'<rect x="{f(x0-0.06*m)}" y="{f(y0+h+0.06*m)}" width="{f(w+0.12*m)}" height="{f(0.09*m)}" {SOMBRA_SUAVE}/>')
     return ''.join(out)
 
 
@@ -391,7 +405,7 @@ def afiche(x0, y0, w, h, m, sw, rnd, color=ROJO, estrella=True):
         yy = y0 + h * (0.42 + i * 0.1)
         largo = w * (0.8 if i % 2 == 0 else 0.6)
         out.append(f'<line x1="{f(x0+w*0.1)}" y1="{f(yy)}" x2="{f(x0+w*0.1+largo)}" y2="{f(yy)}" stroke="#000" stroke-width="{f(sw*(1.1 if i==0 else 0.6))}"/>')
-    out.append(f'<path d="M{f(x0+w)},{f(y0+h*0.85)} L{f(x0+w*0.82)},{f(y0+h)} L{f(x0+w*0.86)},{f(y0+h*0.84)} Z" fill="url(#t-fina)" stroke="#000" stroke-width="{f(sw*0.4)}"/>')
+    out.append(f'<path d="M{f(x0+w)},{f(y0+h*0.85)} L{f(x0+w*0.82)},{f(y0+h)} L{f(x0+w*0.86)},{f(y0+h*0.84)} Z" {SOMBRA_SUAVE} stroke="#000" stroke-width="{f(sw*0.4)}"/>')
     out.append('</g>')
     return ''.join(out)
 
@@ -411,7 +425,7 @@ def fachada_con_corredor(W, rnd, color, pilares, huecos, notas_extra=''):
     # muro del fondo del corredor
     out.append(muro_cal(0, W, y_viga, y_piso, m, sw, rnd, grietas=6, desconchados=4))
     # sombra del alero sobre el muro
-    out.append(f'<rect x="0" y="{f(y_viga)}" width="{f(W)}" height="{f(0.22*m)}" fill="url(#t-fina)"/>')
+    out.append(f'<rect x="0" y="{f(y_viga)}" width="{f(W)}" height="{f(0.22*m)}" fill="url(#rayado)"/>')
     out.append(zocalo(0, W, y_piso, 0.85 * m, m, sw, rnd, color=color))
     for h in huecos:
         out.append(h(m, sw, y_piso, rnd))
@@ -420,7 +434,7 @@ def fachada_con_corredor(W, rnd, color, pilares, huecos, notas_extra=''):
         out.append(pilar(x, y_piso, y_viga, m, sw))
     # piso del corredor: lajas de piedra en el borde
     out.append(f'<rect x="0" y="{f(y_piso)}" width="{f(W)}" height="{f(H-y_piso)}" fill="{lav("piedra", m)}" stroke="#000" stroke-width="{f(sw)}"/>')
-    out.append(f'<rect x="0" y="{f(y_piso+0.07*m)}" width="{f(W)}" height="{f(H-y_piso-0.07*m)}" fill="url(#t-media)"/>')
+    out.append(f'<rect x="0" y="{f(y_piso+0.07*m)}" width="{f(W)}" height="{f(H-y_piso-0.07*m)}" {SOMBRA}/>')
     x = 0
     juntas = []
     while x < W:
@@ -461,7 +475,9 @@ def portón_tienda(x0, ancho_m, alto_m, color):
         # mostrador
         my = y0 + h * 0.66
         out.append(f'<rect x="{f(x0+hoja)}" y="{f(my)}" width="{f(w-2*hoja)}" height="{f(y_piso-my)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw*0.6)}"/>')
-        out.append(f'<rect x="{f(x0+hoja)}" y="{f(my)}" width="{f(w-2*hoja)}" height="{f(y_piso-my)}" fill="url(#t-madera-v)"/>')
+        for k in (1, 2):
+            tx = x0 + hoja + (w - 2 * hoja) * k / 3
+            out.append(f'<line x1="{f(tx)}" y1="{f(my)}" x2="{f(tx)}" y2="{f(y_piso)}" stroke="#000" stroke-width="{f(sw*0.4)}"/>')
         out.append(f'<rect x="{f(x0+hoja)}" y="{f(my)}" width="{f(w-2*hoja)}" height="{f(0.06*m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw*0.6)}"/>')
         # balanza de platillos sobre el mostrador
         bx = x0 + w * 0.62
@@ -474,7 +490,6 @@ def portón_tienda(x0, ancho_m, alto_m, color):
         out.append(puerta_tablas(x0 + w - hoja, y0, hoja, h, m, sw * 0.8, rnd, color=color))
         # dintel de madera y marco
         out.append(f'<rect x="{f(x0-0.08*m)}" y="{f(y0-0.1*m)}" width="{f(w+0.16*m)}" height="{f(0.1*m)}" fill="{lav("madera", m)}" stroke="#000" stroke-width="{f(sw*0.7)}"/>')
-        out.append(f'<rect x="{f(x0-0.08*m)}" y="{f(y0-0.1*m)}" width="{f(w+0.16*m)}" height="{f(0.1*m)}" fill="url(#t-madera)"/>')
         out.append(f'<rect x="{f(x0)}" y="{f(y0)}" width="{f(w)}" height="{f(h)}" fill="none" stroke="#000" stroke-width="{f(sw)}"/>')
         # umbral
         out.append(f'<rect x="{f(x0-0.05*m)}" y="{f(y_piso-0.04*m)}" width="{f(w+0.1*m)}" height="{f(0.04*m)}" fill="{lav("piedra", m)}" stroke="#000" stroke-width="{f(sw*0.5)}"/>')
@@ -506,11 +521,10 @@ def tienda_roja():
     def banca(m, sw, y_piso, rnd):
         x0, x1 = 1170, 1560
         ys = y_piso - 0.45 * m
-        out = [f'<rect x="{f(x0)}" y="{f(ys)}" width="{f(x1-x0)}" height="{f(0.07*m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw*0.7)}"/>',
-               f'<rect x="{f(x0)}" y="{f(ys)}" width="{f(x1-x0)}" height="{f(0.07*m)}" fill="url(#t-madera)"/>']
+        out = [f'<rect x="{f(x0)}" y="{f(ys)}" width="{f(x1-x0)}" height="{f(0.07*m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw*0.7)}"/>']
         for xx in (x0 + 0.1 * m, x1 - 0.18 * m):
             out.append(f'<rect x="{f(xx)}" y="{f(ys+0.07*m)}" width="{f(0.08*m)}" height="{f(y_piso-ys-0.07*m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw*0.6)}"/>')
-            out.append(f'<rect x="{f(xx+0.04*m)}" y="{f(ys+0.07*m)}" width="{f(0.04*m)}" height="{f(y_piso-ys-0.07*m)}" fill="url(#t-media)"/>')
+            out.append(f'<rect x="{f(xx+0.04*m)}" y="{f(ys+0.07*m)}" width="{f(0.04*m)}" height="{f(y_piso-ys-0.07*m)}" {SOMBRA}/>')
         # un sombrero olvidado sobre la banca
         sx = x0 + 0.55 * m
         out.append(f'<path d="M{f(sx-0.2*m)},{f(ys)} Q{f(sx)},{f(ys-0.03*m)} {f(sx+0.2*m)},{f(ys)} Z M{f(sx-0.1*m)},{f(ys-0.01*m)} Q{f(sx-0.1*m)},{f(ys-0.13*m)} {f(sx)},{f(ys-0.13*m)} Q{f(sx+0.1*m)},{f(ys-0.13*m)} {f(sx+0.1*m)},{f(ys-0.01*m)} Z" fill="#000"/>')
@@ -538,7 +552,7 @@ def maceta(x, y_piso, m, sw, rnd):
     partido (paleta.md §3)."""
     w, h = 0.22 * m, 0.24 * m
     out = [f'<path d="M{f(x)},{f(y_piso-h)} L{f(x+w)},{f(y_piso-h)} L{f(x+w*0.88)},{f(y_piso)} L{f(x+w*0.12)},{f(y_piso)} Z" fill="{lav("teja", m)}" stroke="#000" stroke-width="{f(sw*0.6)}"/>',
-           f'<path d="M{f(x+w*0.55)},{f(y_piso-h)} L{f(x+w)},{f(y_piso-h)} L{f(x+w*0.88)},{f(y_piso)} L{f(x+w*0.5)},{f(y_piso)} Z" fill="url(#t-fina)"/>',
+           f'<path d="M{f(x+w*0.55)},{f(y_piso-h)} L{f(x+w)},{f(y_piso-h)} L{f(x+w*0.88)},{f(y_piso)} L{f(x+w*0.5)},{f(y_piso)} Z" {SOMBRA_SUAVE}/>',
            f'<rect x="{f(x-0.01*m)}" y="{f(y_piso-h-0.02*m)}" width="{f(w+0.02*m)}" height="{f(0.04*m)}" fill="{lav("teja", m)}" stroke="#000" stroke-width="{f(sw*0.5)}"/>']
     for _ in range(9):
         lx = x + w / 2 + rnd.uniform(-0.2, 0.2) * m
@@ -565,7 +579,6 @@ def casa_porton():
         out.append(f'<rect x="{f(x0+w*0.6)}" y="{f(y0+h*0.3)}" width="{f(w*0.28)}" height="{f(h*0.62)}" fill="none" stroke="#000" stroke-width="{f(sw*0.7)}"/>')
         # arco rebajado de piedra sobre el portón
         out.append(f'<path d="M{f(x0-0.12*m)},{f(y0)} Q{f(x0+w/2)},{f(y0-0.35*m)} {f(x0+w+0.12*m)},{f(y0)} L{f(x0+w)},{f(y0)} Q{f(x0+w/2)},{f(y0-0.22*m)} {f(x0)},{f(y0)} Z" fill="{lav("piedra", m)}" stroke="#000" stroke-width="{f(sw*0.8)}"/>')
-        out.append(f'<path d="M{f(x0-0.12*m)},{f(y0)} Q{f(x0+w/2)},{f(y0-0.35*m)} {f(x0+w+0.12*m)},{f(y0)} L{f(x0+w)},{f(y0)} Q{f(x0+w/2)},{f(y0-0.22*m)} {f(x0)},{f(y0)} Z" fill="url(#t-puntos-ralos)"/>')
         # cerrojo de hierro
         out.append(f'<rect x="{f(x0+w*0.4)}" y="{f(y0+h*0.5)}" width="{f(0.2*m)}" height="{f(0.04*m)}" fill="#000"/>')
         return ''.join(out)
@@ -599,23 +612,32 @@ def casa_porton():
 
 
 def empedrado():
-    """Mosaico de empedrado (repetible en x). Se coloca por arriba en el suelo de la capa [P: empedrado o tierra]."""
+    """Mosaico de empedrado (repetible en x): tramos de piedra con claros de tierra, para que el
+    suelo, que ocupa el tercio de abajo y siempre se mueve, no sea una textura repetida. Se coloca
+    por arriba en el suelo de la capa [P: empedrado o tierra]."""
     rnd = random.Random(7)
     m, sw = ppm('juego'), TRAZO['juego']
     W, H = 1024, 180
     out = [f'<g data-p="plaza empedrada o de tierra: confirmar con fotos del norte de Boyacá años 40">',
-           f'<rect x="0" y="0" width="{W}" height="{H}" fill="{lav("tierra", m, 0.8)}"/>',
-           f'<rect x="0" y="0" width="{W}" height="{H}" fill="url(#t-puntos-ralos)"/>']
+           f'<rect x="0" y="0" width="{W}" height="{H}" fill="{lav("tierra", m, 0.8)}"/>']
     y = 2.0
     fila = 0
     while y < H:
         alto = 13 + fila * 5.5  # perspectiva: más grandes hacia el frente
+        # anchos de la fila escalados para que sumen exactamente W: en la costura no hay piedra doble
+        anchos, total = [], 0.0
+        while total < W:
+            anchos.append((alto * rnd.uniform(1.2, 1.9), rnd.uniform(1.5, 4)))
+            total += sum(anchos[-1])
+        ajuste = W / total
         x = -rnd.uniform(0, alto)
-        while x < W:
-            ancho = alto * rnd.uniform(1.2, 1.9)
-            for dx in (0, -W, W):
+        for ancho, hueco in anchos:
+            ancho, hueco = ancho * ajuste, hueco * ajuste
+            densidad = 1.5 * math.sin(4 * math.pi * x / W + fila * 1.1) * math.cos(2 * math.pi * x / W - fila * 0.8) - 0.1
+            hay_piedra = random.Random(int(x * 31 + y * 17)).random() < densidad
+            for dx in (0, W):
                 xx = x + dx
-                if xx + ancho < 0 or xx > W:
+                if xx + ancho < 0 or xx > W or not hay_piedra:
                     continue
                 cy = y + alto * 0.5
                 rx, ry = ancho * 0.46, alto * 0.42
@@ -624,11 +646,10 @@ def empedrado():
                     a = k * math.pi / 4
                     jit = random.Random(int(x * 13 + y * 7) + k).uniform(0.85, 1.1)
                     p.append((xx + ancho / 2 + math.cos(a) * rx * jit, cy + math.sin(a) * ry * jit))
-                d = 'M' + ' Q'.join(
-                    f"{f(p[k][0])},{f(p[k][1])} {f((p[k][0]+p[(k+1)%8][0])/2)},{f((p[k][1]+p[(k+1)%8][1])/2)}" for k in range(8)) + ' Z'
+                d = canto(p)
                 out.append(f'<path d="{d}" fill="{lav("piedra", m, 0.75)}" stroke="#000" stroke-width="{f(sw*0.5)}"/>')
-                out.append(f'<path d="M{f(xx+ancho*0.18)},{f(cy+ry*0.35)} Q{f(xx+ancho/2)},{f(cy+ry*1.05)} {f(xx+ancho*0.82)},{f(cy+ry*0.35)} Q{f(xx+ancho/2)},{f(cy+ry*0.65)} {f(xx+ancho*0.18)},{f(cy+ry*0.35)} Z" fill="url(#t-media)"/>')
-            x += ancho + rnd.uniform(1.5, 4)
+                out.append(f'<path d="M{f(xx+ancho*0.18)},{f(cy+ry*0.35)} Q{f(xx+ancho/2)},{f(cy+ry*1.05)} {f(xx+ancho*0.82)},{f(cy+ry*0.35)} Q{f(xx+ancho/2)},{f(cy+ry*0.65)} {f(xx+ancho*0.18)},{f(cy+ry*0.35)} Z" {SOMBRA}/>')
+            x += ancho + hueco
         y += alto + 1.5
         fila += 1
     out.append('</g>')
@@ -637,22 +658,22 @@ def empedrado():
 
 
 def costal(x, y_suelo, w, h, m, sw, rnd, abierto=False):
-    """Costal de fique: tejido en trama cruzada, amarre arriba o boca abierta con papas."""
+    """Costal de fique con amarre arriba o boca abierta con papas."""
     out = []
     d = (f'M{f(x)},{f(y_suelo)} Q{f(x-0.04*m)},{f(y_suelo-h*0.55)} {f(x+w*0.12)},{f(y_suelo-h*0.92)} '
          f'Q{f(x+w*0.5)},{f(y_suelo-h*1.04)} {f(x+w*0.88)},{f(y_suelo-h*0.92)} '
          f'Q{f(x+w+0.04*m)},{f(y_suelo-h*0.55)} {f(x+w)},{f(y_suelo)} Z')
-    out.append(f'<path d="{d}" fill="{lav("paja", m)}" stroke="#000" stroke-width="{f(sw*0.8)}"/>')
-    out.append(f'<path d="{d}" fill="url(#t-tejido)"/>')
-    # cara en sombra (luz de la izquierda), pliegues que salen del amarre y costura
+    out.append(f'<path d="{d}" fill="{lav("paja", m)}"/>')
+    # dentro de la silueta: cara en sombra (luz de la izquierda), pliegues del amarre, costura y pie
     sombra = (f'M{f(x+w*0.62)},{f(y_suelo)} Q{f(x+w*0.75)},{f(y_suelo-h*0.5)} {f(x+w*0.7)},{f(y_suelo-h*0.96)} '
               f'Q{f(x+w*0.8)},{f(y_suelo-h*0.95)} {f(x+w*0.88)},{f(y_suelo-h*0.92)} Q{f(x+w+0.04*m)},{f(y_suelo-h*0.55)} {f(x+w)},{f(y_suelo)} Z')
-    out.append(f'<path d="{sombra}" fill="url(#t-fina)"/>')
-    out.append(f'<path d="M{f(x+w*0.44)},{f(y_suelo-h*0.95)} Q{f(x+w*0.3)},{f(y_suelo-h*0.8)} {f(x+w*0.22)},{f(y_suelo-h*0.55)} '
+    out.append(recortar(d, f'<path d="{sombra}" {SOMBRA_SUAVE}/>'
+                          f'<path d="M{f(x+w*0.44)},{f(y_suelo-h*0.95)} Q{f(x+w*0.3)},{f(y_suelo-h*0.8)} {f(x+w*0.22)},{f(y_suelo-h*0.55)} '
                f'M{f(x+w*0.56)},{f(y_suelo-h*0.95)} Q{f(x+w*0.68)},{f(y_suelo-h*0.78)} {f(x+w*0.74)},{f(y_suelo-h*0.5)} '
-               f'M{f(x+w*0.15)},{f(y_suelo-h*0.2)} Q{f(x+w*0.5)},{f(y_suelo-h*0.12)} {f(x+w*0.85)},{f(y_suelo-h*0.2)}" stroke="#000" stroke-width="{f(sw*0.45)}" fill="none"/>')
-    out.append(f'<path d="M{f(x+w*0.12)},{f(y_suelo-h*0.08)} Q{f(x+w*0.06)},{f(y_suelo-h*0.5)} {f(x+w*0.16)},{f(y_suelo-h*0.86)}" stroke="#000" stroke-width="{f(sw*0.4)}" fill="none" stroke-dasharray="{f(sw*1.2)} {f(sw*1.2)}"/>')
-    out.append(f'<path d="M{f(x+w*0.05)},{f(y_suelo)} Q{f(x+w*0.5)},{f(y_suelo-0.05*m)} {f(x+w*0.95)},{f(y_suelo)} Z" fill="url(#t-media)"/>')
+               f'M{f(x+w*0.15)},{f(y_suelo-h*0.2)} Q{f(x+w*0.5)},{f(y_suelo-h*0.12)} {f(x+w*0.85)},{f(y_suelo-h*0.2)}" stroke="#000" stroke-width="{f(sw*0.45)}" fill="none"/>'
+                          f'<path d="M{f(x+w*0.12)},{f(y_suelo-h*0.08)} Q{f(x+w*0.06)},{f(y_suelo-h*0.5)} {f(x+w*0.16)},{f(y_suelo-h*0.86)}" stroke="#000" stroke-width="{f(sw*0.4)}" fill="none" stroke-dasharray="{f(sw*1.2)} {f(sw*1.2)}"/>'
+                          f'<path d="M{f(x+w*0.05)},{f(y_suelo)} Q{f(x+w*0.5)},{f(y_suelo-0.05*m)} {f(x+w*0.95)},{f(y_suelo)} Z" {SOMBRA}/>'))
+    out.append(f'<path d="{d}" fill="none" stroke="#000" stroke-width="{f(sw*0.8)}"/>')
     if abierto:
         for _ in range(7):
             px = x + w * rnd.uniform(0.2, 0.8)
@@ -674,7 +695,6 @@ def canasto(x, y_suelo, w, h, m, sw, rnd, carga='papas'):
         for i in range(5):
             cx = x + w * (0.15 + i * 0.17)
             out.append(f'<ellipse cx="{f(cx)}" cy="{f(y_suelo-h-0.05*m)}" rx="{f(0.05*m)}" ry="{f(0.11*m)}" transform="rotate({f(rnd.uniform(-35,35))} {f(cx)} {f(y_suelo-h)})" fill="{lav("trigo", m)}" stroke="#000" stroke-width="{f(sw*0.45)}"/>')
-            out.append(f'<ellipse cx="{f(cx)}" cy="{f(y_suelo-h-0.05*m)}" rx="{f(0.05*m)}" ry="{f(0.11*m)}" transform="rotate({f(rnd.uniform(-35,35))} {f(cx)} {f(y_suelo-h)})" fill="url(#t-puntos)"/>')
     elif carga == 'cebollas':
         for i in range(6):
             cx = x + w * (0.12 + i * 0.15)
@@ -685,12 +705,15 @@ def canasto(x, y_suelo, w, h, m, sw, rnd, carga='papas'):
             cx = x + w * (0.1 + i * 0.11) + rnd.uniform(-0.01, 0.01) * m
             cy = y_suelo - h - rnd.uniform(0.0, 0.06) * m
             out.append(f'<ellipse cx="{f(cx)}" cy="{f(cy)}" rx="{f(0.05*m)}" ry="{f(0.04*m)}" fill="{lav("tapia", m)}" stroke="#000" stroke-width="{f(sw*0.45)}"/>')
-    out.append(f'<path d="{d}" fill="{lav("paja", m)}" stroke="#000" stroke-width="{f(sw*0.8)}"/>')
-    # tejido: bandas horizontales y varillas
+    out.append(f'<path d="{d}" fill="{lav("paja", m)}"/>')
+    # tejido dentro de la silueta: cuatro bandas, cuatro varillas y la cara en sombra
+    tejido = [f'<path d="M{f(x+w*0.62)},{f(y_suelo-h)} L{f(x+w)},{f(y_suelo-h)} L{f(x+w*0.9)},{f(y_suelo)} L{f(x+w*0.58)},{f(y_suelo)} Z" {SOMBRA_SUAVE}/>']
     for i in range(1, 5):
         yy = y_suelo - h + h * i / 5
-        out.append(f'<line x1="{f(x+w*0.02*i)}" y1="{f(yy)}" x2="{f(x+w-w*0.02*i)}" y2="{f(yy)}" stroke="#000" stroke-width="{f(sw*0.4)}"/>')
-    out.append(f'<path d="{d}" fill="url(#t-vert)" opacity="0.6"/>')
+        tejido.append(f'<line x1="{f(x)}" y1="{f(yy)}" x2="{f(x+w)}" y2="{f(yy)}" stroke="#000" stroke-width="{f(sw*0.4)}"/>')
+        tejido.append(f'<line x1="{f(x+w*i/5)}" y1="{f(y_suelo-h)}" x2="{f(x+w*0.1+w*0.8*i/5)}" y2="{f(y_suelo)}" stroke="#000" stroke-width="{f(sw*0.3)}"/>')
+    out.append(recortar(d, ''.join(tejido)))
+    out.append(f'<path d="{d}" fill="none" stroke="#000" stroke-width="{f(sw*0.8)}"/>')
     out.append(f'<rect x="{f(x-0.02*m)}" y="{f(y_suelo-h-0.03*m)}" width="{f(w+0.04*m)}" height="{f(0.05*m)}" rx="{f(0.02*m)}" fill="{lav("paja", m)}" stroke="#000" stroke-width="{f(sw*0.6)}"/>')
     return ''.join(out)
 
@@ -706,11 +729,13 @@ def olla(x, y_suelo, w, h, m, sw, rnd, tipo='olla'):
         d = (f'M{f(x+w*0.1)},{f(y_suelo-h)} L{f(x+w*0.9)},{f(y_suelo-h)} '
              f'Q{f(x+w*1.06)},{f(y_suelo-h*0.55)} {f(x+w*0.78)},{f(y_suelo-h*0.05)} Q{f(x+w*0.5)},{f(y_suelo+h*0.03)} {f(x+w*0.22)},{f(y_suelo-h*0.05)} '
              f'Q{f(x-w*0.06)},{f(y_suelo-h*0.55)} {f(x+w*0.1)},{f(y_suelo-h)} Z')
-    out.append(f'<path d="{d}" fill="{lav("teja", m)}" stroke="#000" stroke-width="{f(sw*0.7)}"/>')
-    out.append(f'<path d="{d}" fill="url(#t-fina)"/>')
-    # brillo y franja decorativa
-    out.append(f'<path d="M{f(x+w*0.28)},{f(y_suelo-h*0.75)} Q{f(x+w*0.2)},{f(y_suelo-h*0.45)} {f(x+w*0.3)},{f(y_suelo-h*0.2)}" stroke="#fff" stroke-width="{f(sw*1.2)}" fill="none" stroke-linecap="round"/>')
-    out.append(f'<path d="M{f(x+w*0.12)},{f(y_suelo-h*0.7)} Q{f(x+w*0.5)},{f(y_suelo-h*0.62)} {f(x+w*0.88)},{f(y_suelo-h*0.7)}" stroke="#000" stroke-width="{f(sw*0.4)}" fill="none" stroke-dasharray="{f(0.02*m)} {f(0.015*m)}"/>')
+    out.append(f'<path d="{d}" fill="{lav("teja", m)}"/>')
+    # dentro de la silueta: cara en sombra, brillo y franja decorativa (la franja abraza la pieza
+    # de borde a borde y no se sale de ella)
+    out.append(recortar(d, f'<rect x="{f(x+w*0.62)}" y="{f(y_suelo-h*1.1)}" width="{f(w*0.6)}" height="{f(h*1.2)}" {SOMBRA}/>'
+                           f'<path d="M{f(x+w*0.28)},{f(y_suelo-h*0.75)} Q{f(x+w*0.2)},{f(y_suelo-h*0.45)} {f(x+w*0.3)},{f(y_suelo-h*0.2)}" stroke="#fff" stroke-width="{f(sw*1.2)}" fill="none" stroke-linecap="round"/>'
+                           f'<path d="M{f(x-w*0.1)},{f(y_suelo-h*0.7)} Q{f(x+w*0.5)},{f(y_suelo-h*0.6)} {f(x+w*1.1)},{f(y_suelo-h*0.7)}" stroke="#000" stroke-width="{f(sw*0.4)}" fill="none" stroke-dasharray="{f(0.02*m)} {f(0.015*m)}"/>'))
+    out.append(f'<path d="{d}" fill="none" stroke="#000" stroke-width="{f(sw*0.7)}"/>')
     if tipo != 'mucura':
         out.append(f'<ellipse cx="{f(x+w/2)}" cy="{f(y_suelo-h)}" rx="{f(w*0.4)}" ry="{f(0.035*m)}" fill="#000"/>')
     return ''.join(out)
@@ -778,21 +803,9 @@ def y_de(perf, x):
 
 
 # Cultivos vistos de lejos (paleta.md §4 «Boyacá: campo»): trigo y cebada de la franja triguera
-# [V], sementera de papa, potrero, tierra arada y barbecho (papel). Lavado + trama; pesos por repetición.
-CULTIVOS = [('trigo', 't-surco-a'), ('trigo', None), ('trigo', 't-surco-b'), ('cebada', 't-surco-a'),
-            ('cebada', None), ('sementera', 't-surco-c'), ('sementera', 't-fina'), ('potrero', 't-puntos-ralos'),
-            ('potrero', None), ('potrero', 't-puntos-ralos'), ('tapia', 't-horiz'), ('tierra', 't-surco-b'),
-            (None, None), (None, 't-puntos-ralos')]
-
-
-def defs_cultivo():
-    """Surcos en varias direcciones: siguen la ladera, no la pantalla."""
-    return '''
-  <defs>
-    <pattern id="t-surco-a" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(12)"><line x1="0" y1="2.5" x2="5" y2="2.5" stroke="#000" stroke-width="0.7"/></pattern>
-    <pattern id="t-surco-b" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-14)"><line x1="0" y1="2.5" x2="5" y2="2.5" stroke="#000" stroke-width="0.7"/></pattern>
-    <pattern id="t-surco-c" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(72)"><line x1="0" y1="2" x2="4" y2="2" stroke="#000" stroke-width="0.6"/></pattern>
-  </defs>'''
+# [V], sementera de papa, potrero, tierra arada y barbecho (papel). Lavado plano; pesos por repetición.
+CULTIVOS = ['trigo', 'trigo', 'trigo', 'cebada', 'cebada', 'sementera', 'sementera', 'potrero',
+            'potrero', 'potrero', 'tapia', 'tierra', None, None]
 
 
 def ladera(perf, x0, x1, desde, pie, rnd, sw, alto0, crece, casitas=0.06, fuerza=0.5):
@@ -827,12 +840,18 @@ def ladera(perf, x0, x1, desde, pie, rnd, sw, alto0, crece, casitas=0.06, fuerza
             xb_s, xb_i = x + ancho + inclina, x + ancho - inclina
             arriba = [(xx, en(sup, xx)) for xx in [xa_s] + [v for v in xs if xa_s < v < xb_s] + [xb_s]]
             abajo = [(xx, en(inf, xx)) for xx in [xb_i] + [v for v in reversed(xs) if xa_i < v < xb_i] + [xa_i]]
-            cultivo, trama = rnd.choice(CULTIVOS)
+            cultivo = rnd.choice(CULTIVOS)
             forma = pts(arriba + abajo)
             if cultivo:
                 rellenos.append(f'<polygon points="{forma}" fill="{diluir(PALETA[cultivo], fuerza)}"/>')
-            if trama:
-                rellenos.append(f'<polygon points="{forma}" fill="url(#{trama})"/>')
+            if cultivo in ('trigo', 'cebada', 'sementera', 'tierra') and rnd.random() < 0.25:
+                # tres surcos dibujados en algunas parcelas, no una trama de surcos en todas
+                xc = x + ancho / 2
+                yc = (en(sup, xc) + en(inf, xc)) / 2
+                ang = rnd.uniform(-0.25, 0.25)
+                for j in (-1, 0, 1):
+                    yj = yc + j * alto * 0.22
+                    rellenos.append(f'<path d="M{f(xc - ancho * 0.22)},{f(yj - ang * ancho * 0.22)} L{f(xc + ancho * 0.22)},{f(yj + ang * ancho * 0.22)}" stroke="#000" stroke-width="{f(sw*0.35)}"/>')
             # lindero lateral: unas veces cerca de piedra, otras cerco vivo, otras solo raya
             lado = f'M{f(xb_s)},{f(en(sup, xb_s))} L{f(xb_i)},{f(en(inf, xb_i))}'
             tipo = rnd.random()
@@ -846,12 +865,11 @@ def ladera(perf, x0, x1, desde, pie, rnd, sw, alto0, crece, casitas=0.06, fuerza
         d = f'M{f(borde[0][0])},{f(borde[0][1])}' + ''.join(f' L{f(a)},{f(b)}' for a, b in borde[1:])
         (piedra if rnd.random() < 0.4 else cercas).append(d)
     out.append(f'<path d="{" ".join(cercas)}" stroke="#000" stroke-width="{f(sw*0.45)}" fill="none"/>')
-    # cercas de piedra: hilera de piedritas
-    out.append(f'<path d="{" ".join(piedra)}" stroke="#000" stroke-width="{f(sw*0.4)}" fill="none"/>')
-    out.append(f'<path d="{" ".join(piedra)}" stroke="#000" stroke-width="{f(sw*1.5)}" fill="none" stroke-dasharray="1 2.2" stroke-linecap="round"/>')
+    # cercas de piedra: línea algo más marcada
+    out.append(f'<path d="{" ".join(piedra)}" stroke="#000" stroke-width="{f(sw*0.6)}" fill="none"/>')
     # cercos vivos: matorral oscuro a lo largo del lindero
     monte = diluir(PALETA['monte'], min(1.0, fuerza + 0.35))
-    out.append(f'<path d="{" ".join(arbustos)}" stroke="{monte}" stroke-width="{f(sw*2.6)}" fill="none" stroke-dasharray="2.4 1.2 1.2 1.6" stroke-linecap="round"/>')
+    out.append(f'<path d="{" ".join(arbustos)}" stroke="{monte}" stroke-width="{f(sw*2.2)}" fill="none" stroke-linecap="round"/>')
     for cx, cy in casas:
         # casita de teja con su mancha de árboles al lado
         out.append(f'<rect x="{f(cx)}" y="{f(cy)}" width="7" height="4.5" fill="{PALETA["cal"]}" stroke="#000" stroke-width="{f(sw*0.55)}"/>'
@@ -878,7 +896,7 @@ def paramo(perf, x0, x1, hasta, rnd, sw, n):
         w, h = rnd.uniform(8, 18), rnd.uniform(4, 8)
         roca = [(x, y), (x + w * 0.3, y - h), (x + w * 0.75, y - h * 0.8), (x + w, y)]
         out.append(f'<polygon points="{pts(roca)}" fill="{diluir(PALETA["piedra"], 0.55)}" stroke="#000" stroke-width="{f(sw*0.5)}"/>'
-                   f'<polygon points="{pts([(x + w*0.55, y - h*0.85), (x + w*0.75, y - h*0.8), (x + w, y), (x + w*0.6, y)])}" fill="url(#t-media)"/>')
+                   f'<polygon points="{pts([(x + w*0.55, y - h*0.85), (x + w*0.75, y - h*0.8), (x + w, y), (x + w*0.6, y)])}" {SOMBRA}/>')
     return ''.join(out)
 
 
@@ -895,7 +913,7 @@ def cañada(puntos, sw):
     sombra = puntos + [(x + 9, y + 2) for x, y in reversed(puntos)]
     monte = puntos + [(x + 14, y + 3) for x, y in reversed(puntos)]
     return (f'<polygon points="{pts(monte)}" fill="{diluir(PALETA["monte"], 0.55)}"/>'
-            f'<polygon points="{pts(sombra)}" fill="url(#t-fina)"/>'
+            f'<polygon points="{pts(sombra)}" {SOMBRA_SUAVE}/>'
             f'<path d="{d}" stroke="#000" stroke-width="{f(sw*0.6)}" fill="none"/>')
 
 
@@ -916,12 +934,12 @@ def cordillera():
     sw = TRAZO['cielo']
     W, H = 1920, 700
     pie = H
-    out = [defs_cultivo(), '<g data-p="paisaje genérico del norte de Boyacá">']
+    out = ['<g data-p="paisaje genérico del norte de Boyacá">']
     # sierra lejana: solo contorno y unas pocas rayas de ladera (perspectiva aérea)
     lejana = perfil([(0, 318), (240, 292), (470, 338), (690, 306), (930, 350), (1210, 322),
                      (1480, 286), (1700, 316), (1920, 298)], 0, W, rnd, 1.2)
     rayas = []
-    for _ in range(70):
+    for _ in range(25):
         x = rnd.uniform(0, W)
         y = y_de(lejana, x) + rnd.uniform(6, 60)
         rayas.append(f'M{f(x)},{f(y)} l{f(rnd.uniform(5, 14))},{f(rnd.uniform(2, 6))}')
@@ -936,8 +954,8 @@ def cordillera():
     dentro = [ladera(mayor, 0, W, 52, pie, rnd, sw, alto0=9, crece=2.2, fuerza=0.5)]
     sombra = [(1170, 250), (1262, 262), (1385, 303), (1515, 336), (1655, 372), (1795, 394),
               (1920, 412), (1920, 520), (1700, 470), (1480, 420), (1330, 360), (1215, 300)]
-    dentro.append(f'<polygon points="{pts(sombra)}" fill="url(#t-fina)"/>')
-    dentro.append(paramo(mayor, 520, 1820, 50, rnd, sw, 260))
+    dentro.append(f'<polygon points="{pts(sombra)}" {SOMBRA_SUAVE}/>')
+    dentro.append(paramo(mayor, 520, 1820, 50, rnd, sw, 80))
     for portillo in ((780, 352), (1060, 292), (1400, 306), (1580, 350)):
         x, y = portillo
         dentro.append(cañada([(x, y + 6), (x + 8, y + 40), (x - 4, y + 80), (x + 10, y + 130), (x + 2, y + 190)], sw))
@@ -945,7 +963,7 @@ def cordillera():
     dentro.append(camino([(240, 540), (300, 500), (230, 476), (330, 458)], sw))
     # arriba, el páramo gris plateado del frailejón; abajo, los cultivos
     out.append(cerro('c-mayor', mayor, pie, sw * 1.4, ''.join(dentro), relleno=diluir(PALETA['frailejon'], 0.55)))
-    # estribos cercanos: más grandes, más trama, cresta más gruesa
+    # estribos cercanos: parcelas más grandes, lavado más fuerte, cresta más gruesa
     oeste = perfil([(0, 486), (150, 470), (330, 478), (520, 500), (700, 560), (820, 640)], 0, 820, rnd, 1.6)
     out.append(cerro('c-oeste', oeste, pie, sw * 1.6, ladera(oeste, 0, 820, 10, pie, rnd, sw, alto0=13, crece=3.2, casitas=0.1, fuerza=0.6),
                      relleno=diluir(PALETA['potrero'], 0.5)))
@@ -958,7 +976,7 @@ def cordillera():
 
 
 def nube(nombre, W, H, semilla):
-    """Cúmulo de tinta: borde de arcos, panza casi plana con trama (sin degradados)."""
+    """Cúmulo de tinta: borde de arcos y panza casi plana en sombra lisa (sin degradados)."""
     rnd = random.Random(semilla)
     sw = TRAZO['cielo']
     base = H - 4
@@ -994,8 +1012,6 @@ def nube(nombre, W, H, semilla):
            f'<path d="{d}" fill="{PALETA["nube"]}"/>',
            f'<g clip-path="url(#c-{nombre})">',
            f'<path d="{sombra}" fill="{PALETA["niebla"]}"/>',
-           f'<path d="{sombra}" fill="url(#t-fina)"/>',
-           f'<rect x="0" y="{f(base - H*0.12)}" width="{W}" height="{f(H*0.14)}" fill="url(#t-horiz)"/>',
            '</g>']
     # volúmenes interiores: arcos de las bolas de atrás
     vol = []
@@ -1014,7 +1030,7 @@ def nube(nombre, W, H, semilla):
 
 def sombra_suelo(x0, x1, base, m):
     """Sombra de contacto en el suelo (sol de la mañana desde la izquierda)."""
-    return f'<path d="M{f(x0)},{f(base)} Q{f((x0 + x1) / 2)},{f(base - 0.1 * m)} {f(x1)},{f(base)} Z" fill="url(#t-fina)"/>'
+    return f'<path d="M{f(x0)},{f(base)} Q{f((x0 + x1) / 2)},{f(base - 0.1 * m)} {f(x1)},{f(base)} Z" {SOMBRA_SUAVE}/>'
 
 
 def persona(x, base, m, sw, tipo='hombre', espejo=False, k=1.0, sombrero='negro', ruana='oscura',
@@ -1054,7 +1070,7 @@ def persona(x, base, m, sw, tipo='hombre', espejo=False, k=1.0, sombrero='negro'
         if negro:
             r.append(f'<path d="{cinta}" stroke="#fff" stroke-width="{f(lw * 0.45)}"/>')
         else:
-            r.append(f'<path d="{copa_d}" fill="url(#t-fina)"/>')
+            r.append(f'<path d="{copa_d}" {SOMBRA_SUAVE}/>')
             r.append(f'<path d="{cinta}" stroke="#000" stroke-width="{f(lw * 1.1)}"/>')
         if det:
             r.append(f'<path d="M{P(-0.03, dy + copa + 0.012)} Q{P(0.0, dy + copa - 0.015)} {P(0.035, dy + copa + 0.01)}" '
@@ -1075,7 +1091,7 @@ def persona(x, base, m, sw, tipo='hombre', espejo=False, k=1.0, sombrero='negro'
         atras = f'M{P(-0.13, 0.84)} L{P(-0.02, 0.84)} L{P(-0.04, 0.04)} L{P(-0.13, 0.04)} Z'
         # pantalón de dril y alpargatas blancas (Ocampo López, 1977)
         dril = lav('blanco-tela', m)
-        out.append(f'<path d="{atras}" fill="{dril}" stroke="#000" stroke-width="{f(lw * 0.6)}"/><path d="{atras}" fill="url(#t-fina)"/>')
+        out.append(f'<path d="{atras}" fill="{dril}" stroke="#000" stroke-width="{f(lw * 0.6)}"/><path d="{atras}" {SOMBRA_SUAVE}/>')
         out.append(f'<path d="M{P(-0.01, 0.84)} L{P(0.11, 0.84)} L{P(0.13, 0.04)} L{P(0.03, 0.04)} Z" fill="{dril}" stroke="#000" stroke-width="{f(lw * 0.6)}"/>')
         out.append(f'<path d="M{P(-0.15, 0)} L{P(-0.03, 0)} L{P(-0.04, 0.05)} L{P(-0.14, 0.05)} Z '
                    f'M{P(0.02, 0)} L{P(0.19, 0)} Q{P(0.19, 0.04)} {P(0.13, 0.05)} L{P(0.03, 0.05)} Z" fill="{dril}" stroke="#000" stroke-width="{f(lw * 0.4)}"/>')
@@ -1084,18 +1100,15 @@ def persona(x, base, m, sw, tipo='hombre', espejo=False, k=1.0, sombrero='negro'
         ru = (f'M{P(-0.07, 1.43)} L{P(0.08, 1.43)} Q{P(0.2, 1.42)} {P(0.26, 1.32)} L{P(0.41, 0.82)} '
               f'Q{P(0.02, 0.73)} {P(-0.39, 0.8)} L{P(-0.25, 1.32)} Q{P(-0.2, 1.42)} {P(-0.07, 1.43)} Z')
         # lana en tonos naturales (Ruanas de Nobsa; Ocampo: «en tonos oscuros»)
-        fondo, trama, linea = {'oscura': (lav('lana-parda', m), 't-fina', '#fff'),
-                               'gris': (lav('lana-gris', m), 't-puntos-ralos', '#fff'),
-                               'clara': (lav('lana-cruda', m), 't-puntos-ralos', '#000'),
-                               'negra': (lav('pano-oscuro', m), None, '#fff')}[ruana]
-        out.append(f'<path d="{ru}" fill="{fondo}" stroke="#000" stroke-width="{f(lw * 0.8)}" stroke-linejoin="round"/>')
-        if trama:
-            out.append(f'<path d="{ru}" fill="url(#{trama})"/>')
-        # listas tejidas cerca del borde y caída de la ruana sobre el pecho
-        out.append(f'<path d="M{P(-0.37, 0.86)} Q{P(0.02, 0.79)} {P(0.39, 0.88)} M{P(-0.36, 0.9)} Q{P(0.02, 0.83)} {P(0.38, 0.92)} '
-                   f'M{P(0.03, 1.42)} Q{P(0.06, 1.1)} {P(0.07, 0.77)}" stroke="{linea}" stroke-width="{f(lw * 0.45)}" fill="none"/>')
+        fondo, linea = {'oscura': (lav('lana-parda', m), '#fff'), 'gris': (lav('lana-gris', m), '#fff'),
+                        'clara': (lav('lana-cruda', m), '#000'), 'negra': (lav('pano-oscuro', m), '#fff')}[ruana]
+        out.append(f'<path d="{ru}" fill="{fondo}"/>')
+        # listas tejidas cerca del borde y caída de la ruana sobre el pecho, dentro de la ruana
+        out.append(recortar(ru, f'<path d="M{P(-0.45, 0.86)} Q{P(0.02, 0.79)} {P(0.47, 0.88)} M{P(-0.45, 0.9)} Q{P(0.02, 0.83)} {P(0.47, 0.92)} '
+                                f'M{P(0.03, 1.42)} Q{P(0.06, 1.1)} {P(0.07, 0.77)}" stroke="{linea}" stroke-width="{f(lw * 0.45)}" fill="none"/>'))
+        out.append(f'<path d="{ru}" fill="none" stroke="#000" stroke-width="{f(lw * 0.8)}" stroke-linejoin="round"/>')
         if det:
-            out.append(flecos(-0.39, 0.8, 0.02, 0.73, 0.41, 0.82, 16, '#000'))
+            out.append(flecos(-0.39, 0.8, 0.02, 0.73, 0.41, 0.82, 8, '#000'))
         if lleva == 'vara':
             out.append(f'<ellipse cx="{P(0.345, 1.0).split(",")[0]}" cy="{P(0.345, 1.0).split(",")[1]}" rx="{f(0.03 * k * m)}" ry="{f(0.035 * k * m)}" fill="{lav("piel", m)}" stroke="#000" stroke-width="{f(lw * 0.5)}"/>')
         if panuelo:
@@ -1122,14 +1135,14 @@ def persona(x, base, m, sw, tipo='hombre', espejo=False, k=1.0, sombrero='negro'
             out.append(f'<path d="M{P(-0.29, 0.05)} Q{P(0.0, 0.0)} {P(0.31, 0.05)} L{P(0.3, 0.1)} Q{P(0.0, 0.055)} {P(-0.28, 0.1)} Z" '
                        f'fill="{lav("blanco-tela", m)}" stroke="#000" stroke-width="{f(lw * 0.45)}"/>')
         if det and not sentada:
-            out.append(f'<path d="M{P(-0.05, 0.96)} Q{P(-0.1, 0.5)} {P(-0.14, 0.06)} M{P(0.06, 0.96)} Q{P(0.1, 0.5)} {P(0.14, 0.04)} '
-                       f'M{P(-0.27, 0.16)} Q{P(0.0, 0.11)} {P(0.29, 0.16)}" stroke="#fff" stroke-width="{f(lw * 0.35)}" fill="none"/>')
+            out.append(recortar(fa, f'<path d="M{P(-0.05, 0.96)} Q{P(-0.1, 0.5)} {P(-0.14, 0.06)} M{P(0.06, 0.96)} Q{P(0.1, 0.5)} {P(0.14, 0.04)} '
+                                    f'M{P(-0.32, 0.16)} Q{P(0.0, 0.11)} {P(0.34, 0.16)}" stroke="#fff" stroke-width="{f(lw * 0.35)}" fill="none"/>'))
         out.append(f'<path d="{pa}" fill="#000" stroke="#000" stroke-width="{f(lw * 0.6)}" stroke-linejoin="round"/>')
         if det:
             xa, ya, xc, yc, xb, yb = borde_pa
-            out.append(f'<path d="M{P(xa + 0.08, ya + 0.38)} Q{P(xa + 0.1, ya + 0.15)} {P(xa + 0.14, ya + 0.0)} '
-                       f'M{P(xb - 0.05, yb + 0.33)} Q{P(xb - 0.08, yb + 0.15)} {P(xb - 0.1, yb + 0.02)}" stroke="#fff" stroke-width="{f(lw * 0.45)}" fill="none"/>')
-            out.append(flecos(xa, ya, xc, yc, xb, yb, 14, '#000'))
+            out.append(recortar(pa, f'<path d="M{P(xa + 0.08, ya + 0.38)} Q{P(xa + 0.1, ya + 0.15)} {P(xa + 0.14, ya + 0.0)} '
+                                    f'M{P(xb - 0.05, yb + 0.33)} Q{P(xb - 0.08, yb + 0.15)} {P(xb - 0.1, yb + 0.02)}" stroke="#fff" stroke-width="{f(lw * 0.45)}" fill="none"/>'))
+            out.append(flecos(xa, ya, xc, yc, xb, yb, 7, '#000'))
         for mx, my in manos:
             out.append(f'<ellipse cx="{P(mx, my).split(",")[0]}" cy="{P(mx, my).split(",")[1]}" rx="{f(0.032 * k * m)}" ry="{f(0.036 * k * m)}" fill="{lav("piel", m)}" stroke="#000" stroke-width="{f(lw * 0.5)}"/>')
         out.append(cabeza(y_cab))
@@ -1137,7 +1150,7 @@ def persona(x, base, m, sw, tipo='hombre', espejo=False, k=1.0, sombrero='negro'
         if lleva == 'canasto':
             cv = f'M{P(0.1, 0.96)} L{P(0.44, 0.96)} L{P(0.4, 0.74)} L{P(0.14, 0.74)} Z'
             out.append(f'<path d="M{P(0.12, 0.96)} Q{P(0.2, 1.2)} {P(0.42, 0.96)}" stroke="#000" stroke-width="{f(lw * 0.7)}" fill="none"/>')
-            out.append(f'<path d="{cv}" fill="{lav("paja", m)}" stroke="#000" stroke-width="{f(lw * 0.7)}"/><path d="{cv}" fill="url(#t-vert)"/>')
+            out.append(f'<path d="{cv}" fill="{lav("paja", m)}" stroke="#000" stroke-width="{f(lw * 0.7)}"/>')
             out.append(f'<path d="M{P(0.12, 0.89)} L{P(0.42, 0.89)} M{P(0.13, 0.82)} L{P(0.41, 0.82)}" stroke="#000" stroke-width="{f(lw * 0.45)}"/>')
         elif lleva == 'paraguas':
             # paraguas negro abierto contra el sol del mercado (Hernán Díaz, BanRep)
@@ -1165,7 +1178,7 @@ def mula(x, base, m, sw, espejo=False, pelaje='pelaje-castano', carga=True):
 
     def pata(d, lejos_):
         return (f'<path d="{d}" fill="{pelo}" stroke="#000" stroke-width="{f(sw * 0.6)}" stroke-linejoin="round"/>'
-                f'<path d="{d}" fill="url(#{"t-media" if lejos_ else "t-fina"})"/>')
+                f'<path d="{d}" {SOMBRA if lejos_ else SOMBRA_SUAVE}/>')
 
     def casco(xc):
         return f'<path d="M{P(xc - 0.045, 0.07)} L{P(xc + 0.05, 0.07)} L{P(xc + 0.065, 0)} L{P(xc - 0.06, 0)} Z" fill="#000"/>'
@@ -1185,7 +1198,7 @@ def mula(x, base, m, sw, espejo=False, pelaje='pelaje-castano', carga=True):
     orejas = (f'M{P(0.9, 1.67)} Q{P(0.8, 1.84)} {P(0.82, 1.98)} Q{P(0.93, 1.87)} {P(0.98, 1.69)} Z '
               f'M{P(0.98, 1.7)} Q{P(0.96, 1.88)} {P(1.02, 1.99)} Q{P(1.07, 1.85)} {P(1.05, 1.67)} Z')
     for d in (orejas, cuello, cuerpo, cabeza):
-        out.append(f'<path d="{d}" fill="{pelo}" stroke="#000" stroke-width="{f(sw * 0.7)}" stroke-linejoin="round"/><path d="{d}" fill="url(#t-fina)"/>')
+        out.append(f'<path d="{d}" fill="{pelo}" stroke="#000" stroke-width="{f(sw * 0.7)}" stroke-linejoin="round"/><path d="{d}" {SOMBRA_SUAVE}/>')
     # crin corta, ojo, ollar y jáquima
     out.append(f'<path d="M{P(0.42, 1.33)} Q{P(0.7, 1.56)} {P(0.9, 1.68)} L{P(0.88, 1.73)} Q{P(0.68, 1.61)} {P(0.4, 1.38)} Z" fill="#000"/>')
     out.append(f'<circle cx="{P(1.08, 1.55).split(",")[0]}" cy="{P(1.08, 1.55).split(",")[1]}" r="{f(0.028 * m)}" fill="#fff"/>')
@@ -1198,8 +1211,8 @@ def mula(x, base, m, sw, espejo=False, pelaje='pelaje-castano', carga=True):
         enjalma = f'M{P(-0.44, 1.27)} Q{P(0.0, 1.42)} {P(0.43, 1.32)} L{P(0.4, 1.16)} Q{P(0.0, 1.22)} {P(-0.42, 1.12)} Z'
         bulto = f'M{P(-0.3, 1.36)} Q{P(-0.32, 1.6)} {P(0.0, 1.62)} Q{P(0.34, 1.6)} {P(0.32, 1.38)} Z'
         costal_ = f'M{P(-0.36, 1.24)} Q{P(-0.44, 0.96)} {P(-0.28, 0.84)} L{P(0.27, 0.86)} Q{P(0.4, 0.98)} {P(0.31, 1.26)} Z'
-        for d, tono, tr in ((enjalma, 'lana-gris', 't-horiz'), (bulto, 'lana-cruda', 't-fina'), (costal_, 'paja', 't-tejido')):
-            out.append(f'<path d="{d}" fill="{lav(tono, m)}" stroke="#000" stroke-width="{f(sw * 0.7)}" stroke-linejoin="round"/><path d="{d}" fill="url(#{tr})"/>')
+        for d, tono in ((enjalma, 'lana-gris'), (bulto, 'lana-cruda'), (costal_, 'paja')):
+            out.append(f'<path d="{d}" fill="{lav(tono, m)}" stroke="#000" stroke-width="{f(sw * 0.7)}" stroke-linejoin="round"/>')
         # sogas: cincha y amarres en cruz
         out.append(f'<path d="M{P(0.08, 1.6)} L{P(0.12, 0.8)} M{P(-0.3, 1.2)} L{P(0.26, 0.9)} M{P(-0.3, 0.9)} L{P(0.28, 1.2)} '
                    f'M{P(-0.28, 1.5)} Q{P(0.0, 1.44)} {P(0.3, 1.5)}" stroke="#000" stroke-width="{f(sw * 0.75)}" fill="none"/>')
@@ -1214,7 +1227,7 @@ def tejado_lejos(x0, x1, y_alero, y_cumbre, m, sw, rnd, cuatro_aguas=False):
     a, b = x0 - vuelo, x1 + vuelo
     lim = 0.9 * m if cuatro_aguas else 0.05 * m
     forma = [(a, y_alero), (b, y_alero), (b - lim, y_cumbre), (a + lim, y_cumbre)]
-    out = [f'<polygon points="{pts(forma)}" fill="{lav("teja", m)}"/>', f'<polygon points="{pts(forma)}" fill="url(#t-fina)"/>']
+    out = [f'<polygon points="{pts(forma)}" fill="{lav("teja", m)}"/>', f'<polygon points="{pts(forma)}" {SOMBRA_SUAVE}/>']
     paso, canales, x = 0.26 * m, [], a + 0.13 * m
     while x < b:
         tope = y_cumbre
@@ -1223,20 +1236,19 @@ def tejado_lejos(x0, x1, y_alero, y_cumbre, m, sw, rnd, cuatro_aguas=False):
         elif x > b - lim:
             tope = y_alero + (y_cumbre - y_alero) * (b - x) / lim
         canales.append(f'M{f(x)},{f(y_alero - 0.05 * m)} L{f(x + rnd.uniform(-0.4, 0.4))},{f(tope)}')
-        x += paso
+        x += paso * rnd.uniform(3.5, 5.5)  # pocos canales: detalle, no textura
     out.append(f'<path d="{" ".join(canales)}" stroke="#000" stroke-width="{f(sw * 0.35)}"/>')
     # tejas cambiadas, musgo y matas sobre el tejado viejo
     for _ in range(int((b - a) / (3 * m)) + 1):
         tx = rnd.uniform(a + 0.5 * m, b - 0.8 * m)
         ty = rnd.uniform(y_cumbre + 0.2 * m, y_alero - 0.3 * m)
-        out.append(f'<rect x="{f(tx)}" y="{f(ty)}" width="{f(rnd.uniform(0.3, 0.7) * m)}" height="{f(0.2 * m)}" fill="url(#t-media)"/>')
+        out.append(f'<rect x="{f(tx)}" y="{f(ty)}" width="{f(rnd.uniform(0.3, 0.7) * m)}" height="{f(0.2 * m)}" {SOMBRA}/>')
     matas = []
     for _ in range(rnd.randint(1, 3)):
         mx = rnd.uniform(a + lim + 4, b - lim - 4)
         matas.append(f'M{f(mx-2)},{f(y_cumbre)} L{f(mx-1)},{f(y_cumbre-3)} M{f(mx)},{f(y_cumbre)} L{f(mx+0.4)},{f(y_cumbre-4)} M{f(mx+2)},{f(y_cumbre)} L{f(mx+1.6)},{f(y_cumbre-2.6)}')
     out.append(f'<path d="{" ".join(matas)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
-    # bocas de teja en el borde, borde del alero y caballete combado
-    out.append(f'<line x1="{f(a)}" y1="{f(y_alero - 1.2)}" x2="{f(b)}" y2="{f(y_alero - 1.2)}" stroke="#000" stroke-width="2" stroke-dasharray="2 {f(paso - 2)}"/>')
+    # borde del alero y caballete combado
     out.append(f'<polygon points="{pts(forma)}" fill="none" stroke="#000" stroke-width="{f(sw * 0.6)}"/>')
     out.append(f'<line x1="{f(a)}" y1="{f(y_alero)}" x2="{f(b)}" y2="{f(y_alero)}" stroke="#000" stroke-width="{f(sw * 1.1)}"/>')
     out.append(f'<path d="M{f(a + lim)},{f(y_cumbre)} Q{f((a + b) / 2)},{f(y_cumbre + 0.5)} {f(b - lim)},{f(y_cumbre)} '
@@ -1254,16 +1266,12 @@ def huecos_lejos(x0, y_piso, m, sw, color, puertas, ventanas):
         if abierta:
             # interior en penumbra con las hojas abiertas contra el vano
             out.append(f'<rect x="{f(px)}" y="{f(py)}" width="{f(pw)}" height="{f(ph)}" fill="{lav("madera", m)}"/>'
-                       f'<rect x="{f(px)}" y="{f(py)}" width="{f(pw)}" height="{f(ph)}" fill="url(#t-densa)"/>')
+                       f'<rect x="{f(px)}" y="{f(py)}" width="{f(pw)}" height="{f(ph)}" {SOMBRA_HONDA}/>')
             hoja = min(0.22 * m, pw * 0.2)
             for hx in (px, px + pw - hoja):
                 out.append(f'<rect x="{f(hx)}" y="{f(py)}" width="{f(hoja)}" height="{f(ph)}" fill="{color or lav("madera", m)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
-                if not color:
-                    out.append(f'<rect x="{f(hx)}" y="{f(py)}" width="{f(hoja)}" height="{f(ph)}" fill="url(#t-madera-v)"/>')
         else:
             out.append(f'<rect x="{f(px)}" y="{f(py)}" width="{f(pw)}" height="{f(ph)}" fill="{color or lav("madera", m)}"/>')
-            if not color:
-                out.append(f'<rect x="{f(px)}" y="{f(py)}" width="{f(pw)}" height="{f(ph)}" fill="url(#t-madera-v)"/>')
             out.append(f'<line x1="{f(px + pw / 2)}" y1="{f(py)}" x2="{f(px + pw / 2)}" y2="{f(y_piso)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
         out.append(f'<rect x="{f(px)}" y="{f(py)}" width="{f(pw)}" height="{f(ph)}" fill="none" stroke="#000" stroke-width="{f(sw * 0.8)}"/>')
         out.append(f'<rect x="{f(px - 0.08 * m)}" y="{f(py - 0.1 * m)}" width="{f(pw + 0.16 * m)}" height="{f(0.1 * m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
@@ -1271,18 +1279,16 @@ def huecos_lejos(x0, y_piso, m, sw, color, puertas, ventanas):
         wx, ww, wh = x0 + pos * m, an * m, al * m
         wy = y_piso - (alf + al) * m
         out.append(f'<rect x="{f(wx)}" y="{f(wy)}" width="{f(ww)}" height="{f(wh)}" fill="{lav("madera", m)}"/>'
-                   f'<rect x="{f(wx)}" y="{f(wy)}" width="{f(ww)}" height="{f(wh)}" fill="url(#t-densa)"/>')
+                   f'<rect x="{f(wx)}" y="{f(wy)}" width="{f(ww)}" height="{f(wh)}" {SOMBRA_HONDA}/>')
         barrotes, bx = [], wx + 0.12 * m
         while bx < wx + ww - 0.05 * m:
             barrotes.append(f'M{f(bx)},{f(wy)} L{f(bx)},{f(wy + wh)}')
-            bx += 0.13 * m
+            bx += 0.32 * m
         out.append(f'<path d="{" ".join(barrotes)}" stroke="#fff" stroke-width="{f(sw * 0.7)}"/>')
         out.append(f'<rect x="{f(wx)}" y="{f(wy)}" width="{f(ww)}" height="{f(wh)}" fill="none" stroke="#000" stroke-width="{f(sw * 0.8)}"/>')
         pw = ww * 0.42
         for hx in (wx - pw, wx + ww):
             out.append(f'<rect x="{f(hx)}" y="{f(wy)}" width="{f(pw)}" height="{f(wh)}" fill="{color or lav("madera", m)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
-            if not color:
-                out.append(f'<rect x="{f(hx)}" y="{f(wy)}" width="{f(pw)}" height="{f(wh)}" fill="url(#t-madera-v)"/>')
         out.append(f'<rect x="{f(wx - 0.06 * m)}" y="{f(wy + wh)}" width="{f(ww + 0.12 * m)}" height="{f(0.07 * m)}" fill="{lav("cal", m)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
     return ''.join(out)
 
@@ -1302,7 +1308,7 @@ def zocalo_lejos(x0, x1, y_piso, m, sw, rnd, color):
     zy = y_piso - 0.8 * m
     out = [f'<rect x="{f(x0)}" y="{f(zy)}" width="{f(x1 - x0)}" height="{f(0.8 * m)}" fill="{color or lav("tapia", m)}"/>']
     if not color:
-        out.append(f'<rect x="{f(x0)}" y="{f(zy)}" width="{f(x1 - x0)}" height="{f(0.8 * m)}" fill="url(#t-fina)"/>')
+        out.append(f'<rect x="{f(x0)}" y="{f(zy)}" width="{f(x1 - x0)}" height="{f(0.8 * m)}" {SOMBRA_SUAVE}/>')
     borde, x = f'M{f(x0)},{f(zy)}', x0
     while x < x1:
         x = min(x1, x + rnd.uniform(0.4, 0.9) * m)
@@ -1320,13 +1326,13 @@ def casa_lejos(x0, w_m, base, rnd, muro_m=3.0, techo_m=1.3, corredor=True, color
     y_piso = base - (0.25 * m if corredor else 0)
     out = [muro_lejos(x0, x1, y_alero, y_piso, m, sw, rnd)]
     if corredor:
-        out.append(f'<rect x="{f(x0)}" y="{f(y_alero)}" width="{f(x1 - x0)}" height="{f(y_piso - y_alero)}" fill="url(#t-fina)"/>')
+        out.append(f'<rect x="{f(x0)}" y="{f(y_alero)}" width="{f(x1 - x0)}" height="{f(y_piso - y_alero)}" {SOMBRA_SUAVE}/>')
     out.append(zocalo_lejos(x0, x1, y_piso, m, sw, rnd, color))
     out.append(huecos_lejos(x0, y_piso, m, sw, color, puertas, ventanas))
     out.append(encima)
     if corredor:
         y_viga = y_alero + 0.34 * m
-        out.append(f'<rect x="{f(x0)}" y="{f(y_alero)}" width="{f(x1 - x0)}" height="{f(0.22 * m)}" fill="url(#t-densa)"/>')
+        out.append(f'<rect x="{f(x0)}" y="{f(y_alero)}" width="{f(x1 - x0)}" height="{f(0.22 * m)}" {SOMBRA_HONDA}/>')
         out.append(f'<rect x="{f(x0)}" y="{f(y_alero + 0.22 * m)}" width="{f(x1 - x0)}" height="{f(0.12 * m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>')
         n = max(2, round(w_m / 2.7))
         for xp in pilares or [x0 + 0.15 * m + (x1 - x0 - 0.3 * m) * i / n for i in range(n + 1)]:
@@ -1335,9 +1341,9 @@ def casa_lejos(x0, w_m, base, rnd, muro_m=3.0, techo_m=1.3, corredor=True, color
             out.append(f'<path d="M{f(xp - 0.17 * m)},{f(y_piso)} L{f(xp - 0.14 * m)},{f(y_piso - 0.28 * m)} L{f(xp + 0.14 * m)},{f(y_piso - 0.28 * m)} L{f(xp + 0.17 * m)},{f(y_piso)} Z" fill="{lav("piedra", m)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
             out.append(f'<line x1="{f(xp - 0.3 * m)}" y1="{f(y_viga + 0.5)}" x2="{f(xp + 0.3 * m)}" y2="{f(y_viga + 0.5)}" stroke="#000" stroke-width="{f(sw * 1.2)}"/>')
         out.append(f'<rect x="{f(x0)}" y="{f(y_piso)}" width="{f(x1 - x0)}" height="{f(base - y_piso)}" fill="{lav("piedra", m)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>'
-                   f'<rect x="{f(x0)}" y="{f(y_piso + 0.1 * m)}" width="{f(x1 - x0)}" height="{f(base - y_piso - 0.1 * m)}" fill="url(#t-media)"/>')
+                   f'<rect x="{f(x0)}" y="{f(y_piso + 0.1 * m)}" width="{f(x1 - x0)}" height="{f(base - y_piso - 0.1 * m)}" {SOMBRA}/>')
     else:
-        out.append(f'<rect x="{f(x0)}" y="{f(y_alero)}" width="{f(x1 - x0)}" height="{f(0.3 * m)}" fill="url(#t-media)"/>')
+        out.append(f'<rect x="{f(x0)}" y="{f(y_alero)}" width="{f(x1 - x0)}" height="{f(0.3 * m)}" {SOMBRA}/>')
     out.append(tejado_lejos(x0, x1, y_alero, y_alero - techo_m * m, m, sw, rnd, cuatro_aguas))
     for xx in (x0, x1):
         out.append(f'<line x1="{f(xx)}" y1="{f(y_alero)}" x2="{f(xx)}" y2="{f(base)}" stroke="#000" stroke-width="{f(sw * 1.1)}"/>')
@@ -1354,16 +1360,15 @@ def casa_balcon_lejos(x0, w_m, base, rnd, color=None, puertas=(), ventanas=()):
     out = [muro_lejos(x0, x1, y_alero, base, m, sw, rnd), zocalo_lejos(x0, x1, base, m, sw, rnd, color),
            huecos_lejos(x0, base, m, sw, color, puertas, ventanas)]
     # sombra del balcón sobre el primer piso
-    out.append(f'<rect x="{f(bx0)}" y="{f(y_bal)}" width="{f(bx1 - bx0)}" height="{f(0.35 * m)}" fill="url(#t-media)"/>')
+    out.append(f'<rect x="{f(bx0)}" y="{f(y_bal)}" width="{f(bx1 - bx0)}" height="{f(0.35 * m)}" {SOMBRA}/>')
     # puertas del segundo piso que dan al balcón
     n = max(2, round((bx1 - bx0) / (2.6 * m)))
     for i in range(n):
         px = bx0 + (bx1 - bx0) * (i + 0.5) / n - 0.45 * m
         out.append(f'<rect x="{f(px)}" y="{f(y_bal - 2.15 * m)}" width="{f(0.9 * m)}" height="{f(2.15 * m)}" fill="{lav("madera", m)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>'
-                   f'<rect x="{f(px)}" y="{f(y_bal - 2.15 * m)}" width="{f(0.9 * m)}" height="{f(2.15 * m)}" fill="url(#t-densa)"/>')
+                   f'<rect x="{f(px)}" y="{f(y_bal - 2.15 * m)}" width="{f(0.9 * m)}" height="{f(2.15 * m)}" {SOMBRA_HONDA}/>')
     # piso del balcón con canes, baranda de balaústres y pies derechos hasta el alero
-    out.append(f'<rect x="{f(bx0 - 0.15 * m)}" y="{f(y_bal)}" width="{f(bx1 - bx0 + 0.3 * m)}" height="{f(0.16 * m)}" fill="{lav("madera", m)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>'
-               f'<rect x="{f(bx0 - 0.15 * m)}" y="{f(y_bal)}" width="{f(bx1 - bx0 + 0.3 * m)}" height="{f(0.16 * m)}" fill="url(#t-madera)"/>')
+    out.append(f'<rect x="{f(bx0 - 0.15 * m)}" y="{f(y_bal)}" width="{f(bx1 - bx0 + 0.3 * m)}" height="{f(0.16 * m)}" fill="{lav("madera", m)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>')
     cx = bx0
     while cx <= bx1:
         out.append(f'<path d="M{f(cx - 0.08 * m)},{f(y_bal + 0.16 * m)} L{f(cx + 0.08 * m)},{f(y_bal + 0.16 * m)} L{f(cx)},{f(y_bal + 0.42 * m)} Z" fill="{lav("madera", m)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
@@ -1371,13 +1376,13 @@ def casa_balcon_lejos(x0, w_m, base, rnd, color=None, puertas=(), ventanas=()):
     bal, bx = [], bx0 + 0.08 * m
     while bx < bx1 - 0.05 * m:
         bal.append(f'<rect x="{f(bx)}" y="{f(y_bal - 0.9 * m)}" width="{f(0.055 * m)}" height="{f(0.9 * m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw * 0.3)}"/>')
-        bx += 0.16 * m
+        bx += 0.34 * m
     out.extend(bal)
     out.append(f'<rect x="{f(bx0 - 0.1 * m)}" y="{f(y_bal - 0.98 * m)}" width="{f(bx1 - bx0 + 0.2 * m)}" height="{f(0.1 * m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>')
     for i in range(n + 1):
         px = bx0 + (bx1 - bx0) * i / n
         out.append(f'<rect x="{f(px - 0.08 * m)}" y="{f(y_alero + 0.3 * m)}" width="{f(0.16 * m)}" height="{f(y_bal - y_alero - 0.3 * m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>')
-    out.append(f'<rect x="{f(x0)}" y="{f(y_alero)}" width="{f(x1 - x0)}" height="{f(0.3 * m)}" fill="url(#t-densa)"/>')
+    out.append(f'<rect x="{f(x0)}" y="{f(y_alero)}" width="{f(x1 - x0)}" height="{f(0.3 * m)}" {SOMBRA_HONDA}/>')
     out.append(tejado_lejos(x0, x1, y_alero, y_alero - 1.3 * m, m, sw, rnd))
     for xx in (x0, x1):
         out.append(f'<line x1="{f(xx)}" y1="{f(y_alero)}" x2="{f(xx)}" y2="{f(base)}" stroke="#000" stroke-width="{f(sw * 1.1)}"/>')
@@ -1392,18 +1397,17 @@ def calle_lejos(x0, w_m, base, rnd):
     id_clip = f'c-calle-{int(x0)}'
     out = [f'<clipPath id="{id_clip}"><rect x="{f(x0)}" y="0" width="{f(W)}" height="{f(base)}"/></clipPath>',
            f'<g clip-path="url(#{id_clip})">',
-           f'<rect x="{f(x0)}" y="{f(base2)}" width="{f(W)}" height="{f(base - base2)}" fill="{lav("tierra", m2)}"/>',
-           f'<rect x="{f(x0)}" y="{f(base2)}" width="{f(W)}" height="{f(base - base2)}" fill="url(#t-puntos-ralos)"/>']
+           f'<rect x="{f(x0)}" y="{f(base2)}" width="{f(W)}" height="{f(base - base2)}" fill="{lav("tierra", m2)}"/>']
     x = x0 - rnd.uniform(0.5, 2) * m2
     while x < x0 + W:
         cw, alto = rnd.uniform(3.5, 6) * m2, rnd.uniform(2.7, 3.3) * m2
         ya = base2 - alto
         out.append(f'<rect x="{f(x)}" y="{f(ya)}" width="{f(cw)}" height="{f(alto)}" fill="{lav("cal", m2)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>')
-        out.append(f'<rect x="{f(x + cw * 0.3)}" y="{f(base2 - 2 * m2)}" width="{f(m2)}" height="{f(2 * m2)}" fill="url(#t-cruz)" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
-        out.append(f'<rect x="{f(x + cw * 0.65)}" y="{f(base2 - 1.9 * m2)}" width="{f(0.8 * m2)}" height="{f(0.9 * m2)}" fill="url(#t-cruz)" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
-        out.append(f'<rect x="{f(x)}" y="{f(ya)}" width="{f(cw)}" height="{f(0.25 * m2)}" fill="url(#t-media)"/>')
+        out.append(f'<rect x="{f(x + cw * 0.3)}" y="{f(base2 - 2 * m2)}" width="{f(m2)}" height="{f(2 * m2)}" {SOMBRA_FUERTE} stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
+        out.append(f'<rect x="{f(x + cw * 0.65)}" y="{f(base2 - 1.9 * m2)}" width="{f(0.8 * m2)}" height="{f(0.9 * m2)}" {SOMBRA_FUERTE} stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
+        out.append(f'<rect x="{f(x)}" y="{f(ya)}" width="{f(cw)}" height="{f(0.25 * m2)}" {SOMBRA}/>')
         techo = [(x - 0.2 * m2, ya), (x + cw + 0.2 * m2, ya), (x + cw + 0.1 * m2, ya - 1.1 * m2), (x - 0.1 * m2, ya - 1.1 * m2)]
-        out.append(f'<polygon points="{pts(techo)}" fill="{lav("teja", m2)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/><polygon points="{pts(techo)}" fill="url(#t-fina)"/>')
+        out.append(f'<polygon points="{pts(techo)}" fill="{lav("teja", m2)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/><polygon points="{pts(techo)}" {SOMBRA_SUAVE}/>')
         x += cw
     out.append('</g>')
     # esquinas de las casas que forman la boca de la calle
@@ -1448,41 +1452,38 @@ def iglesia():
     cal, piedra_ = lav('cal', m), lav('piedra', m, 0.8)
     out.append(f'<polygon points="{pts(remate)}" fill="{cal}"/>')
     out.append(f'<polygon points="{pts(fachada)}" fill="{cal}" stroke="#000" stroke-width="{f(sw)}"/>')
-    out.append(f'<rect x="{f(fx0)}" y="{f(y_atrio - 0.6 * m)}" width="{f(fx1 - fx0)}" height="{f(0.6 * m)}" fill="url(#t-puntos-ralos)"/>')
     # pilastras de esquina con su canto en sombra
     for px in (fx0, fx1 - 0.6 * m):
         out.append(f'<rect x="{f(px)}" y="{f(y_cornisa)}" width="{f(0.6 * m)}" height="{f(y_atrio - y_cornisa)}" fill="none" stroke="#000" stroke-width="{f(sw * 0.6)}"/>'
-                   f'<rect x="{f(px + 0.42 * m)}" y="{f(y_cornisa)}" width="{f(0.18 * m)}" height="{f(y_atrio - y_cornisa)}" fill="url(#t-fina)"/>')
+                   f'<rect x="{f(px + 0.42 * m)}" y="{f(y_cornisa)}" width="{f(0.18 * m)}" height="{f(y_atrio - y_cornisa)}" {SOMBRA_SUAVE}/>')
     # grietas y desconchados de la cal
     out.append(muro_lejos(fx0 + 0.7 * m, fx1 - 0.7 * m, y_cornisa + 0.5 * m, y_atrio, m, sw, rnd, fondo=False))
     # cornisa y frontón con su sombra
     out.append(f'<rect x="{f(fx0 - 0.25 * m)}" y="{f(y_cornisa - 0.35 * m)}" width="{f(fx1 - fx0 + 0.5 * m)}" height="{f(0.35 * m)}" fill="{cal}" stroke="#000" stroke-width="{f(sw * 0.8)}"/>'
-               f'<rect x="{f(fx0)}" y="{f(y_cornisa)}" width="{f(fx1 - fx0)}" height="{f(0.18 * m)}" fill="url(#t-media)"/>')
+               f'<rect x="{f(fx0)}" y="{f(y_cornisa)}" width="{f(fx1 - fx0)}" height="{f(0.18 * m)}" {SOMBRA}/>')
     out.append(f'<path d="M{f(fx0 - 0.25 * m)},{f(y_cornisa - 0.35 * m)} L{f(cx)},{f(y_pico - 0.4 * m)} L{f(fx1 + 0.25 * m)},{f(y_cornisa - 0.35 * m)}" stroke="#000" stroke-width="{f(sw * 1.2)}" fill="none"/>'
                f'<path d="M{f(fx0 + 0.3 * m)},{f(y_cornisa - 0.35 * m)} L{f(cx)},{f(y_pico - 0.05 * m)} L{f(fx1 - 0.3 * m)},{f(y_cornisa - 0.35 * m)}" stroke="#000" stroke-width="{f(sw * 0.6)}" fill="none"/>')
     # óculo del frontón y cruz de remate
     out.append(f'<circle cx="{f(cx)}" cy="{f(y_cornisa - 1.15 * m)}" r="{f(0.32 * m)}" fill="{piedra_}" stroke="#000" stroke-width="{f(sw * 0.8)}"/>'
-               f'<circle cx="{f(cx)}" cy="{f(y_cornisa - 1.15 * m)}" r="{f(0.22 * m)}" fill="url(#t-densa)"/>')
+               f'<circle cx="{f(cx)}" cy="{f(y_cornisa - 1.15 * m)}" r="{f(0.22 * m)}" {SOMBRA_HONDA}/>')
     out.append(f'<rect x="{f(cx - 0.3 * m)}" y="{f(y_pico - 0.6 * m)}" width="{f(0.6 * m)}" height="{f(0.25 * m)}" fill="{piedra_}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>'
                f'<path d="M{f(cx)},{f(y_pico - 0.6 * m)} L{f(cx)},{f(y_pico - 2.0 * m)} M{f(cx - 0.4 * m)},{f(y_pico - 1.55 * m)} L{f(cx + 0.4 * m)},{f(y_pico - 1.55 * m)}" stroke="#000" stroke-width="{f(sw * 1.8)}"/>')
     # --- portada de piedra: arco de medio punto entre pilastras, entablamento y hornacina
     pw, pr = 2.4 * m, 1.2 * m
     y_arranque = y_atrio - 3.0 * m
     piedra = f'fill="{piedra_}" stroke="#000"'
-    out.append(f'<rect x="{f(cx - 2.6 * m)}" y="{f(y_atrio - 5.6 * m)}" width="{f(5.2 * m)}" height="{f(5.6 * m)}" fill="{lav("piedra", m, 0.6)}"/>'
-               f'<rect x="{f(cx - 2.6 * m)}" y="{f(y_atrio - 5.6 * m)}" width="{f(5.2 * m)}" height="{f(5.6 * m)}" fill="url(#t-puntos-ralos)"/>')
+    out.append(f'<rect x="{f(cx - 2.6 * m)}" y="{f(y_atrio - 5.6 * m)}" width="{f(5.2 * m)}" height="{f(5.6 * m)}" fill="{lav("piedra", m, 0.6)}"/>')
     for sx in (-1, 1):
         px = cx + sx * (pw / 2 + 0.55 * m) - 0.22 * m
         out.append(f'<rect x="{f(px)}" y="{f(y_atrio - 5.0 * m)}" width="{f(0.45 * m)}" height="{f(5.0 * m)}" {piedra} stroke-width="{f(sw * 0.7)}"/>'
                    f'<rect x="{f(px - 0.08 * m)}" y="{f(y_atrio - 5.1 * m)}" width="{f(0.61 * m)}" height="{f(0.2 * m)}" {piedra} stroke-width="{f(sw * 0.6)}"/>'
-                   f'<rect x="{f(px + 0.3 * m)}" y="{f(y_atrio - 4.9 * m)}" width="{f(0.15 * m)}" height="{f(4.9 * m)}" fill="url(#t-fina)"/>')
+                   f'<rect x="{f(px + 0.3 * m)}" y="{f(y_atrio - 4.9 * m)}" width="{f(0.15 * m)}" height="{f(4.9 * m)}" {SOMBRA_SUAVE}/>')
     arco = (f'M{f(cx - pw / 2)},{f(y_atrio)} L{f(cx - pw / 2)},{f(y_arranque)} A{f(pr)},{f(pr)} 0 0 1 {f(cx + pw / 2)},{f(y_arranque)} '
             f'L{f(cx + pw / 2)},{f(y_atrio)} Z')
-    out.append(f'<path d="{arco}" fill="{lav("madera", m)}"/><path d="{arco}" fill="url(#t-densa)"/>')
+    out.append(f'<path d="{arco}" fill="{lav("madera", m)}"/><path d="{arco}" {SOMBRA_HONDA}/>')
     # hojas de la puerta abiertas hacia adentro y dovelas del arco
     for hx in (cx - pw / 2, cx + pw / 2 - 0.35 * m):
-        out.append(f'<rect x="{f(hx)}" y="{f(y_arranque)}" width="{f(0.35 * m)}" height="{f(y_atrio - y_arranque)}" fill="{lav("madera", m)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>'
-                   f'<rect x="{f(hx)}" y="{f(y_arranque)}" width="{f(0.35 * m)}" height="{f(y_atrio - y_arranque)}" fill="url(#t-madera-v)"/>')
+        out.append(f'<rect x="{f(hx)}" y="{f(y_arranque)}" width="{f(0.35 * m)}" height="{f(y_atrio - y_arranque)}" fill="{lav("madera", m)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
     ra = pr + 0.4 * m
     out.append(f'<path d="M{f(cx - pw / 2 - 0.4 * m)},{f(y_arranque)} A{f(ra)},{f(ra)} 0 0 1 {f(cx + pw / 2 + 0.4 * m)},{f(y_arranque)} '
                f'L{f(cx + pw / 2)},{f(y_arranque)} A{f(pr)},{f(pr)} 0 0 0 {f(cx - pw / 2)},{f(y_arranque)} Z" {piedra} stroke-width="{f(sw * 0.7)}"/>')
@@ -1494,12 +1495,12 @@ def iglesia():
     out.append(f'<path d="{arco}" fill="none" stroke="#000" stroke-width="{f(sw * 0.9)}"/>')
     y_ent = y_atrio - 5.6 * m
     out.append(f'<rect x="{f(cx - 2.7 * m)}" y="{f(y_ent)}" width="{f(5.4 * m)}" height="{f(0.5 * m)}" {piedra} stroke-width="{f(sw * 0.8)}"/>'
-               f'<rect x="{f(cx - 2.6 * m)}" y="{f(y_ent + 0.5 * m)}" width="{f(5.2 * m)}" height="{f(0.12 * m)}" fill="url(#t-media)"/>')
+               f'<rect x="{f(cx - 2.6 * m)}" y="{f(y_ent + 0.5 * m)}" width="{f(5.2 * m)}" height="{f(0.12 * m)}" {SOMBRA}/>')
     # hornacina con la imagen del santo (silueta, sin rasgos) y pináculos
     hw, hh = 0.8 * m, 1.4 * m
     y_h = y_ent - 0.3 * m
     out.append(f'<path d="M{f(cx - hw / 2)},{f(y_h)} L{f(cx - hw / 2)},{f(y_h - hh + hw / 2)} A{f(hw / 2)},{f(hw / 2)} 0 0 1 {f(cx + hw / 2)},{f(y_h - hh + hw / 2)} L{f(cx + hw / 2)},{f(y_h)} Z" fill="{cal}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>'
-               f'<path d="M{f(cx - hw / 2)},{f(y_h)} L{f(cx - hw / 2)},{f(y_h - hh + hw / 2)} A{f(hw / 2)},{f(hw / 2)} 0 0 1 {f(cx + hw / 2)},{f(y_h - hh + hw / 2)} L{f(cx + hw / 2)},{f(y_h)} Z" fill="url(#t-cruz)"/>')
+               f'<path d="M{f(cx - hw / 2)},{f(y_h)} L{f(cx - hw / 2)},{f(y_h - hh + hw / 2)} A{f(hw / 2)},{f(hw / 2)} 0 0 1 {f(cx + hw / 2)},{f(y_h - hh + hw / 2)} L{f(cx + hw / 2)},{f(y_h)} Z" {SOMBRA_FUERTE}/>')
     out.append(f'<path d="M{f(cx - 0.18 * m)},{f(y_h)} L{f(cx - 0.12 * m)},{f(y_h - 0.95 * m)} L{f(cx + 0.12 * m)},{f(y_h - 0.95 * m)} L{f(cx + 0.18 * m)},{f(y_h)} Z" fill="{lav("piedra", m, 0.6)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>'
                f'<circle cx="{f(cx)}" cy="{f(y_h - 1.08 * m)}" r="{f(0.12 * m)}" fill="{lav("piedra", m, 0.6)}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>'
                f'<path d="M{f(cx - 0.2 * m)},{f(y_h - 1.1 * m)} A{f(0.2 * m)},{f(0.2 * m)} 0 0 1 {f(cx + 0.2 * m)},{f(y_h - 1.1 * m)}" stroke="#000" stroke-width="{f(sw * 0.4)}" fill="none"/>')
@@ -1510,36 +1511,34 @@ def iglesia():
     # ventana del coro
     vy = y_atrio - 9.05 * m
     out.append(f'<path d="M{f(cx - 0.5 * m)},{f(vy + 1.3 * m)} L{f(cx - 0.5 * m)},{f(vy + 0.5 * m)} A{f(0.5 * m)},{f(0.5 * m)} 0 0 1 {f(cx + 0.5 * m)},{f(vy + 0.5 * m)} L{f(cx + 0.5 * m)},{f(vy + 1.3 * m)} Z" fill="{piedra_}" stroke="#000" stroke-width="{f(sw * 0.8)}"/>'
-               f'<path d="M{f(cx - 0.4 * m)},{f(vy + 1.25 * m)} L{f(cx - 0.4 * m)},{f(vy + 0.55 * m)} A{f(0.4 * m)},{f(0.4 * m)} 0 0 1 {f(cx + 0.4 * m)},{f(vy + 0.55 * m)} L{f(cx + 0.4 * m)},{f(vy + 1.25 * m)} Z" fill="url(#t-densa)"/>'
+               f'<path d="M{f(cx - 0.4 * m)},{f(vy + 1.25 * m)} L{f(cx - 0.4 * m)},{f(vy + 0.55 * m)} A{f(0.4 * m)},{f(0.4 * m)} 0 0 1 {f(cx + 0.4 * m)},{f(vy + 0.55 * m)} L{f(cx + 0.4 * m)},{f(vy + 1.25 * m)} Z" {SOMBRA_HONDA}/>'
                f'<path d="M{f(cx)},{f(vy + 0.2 * m)} L{f(cx)},{f(vy + 1.25 * m)} M{f(cx - 0.4 * m)},{f(vy + 0.8 * m)} L{f(cx + 0.4 * m)},{f(vy + 0.8 * m)}" stroke="#fff" stroke-width="{f(sw * 0.6)}"/>')
     # --- torre: cuerpo, campanario con campana, cupulín con linterna y cruz
     y_t1 = y_atrio - 11.4 * m
     y_t2 = y_t1 - 3.1 * m
     out.append(f'<rect x="{f(tx0)}" y="{f(y_t1)}" width="{f(tx1 - tx0)}" height="{f(y_atrio - y_t1)}" fill="{cal}" stroke="#000" stroke-width="{f(sw)}"/>'
-               f'<rect x="{f(tx1 - 0.5 * m)}" y="{f(y_t1)}" width="{f(0.5 * m)}" height="{f(y_atrio - y_t1)}" fill="url(#t-fina)"/>'
-               f'<rect x="{f(tx0)}" y="{f(y_atrio - 0.6 * m)}" width="{f(tx1 - tx0)}" height="{f(0.6 * m)}" fill="url(#t-puntos-ralos)"/>')
+               f'<rect x="{f(tx1 - 0.5 * m)}" y="{f(y_t1)}" width="{f(0.5 * m)}" height="{f(y_atrio - y_t1)}" {SOMBRA_SUAVE}/>')
     for yy in (y_atrio - 6.0 * m, y_t1 + 0.3 * m):
         out.append(f'<rect x="{f(tx0 - 0.15 * m)}" y="{f(yy - 0.3 * m)}" width="{f(tx1 - tx0 + 0.3 * m)}" height="{f(0.3 * m)}" fill="{cal}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>'
-                   f'<rect x="{f(tx0)}" y="{f(yy)}" width="{f(tx1 - tx0)}" height="{f(0.14 * m)}" fill="url(#t-media)"/>')
+                   f'<rect x="{f(tx0)}" y="{f(yy)}" width="{f(tx1 - tx0)}" height="{f(0.14 * m)}" {SOMBRA}/>')
     tcx = (tx0 + tx1) / 2
     out.append(f'<rect x="{f(tcx - 0.45 * m)}" y="{f(y_atrio - 1.95 * m)}" width="{f(0.9 * m)}" height="{f(1.95 * m)}" fill="{lav("madera", m)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>'
-               f'<rect x="{f(tcx - 0.45 * m)}" y="{f(y_atrio - 1.95 * m)}" width="{f(0.9 * m)}" height="{f(1.95 * m)}" fill="url(#t-madera-v)"/>'
-               f'<rect x="{f(tcx - 0.1 * m)}" y="{f(y_atrio - 4.6 * m)}" width="{f(0.2 * m)}" height="{f(0.9 * m)}" fill="url(#t-densa)" stroke="#000" stroke-width="{f(sw * 0.5)}"/>'
-               f'<rect x="{f(tcx - 0.35 * m)}" y="{f(y_atrio - 9.4 * m)}" width="{f(0.7 * m)}" height="{f(1.1 * m)}" fill="url(#t-densa)" stroke="#000" stroke-width="{f(sw * 0.6)}"/>')
+               f'<rect x="{f(tcx - 0.1 * m)}" y="{f(y_atrio - 4.6 * m)}" width="{f(0.2 * m)}" height="{f(0.9 * m)}" {SOMBRA_HONDA} stroke="#000" stroke-width="{f(sw * 0.5)}"/>'
+               f'<rect x="{f(tcx - 0.35 * m)}" y="{f(y_atrio - 9.4 * m)}" width="{f(0.7 * m)}" height="{f(1.1 * m)}" {SOMBRA_HONDA} stroke="#000" stroke-width="{f(sw * 0.6)}"/>')
     # campanario
     out.append(f'<rect x="{f(tx0 + 0.1 * m)}" y="{f(y_t2)}" width="{f(tx1 - tx0 - 0.2 * m)}" height="{f(y_t1 - y_t2)}" fill="{cal}" stroke="#000" stroke-width="{f(sw)}"/>'
-               f'<rect x="{f(tx1 - 0.6 * m)}" y="{f(y_t2)}" width="{f(0.5 * m)}" height="{f(y_t1 - y_t2)}" fill="url(#t-fina)"/>')
+               f'<rect x="{f(tx1 - 0.6 * m)}" y="{f(y_t2)}" width="{f(0.5 * m)}" height="{f(y_t1 - y_t2)}" {SOMBRA_SUAVE}/>')
     aw, ar = 2.0 * m, 1.0 * m
     y_arr = y_t1 - 0.3 * m - 1.3 * m
     vano = f'M{f(tcx - aw / 2)},{f(y_t1 - 0.3 * m)} L{f(tcx - aw / 2)},{f(y_arr)} A{f(ar)},{f(ar)} 0 0 1 {f(tcx + aw / 2)},{f(y_arr)} L{f(tcx + aw / 2)},{f(y_t1 - 0.3 * m)} Z'
-    out.append(f'<path d="{vano}" fill="{lav("madera", m)}"/><path d="{vano}" fill="url(#t-densa)"/><path d="{vano}" fill="none" stroke="#000" stroke-width="{f(sw * 0.8)}"/>')
+    out.append(f'<path d="{vano}" fill="{lav("madera", m)}"/><path d="{vano}" {SOMBRA_HONDA}/><path d="{vano}" fill="none" stroke="#000" stroke-width="{f(sw * 0.8)}"/>')
     yb = y_arr - 0.55 * m
     campana = (f'M{f(tcx - 0.12 * m)},{f(yb)} Q{f(tcx - 0.3 * m)},{f(yb + 0.1 * m)} {f(tcx - 0.32 * m)},{f(yb + 0.7 * m)} L{f(tcx - 0.45 * m)},{f(yb + 0.9 * m)} '
                f'L{f(tcx + 0.45 * m)},{f(yb + 0.9 * m)} L{f(tcx + 0.32 * m)},{f(yb + 0.7 * m)} Q{f(tcx + 0.3 * m)},{f(yb + 0.1 * m)} {f(tcx + 0.12 * m)},{f(yb)} Z')
     out.append(f'<path d="M{f(tcx - aw / 2)},{f(yb - 0.08 * m)} L{f(tcx + aw / 2)},{f(yb - 0.08 * m)}" stroke="#000" stroke-width="{f(sw * 1.2)}"/>'
                f'<path d="{campana}" fill="#000" stroke="#fff" stroke-width="{f(sw * 0.4)}"/>')
     out.append(f'<rect x="{f(tx0 - 0.2 * m)}" y="{f(y_t2 - 0.35 * m)}" width="{f(tx1 - tx0 + 0.4 * m)}" height="{f(0.35 * m)}" fill="{cal}" stroke="#000" stroke-width="{f(sw * 0.8)}"/>'
-               f'<rect x="{f(tx0 + 0.1 * m)}" y="{f(y_t2)}" width="{f(tx1 - tx0 - 0.2 * m)}" height="{f(0.15 * m)}" fill="url(#t-media)"/>')
+               f'<rect x="{f(tx0 + 0.1 * m)}" y="{f(y_t2)}" width="{f(tx1 - tx0 - 0.2 * m)}" height="{f(0.15 * m)}" {SOMBRA}/>')
     for px in (tx0 + 0.1 * m, tx1 - 0.1 * m):
         out.append(f'<path d="M{f(px - 0.12 * m)},{f(y_t2 - 0.35 * m)} L{f(px - 0.08 * m)},{f(y_t2 - 0.75 * m)} L{f(px + 0.08 * m)},{f(y_t2 - 0.75 * m)} L{f(px + 0.12 * m)},{f(y_t2 - 0.35 * m)} Z" fill="{piedra_}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>'
                    f'<circle cx="{f(px)}" cy="{f(y_t2 - 0.9 * m)}" r="{f(0.16 * m)}" fill="{piedra_}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
@@ -1549,7 +1548,7 @@ def iglesia():
     rw, rh = (tx1 - tx0) / 2 - 0.7 * m, 1.25 * m
     y_c = y_tam - 0.45 * m
     cupula = f'M{f(tcx - rw)},{f(y_c)} A{f(rw)},{f(rh)} 0 0 1 {f(tcx + rw)},{f(y_c)} Z'
-    out.append(f'<path d="{cupula}" fill="{lav("teja", m)}"/><path d="{cupula}" fill="url(#t-fina)"/>')
+    out.append(f'<path d="{cupula}" fill="{lav("teja", m)}"/><path d="{cupula}" {SOMBRA_SUAVE}/>')
     meridianos = ' '.join(f'M{f(tcx + rw * u)},{f(y_c)} Q{f(tcx + rw * u * 0.85)},{f(y_c - rh * 0.8)} {f(tcx)},{f(y_c - rh)}' for u in (-0.6, -0.25, 0.25, 0.6))
     out.append(f'<path d="{meridianos}" stroke="#000" stroke-width="{f(sw * 0.45)}" fill="none"/><path d="{cupula}" fill="none" stroke="#000" stroke-width="{f(sw * 0.9)}"/>')
     y_l = y_c - rh
@@ -1558,23 +1557,22 @@ def iglesia():
                f'<path d="M{f(tcx - 0.3 * m)},{f(y_l - 0.55 * m)} Q{f(tcx)},{f(y_l - 0.95 * m)} {f(tcx + 0.3 * m)},{f(y_l - 0.55 * m)} Z" fill="{lav("teja", m)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>'
                f'<path d="M{f(tcx)},{f(y_l - 0.85 * m)} L{f(tcx)},{f(y_l - 2.1 * m)} M{f(tcx - 0.35 * m)},{f(y_l - 1.7 * m)} L{f(tcx + 0.35 * m)},{f(y_l - 1.7 * m)}" stroke="#000" stroke-width="{f(sw * 1.6)}"/>')
     # --- atrio de piedra con gradas, cruz atrial y feligreses
-    out.append(f'<rect x="0" y="{f(y_atrio)}" width="{W}" height="{f(base - y_atrio)}" fill="{lav("piedra", m)}" stroke="#000" stroke-width="{f(sw)}"/>'
-               f'<rect x="0" y="{f(y_atrio)}" width="{W}" height="{f(base - y_atrio)}" fill="url(#t-puntos-ralos)"/>')
-    juntas, yy, fila = [], y_atrio + 0.33 * m, 0
+    out.append(f'<rect x="0" y="{f(y_atrio)}" width="{W}" height="{f(base - y_atrio)}" fill="{lav("piedra", m)}" stroke="#000" stroke-width="{f(sw)}"/>')
+    juntas, yy, fila = [], y_atrio + 0.5 * m, 0
     while yy < base - 1:
         juntas.append(f'M0,{f(yy)} L{W},{f(yy)}')
-        xx = (fila % 2) * 0.5 * m
+        xx = (fila % 2) * 0.7 * m
         while xx < W:
-            juntas.append(f'M{f(xx)},{f(yy - 0.33 * m)} L{f(xx)},{f(yy)}')
-            xx += rnd.uniform(0.8, 1.3) * m
-        yy += 0.33 * m
+            juntas.append(f'M{f(xx)},{f(yy - 0.5 * m)} L{f(xx)},{f(yy)}')
+            xx += rnd.uniform(1.4, 2.2) * m
+        yy += 0.5 * m
         fila += 1
     out.append(f'<path d="{" ".join(juntas)}" stroke="#000" stroke-width="{f(sw * 0.4)}"/>')
     for i in range(4):
         gy = y_atrio + i * 0.25 * m
         gw = 4.4 * m + i * 0.5 * m
         out.append(f'<rect x="{f(cx - gw / 2)}" y="{f(gy)}" width="{f(gw)}" height="{f(0.25 * m)}" fill="{lav("piedra", m, 0.7)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>'
-                   f'<rect x="{f(cx - gw / 2)}" y="{f(gy + 0.08 * m)}" width="{f(gw)}" height="{f(0.17 * m)}" fill="url(#t-fina)"/>')
+                   f'<rect x="{f(cx - gw / 2)}" y="{f(gy + 0.08 * m)}" width="{f(gw)}" height="{f(0.17 * m)}" {SOMBRA_SUAVE}/>')
     kx = fx0 + 1.4 * m
     out.append(f'<path d="M{f(kx - 0.5 * m)},{f(y_atrio)} L{f(kx - 0.5 * m)},{f(y_atrio - 0.3 * m)} L{f(kx - 0.3 * m)},{f(y_atrio - 0.3 * m)} L{f(kx - 0.3 * m)},{f(y_atrio - 0.6 * m)} '
                f'L{f(kx + 0.3 * m)},{f(y_atrio - 0.6 * m)} L{f(kx + 0.3 * m)},{f(y_atrio - 0.3 * m)} L{f(kx + 0.5 * m)},{f(y_atrio - 0.3 * m)} L{f(kx + 0.5 * m)},{f(y_atrio)} Z" fill="{piedra_}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>'
@@ -1619,16 +1617,14 @@ def lejos_este():
 
 
 def suelo_plaza(nombre, capa, H, semilla):
-    """Mosaico de suelo de la plaza en una capa lejana (repetible cada 1024 px). Las piedras
-    crecen con la perspectiva (alto ∝ (y−horizonte)², ancho ∝ y−horizonte) y a lo lejos
-    quedan solo como la raya de sombra de su borde."""
+    """Mosaico de suelo de la plaza en una capa lejana (repetible cada 1024 px): tierra lisa con
+    alguna piedra suelta, que crece con la perspectiva (alto ∝ (y−horizonte)², ancho ∝ y−horizonte)."""
     rnd = random.Random(semilla)
     sw, m = TRAZO[capa], ppm(capa)
     W = 1024
     y0 = 580 + 320 * PARALAJE[capa]
     out = ['<g data-p="plaza empedrada o de tierra: confirmar con fotos del norte de Boyacá años 40">',
-           f'<rect x="0" y="0" width="{W}" height="{H}" fill="{lav("tierra", m, 0.8)}"/>',
-           f'<rect x="0" y="0" width="{W}" height="{H}" fill="url(#t-puntos-ralos)"/>']
+           f'<rect x="0" y="0" width="{W}" height="{H}" fill="{lav("tierra", m, 0.8)}"/>']
     rayas, piedras = [], []
     y = 1.0
     while y < H:
@@ -1646,7 +1642,7 @@ def suelo_plaza(nombre, capa, H, semilla):
         for a, g in anchos:
             a, g = a * k, g * k
             # lo aleatorio se decide una vez por piedra: sus dos mitades en la costura coinciden
-            visible = alto >= 4.5 or rnd.random() < 0.2 + alto / 6
+            visible = alto >= 4.5 and rnd.random() < 0.05  # suelo lejano casi liso
             jit = [rnd.uniform(0.86, 1.08) for _ in range(8)]
             for dx in (0, -W):
                 xx = x + dx
@@ -1658,9 +1654,9 @@ def suelo_plaza(nombre, capa, H, semilla):
                     cy, rx, ry = y + alto * 0.5, a * 0.47, alto * 0.43
                     p = [(xx + a / 2 + math.cos(i * math.pi / 4) * rx * jit[i],
                           cy + math.sin(i * math.pi / 4) * ry * jit[i]) for i in range(8)]
-                    d = 'M' + ' Q'.join(f'{f(p[i][0])},{f(p[i][1])} {f((p[i][0] + p[(i + 1) % 8][0]) / 2)},{f((p[i][1] + p[(i + 1) % 8][1]) / 2)}' for i in range(8)) + ' Z'
+                    d = canto(p)
                     piedras.append(f'<path d="{d}" fill="{lav("piedra", m, 0.75)}" stroke="#000" stroke-width="{f(sw * 0.45)}"/>'
-                                   f'<path d="M{f(xx + a * 0.2)},{f(cy + ry * 0.35)} Q{f(xx + a / 2)},{f(cy + ry * 1.05)} {f(xx + a * 0.8)},{f(cy + ry * 0.35)} Q{f(xx + a / 2)},{f(cy + ry * 0.65)} {f(xx + a * 0.2)},{f(cy + ry * 0.35)} Z" fill="url(#t-media)"/>')
+                                   f'<path d="M{f(xx + a * 0.2)},{f(cy + ry * 0.35)} Q{f(xx + a / 2)},{f(cy + ry * 1.05)} {f(xx + a * 0.8)},{f(cy + ry * 0.35)} Q{f(xx + a / 2)},{f(cy + ry * 0.65)} {f(xx + a * 0.2)},{f(cy + ry * 0.35)} Z" {SOMBRA}/>')
             x += a + g
             if x > W:
                 x -= W
@@ -1691,15 +1687,14 @@ def monton(cx, base, m, sw, rnd, filas=3, r=0.045, clase='papa'):
             if clase == 'papa':
                 out.append(f'<circle cx="{f(px + r * m * 0.3)}" cy="{f(py - r * m * 0.2)}" r="{f(r * m * 0.14)}" fill="#000"/>')
             else:
-                out.append(f'<path d="M{f(px - r * m * 0.5)},{f(py + r * m * 0.2)} Q{f(px)},{f(py + r * m * 0.9)} {f(px + r * m * 0.5)},{f(py + r * m * 0.2)}" fill="url(#t-media)"/>')
+                out.append(f'<path d="M{f(px - r * m * 0.5)},{f(py + r * m * 0.2)} Q{f(px)},{f(py + r * m * 0.9)} {f(px + r * m * 0.5)},{f(py + r * m * 0.2)}" {SOMBRA}/>')
     return ''.join(out)
 
 
 def manta_suelo(x0, x1, base, m, sw):
     """Costal abierto o manta tendida en el suelo, vista casi de canto."""
     h = 0.07 * m
-    return (f'<path d="M{f(x0)},{f(base)} L{f(x1)},{f(base)} L{f(x1 - 0.12 * m)},{f(base - h)} L{f(x0 + 0.1 * m)},{f(base - h)} Z" fill="{lav("lana-cruda", m)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>'
-            f'<path d="M{f(x0)},{f(base)} L{f(x1)},{f(base)} L{f(x1 - 0.12 * m)},{f(base - h)} L{f(x0 + 0.1 * m)},{f(base - h)} Z" fill="url(#t-tejido)"/>')
+    return (f'<path d="M{f(x0)},{f(base)} L{f(x1)},{f(base)} L{f(x1 - 0.12 * m)},{f(base - h)} L{f(x0 + 0.1 * m)},{f(base - h)} Z" fill="{lav("lana-cruda", m)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>')
 
 
 def paraguas_clavado(x, base, m, sw, alto=1.55):
@@ -1734,8 +1729,7 @@ def toldo(x0, base, m, sw, rnd, ancho_m=3.4, mercancia='papas'):
     for px in (x0 + 0.4 * m, x1 - 0.48 * m):
         out.append(f'<rect x="{f(px)}" y="{f(ym)}" width="{f(0.07 * m)}" height="{f(0.8 * m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>')
     out.append(f'<path d="M{f(x0 + 0.47 * m)},{f(base - 0.25 * m)} L{f(x1 - 0.48 * m)},{f(base - 0.25 * m)}" stroke="#000" stroke-width="{f(sw * 0.8)}"/>')
-    out.append(f'<rect x="{f(x0 + 0.3 * m)}" y="{f(ym)}" width="{f(W - 0.6 * m)}" height="{f(0.08 * m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>'
-               f'<rect x="{f(x0 + 0.3 * m)}" y="{f(ym)}" width="{f(W - 0.6 * m)}" height="{f(0.08 * m)}" fill="url(#t-madera)"/>')
+    out.append(f'<rect x="{f(x0 + 0.3 * m)}" y="{f(ym)}" width="{f(W - 0.6 * m)}" height="{f(0.08 * m)}" fill="{lav("madera", m, 0.55)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>')
     if mercancia == 'papas':
         out.append(monton(x0 + 0.75 * m, ym, m, sw, rnd, 3) + monton(x0 + 1.35 * m, ym, m, sw, rnd, 3, clase='cebolla')
                    + monton(x0 + 2.0 * m, ym, m, sw, rnd, 2, r=0.09, clase='col') + monton(x0 + 2.75 * m, ym, m, sw, rnd, 3))
@@ -1750,7 +1744,7 @@ def toldo(x0, base, m, sw, rnd, ancho_m=3.4, mercancia='papas'):
     # lona: envés en sombra (se ve desde abajo), costuras y faldón al sol con remiendo
     lona = f'M{f(x0)},{f(y_frente)} Q{f((x0 + x1) / 2)},{f(y_frente + 0.07 * m)} {f(x1)},{f(y_frente)} L{f(x1 - 0.05 * m)},{f(y_fondo)} L{f(x0 + 0.08 * m)},{f(y_fondo)} Z'
     lona_ = lav('blanco-tela', m)
-    out.append(f'<path d="{lona}" fill="{lona_}" stroke="#000" stroke-width="{f(sw * 0.7)}"/><path d="{lona}" fill="url(#t-fina)"/>')
+    out.append(f'<path d="{lona}" fill="{lona_}" stroke="#000" stroke-width="{f(sw * 0.7)}"/><path d="{lona}" fill="url(#rayado)"/>')
     costuras = ' '.join(f'M{f(x0 + W * u)},{f(y_frente + 0.05 * m)} L{f(x0 + W * u + 0.02 * m)},{f(y_fondo)}' for u in (0.33, 0.66))
     out.append(f'<path d="{costuras}" stroke="#000" stroke-width="{f(sw * 0.5)}"/>')
     falda = f'M{f(x0 - 0.05 * m)},{f(y_frente)} Q{f((x0 + x1) / 2)},{f(y_frente + 0.07 * m)} {f(x1 + 0.05 * m)},{f(y_frente)}'
@@ -1794,18 +1788,19 @@ def pila(cx, base, m, sw, rnd):
     # agua y borde de atrás del pilón (se ve un poco desde la altura de los ojos)
     agua = [(cx - 1.5 * m, y_borde), (cx - 0.75 * m, y_atras), (cx + 0.75 * m, y_atras), (cx + 1.5 * m, y_borde)]
     # el agua no es azul: el azul es del partido (paleta.md §3)
-    out.append(f'<polygon points="{pts(agua)}" fill="{lav("agua", m)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/><polygon points="{pts(agua)}" fill="url(#t-horiz)"/>')
+    out.append(f'<polygon points="{pts(agua)}" fill="{lav("agua", m)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>')
+    out.append(f'<path d="M{f(cx - 1.0 * m)},{f(y_borde - 0.1 * m)} q{f(0.15 * m)},{f(-0.03 * m)} {f(0.3 * m)},0 M{f(cx + 0.55 * m)},{f(y_borde - 0.16 * m)} q{f(0.15 * m)},{f(-0.03 * m)} {f(0.3 * m)},0" stroke="#000" stroke-width="{f(sw * 0.4)}" fill="none"/>')
     piedra = lav('piedra', m)
     # columna, taza y remate
     out.append(f'<rect x="{f(cx - 0.17 * m)}" y="{f(base - 1.75 * m)}" width="{f(0.34 * m)}" height="{f(1.0 * m)}" fill="{piedra}" stroke="#000" stroke-width="{f(sw * 0.8)}"/>'
-               f'<rect x="{f(cx + 0.05 * m)}" y="{f(base - 1.75 * m)}" width="{f(0.12 * m)}" height="{f(1.0 * m)}" fill="url(#t-fina)"/>'
+               f'<rect x="{f(cx + 0.05 * m)}" y="{f(base - 1.75 * m)}" width="{f(0.12 * m)}" height="{f(1.0 * m)}" {SOMBRA_SUAVE}/>'
                f'<rect x="{f(cx - 0.24 * m)}" y="{f(base - 1.0 * m)}" width="{f(0.48 * m)}" height="{f(0.12 * m)}" fill="{piedra}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>')
     taza = f'M{f(cx - 0.6 * m)},{f(base - 1.95 * m)} L{f(cx + 0.6 * m)},{f(base - 1.95 * m)} Q{f(cx + 0.5 * m)},{f(base - 1.72 * m)} {f(cx)},{f(base - 1.7 * m)} Q{f(cx - 0.5 * m)},{f(base - 1.72 * m)} {f(cx - 0.6 * m)},{f(base - 1.95 * m)} Z'
     out.append(f'<path d="{taza}" fill="{piedra}" stroke="#000" stroke-width="{f(sw * 0.8)}"/>'
-               f'<path d="M{f(cx)},{f(base - 1.7 * m)} Q{f(cx + 0.5 * m)},{f(base - 1.72 * m)} {f(cx + 0.6 * m)},{f(base - 1.95 * m)} L{f(cx + 0.3 * m)},{f(base - 1.9 * m)} Z" fill="url(#t-fina)"/>')
+               f'<path d="M{f(cx)},{f(base - 1.7 * m)} Q{f(cx + 0.5 * m)},{f(base - 1.72 * m)} {f(cx + 0.6 * m)},{f(base - 1.95 * m)} L{f(cx + 0.3 * m)},{f(base - 1.9 * m)} Z" {SOMBRA_SUAVE}/>')
     out.append(f'<rect x="{f(cx - 0.1 * m)}" y="{f(base - 2.2 * m)}" width="{f(0.2 * m)}" height="{f(0.25 * m)}" fill="{piedra}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>'
                f'<ellipse cx="{f(cx)}" cy="{f(base - 2.3 * m)}" rx="{f(0.13 * m)}" ry="{f(0.11 * m)}" fill="{piedra}" stroke="#000" stroke-width="{f(sw * 0.6)}"/>'
-               f'<path d="M{f(cx + 0.02 * m)},{f(base - 2.26 * m)} Q{f(cx + 0.1 * m)},{f(base - 2.3 * m)} {f(cx + 0.06 * m)},{f(base - 2.38 * m)} Z" fill="url(#t-fina)"/>'
+               f'<path d="M{f(cx + 0.02 * m)},{f(base - 2.26 * m)} Q{f(cx + 0.1 * m)},{f(base - 2.3 * m)} {f(cx + 0.06 * m)},{f(base - 2.38 * m)} Z" {SOMBRA_SUAVE}/>'
                f'<path d="M{f(cx)},{f(base - 2.41 * m)} L{f(cx)},{f(base - 2.5 * m)}" stroke="#000" stroke-width="{f(sw * 0.9)}"/>')
     # chorros que caen de la taza al pilón
     chorros = []
@@ -1813,13 +1808,13 @@ def pila(cx, base, m, sw, rnd):
         for d_ in (0.0, 0.05):
             chorros.append(f'M{f(cx + sx * (0.58 - d_) * m)},{f(base - 1.93 * m)} Q{f(cx + sx * (0.82 - d_) * m)},{f(base - 1.7 * m)} {f(cx + sx * (0.86 - d_) * m)},{f(y_borde - 0.08 * m)}')
     out.append(f'<path d="{" ".join(chorros)}" stroke="#000" stroke-width="{f(sw * 0.45)}" fill="none"/>')
-    # pilón ochavado de sillares: cara de frente al sol, caras de los lados más oscuras
-    caras = [((cx - 1.5 * m, cx - 0.75 * m), 't-puntos-ralos'), ((cx - 0.75 * m, cx + 0.75 * m), None),
-             ((cx + 0.75 * m, cx + 1.5 * m), 't-fina')]
-    for (xa, xb), tr in caras:
+    # pilón ochavado de sillares: cara de frente al sol, las de los lados algo y más en sombra
+    caras = [((cx - 1.5 * m, cx - 0.75 * m), SOMBRA_SUAVE), ((cx - 0.75 * m, cx + 0.75 * m), None),
+             ((cx + 0.75 * m, cx + 1.5 * m), SOMBRA)]
+    for (xa, xb), sombra in caras:
         out.append(f'<rect x="{f(xa)}" y="{f(y_borde)}" width="{f(xb - xa)}" height="{f(h)}" fill="{piedra}" stroke="#000" stroke-width="{f(sw * 0.8)}"/>')
-        if tr:
-            out.append(f'<rect x="{f(xa)}" y="{f(y_borde)}" width="{f(xb - xa)}" height="{f(h)}" fill="url(#{tr})"/>')
+        if sombra:
+            out.append(f'<rect x="{f(xa)}" y="{f(y_borde)}" width="{f(xb - xa)}" height="{f(h)}" {sombra}/>')
         juntas = [f'M{f(xa)},{f(y_borde + h * 0.5)} L{f(xb)},{f(y_borde + h * 0.5)}']
         for fila, (ya, yb) in enumerate(((y_borde, y_borde + h * 0.5), (y_borde + h * 0.5, base))):
             jx = xa + (0.25 if fila else 0.5) * m
@@ -1828,8 +1823,6 @@ def pila(cx, base, m, sw, rnd):
                 jx += 0.6 * m
         out.append(f'<path d="{" ".join(juntas)}" stroke="#000" stroke-width="{f(sw * 0.4)}"/>')
     out.append(f'<rect x="{f(cx - 1.55 * m)}" y="{f(y_borde - 0.06 * m)}" width="{f(3.1 * m)}" height="{f(0.1 * m)}" fill="{lav("piedra", m, 0.75)}" stroke="#000" stroke-width="{f(sw * 0.8)}"/>')
-    # musgo y humedad al pie
-    out.append(f'<rect x="{f(cx - 1.5 * m)}" y="{f(base - 0.12 * m)}" width="{f(3.0 * m)}" height="{f(0.12 * m)}" fill="url(#t-puntos)"/>')
     # mujer que viene por agua con su múcura
     out.append(olla(cx + 1.25 * m, y_borde - 0.06 * m, 0.3 * m, 0.42 * m, m, sw, rnd, 'mucura'))
     out.append(persona(cx + 1.95 * m, base, m, sw, 'mujer', espejo=True, sombrero='negro', falda='lana-parda'))
@@ -1906,7 +1899,7 @@ def frente_canastos():
         for i in range(1, 6):
             yy = y0 + h * m * i / 6
             tejido.append(f'M{f(x0 + 0.015 * m * i)},{f(yy)} L{f(x1 - 0.015 * m * i)},{f(yy)}')
-        out.append(f'<path d="{" ".join(tejido)}" stroke="#fff" stroke-width="{f(sw * 0.3)}"/>')
+        out.append(recortar(cuerpo, f'<path d="{" ".join(tejido)}" stroke="#fff" stroke-width="{f(sw * 0.3)}"/>'))
         out.append(f'<rect x="{f(x0 - 0.03 * m)}" y="{f(y0 - 0.03 * m)}" width="{f(w * m + 0.06 * m)}" height="{f(0.06 * m)}" rx="{f(0.02 * m)}" fill="#000" stroke="#fff" stroke-width="{f(sw * 0.4)}"/>')
     archivo('frente-canastos', W, H, 'frente', 'canastos en primer plano (silueta)', '\n'.join(out),
             notas='Base por debajo del cuadro: se coloca con y > 1080 para que asome solo la parte de arriba.')
@@ -1917,10 +1910,11 @@ def frente_costal():
     W, H = 330, 300
     d = (f'M{f(20)},{f(H)} Q{f(5)},{f(H - 0.6 * m)} {f(40)},{f(H - 0.95 * m)} Q{f(130)},{f(H - 1.12 * m)} {f(150)},{f(H - 1.0 * m)} '
          f'L{f(165)},{f(H - 1.12 * m)} L{f(185)},{f(H - 0.98 * m)} Q{f(280)},{f(H - 0.98 * m)} {f(300)},{f(H - 0.6 * m)} Q{f(315)},{f(H - 0.3 * m)} {f(305)},{f(H)} Z')
-    out = [f'<path d="{d}" fill="#000"/>',
-           f'<path d="M{f(60)},{f(H - 0.75 * m)} Q{f(160)},{f(H - 0.85 * m)} {f(270)},{f(H - 0.7 * m)} M{f(150)},{f(H - 0.98 * m)} Q{f(140)},{f(H - 0.5 * m)} {f(150)},{f(H)}" stroke="#fff" stroke-width="{f(sw * 0.35)}" fill="none"/>',
-           f'<path d="M{f(40)},{f(H - 0.9 * m)} Q{f(160)},{f(H - 1.05 * m)} {f(295)},{f(H - 0.62 * m)}" stroke="#fff" stroke-width="{f(sw * 0.3)}" fill="none" stroke-dasharray="{f(sw)} {f(sw * 1.4)}"/>',
-           f'<path d="M{f(150)},{f(H - 1.0 * m)} L{f(165)},{f(H - 1.12 * m)} L{f(185)},{f(H - 0.98 * m)}" stroke="#fff" stroke-width="{f(sw * 0.45)}" fill="none"/>']
+    # costuras y pliegues en luz de papel, dentro de la silueta
+    out = [f'<path d="{d}" fill="#000"/>', recortar(d,
+           f'<path d="M{f(60)},{f(H - 0.75 * m)} Q{f(160)},{f(H - 0.85 * m)} {f(270)},{f(H - 0.7 * m)} M{f(150)},{f(H - 0.98 * m)} Q{f(140)},{f(H - 0.5 * m)} {f(150)},{f(H)}" stroke="#fff" stroke-width="{f(sw * 0.35)}" fill="none"/>'
+           f'<path d="M{f(40)},{f(H - 0.9 * m)} Q{f(160)},{f(H - 1.05 * m)} {f(295)},{f(H - 0.62 * m)}" stroke="#fff" stroke-width="{f(sw * 0.3)}" fill="none" stroke-dasharray="{f(sw)} {f(sw * 1.4)}"/>'
+           f'<path d="M{f(150)},{f(H - 1.0 * m)} L{f(165)},{f(H - 1.12 * m)} L{f(185)},{f(H - 0.98 * m)}" stroke="#fff" stroke-width="{f(sw * 0.45)}" fill="none"/>')]
     archivo('frente-costal', W, H, 'frente', 'costal en primer plano (silueta)', '\n'.join(out),
             notas='Base por debajo del cuadro (y > 1080).')
 
