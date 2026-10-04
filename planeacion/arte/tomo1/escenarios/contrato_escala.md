@@ -59,6 +59,12 @@ También fija la escala y el suelo de la capa, como en una perspectiva simplific
   de la capa (100 % en juego y frente, ≈75 % en medio, ≈55 % en lejos, 35–60 % en el cielo) y la
   línea pasa de tinta a grafito en lejos y cielo. El rojo y el azul de partido no se diluyen.
   Las capas lejanas llevan además trazo más fino (doc 03 §1: línea fina en fondos).
+- **Fondo de cámara** por escenario (`fondo` en la definición, un color de la paleta): papel de
+  día; las escenas de noche usan `sepia-oscuro` (paleta.md §3: la noche no es azul).
+- **Interiores en corte** (`casa-insuasty.md` §2): una sola capa, la de juego. Cada cuarto es una
+  viñeta con el muro del fondo apoyado en y = 900, el envés del tejado arriba y márgenes de papel
+  arriba (y < 44) y abajo (y > 924, para los globos). Los muros cortados son el canal de papel
+  entre viñetas, con sus puertas.
 
 ## 5. Pendientes
 

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="700" viewBox="0 0 1920 700">
+  <!--
+    Casa Insuasty · cielo de noche sin luna, sierra y Puente Alto a lo lejos
+    Capa: cielo (paralaje 0, 0 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Se coloca arriba (y=0). El color del cielo lo pone el fondo de cámara (sepia-oscuro).
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (grafito), rojo y azul enteros.
+    GENERADO por game/art/gen/casa_insuasty.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#544f49" stroke-width="1.2"/></pattern>
+  </defs>
+<path d="M0,470 C13.3,472 53.3,480.6 80,482.2 C106.7,483.9 133.3,478.4 160,479.7 C186.7,481.1 213.3,487.2 240,490.3 C266.7,493.4 293.3,497.3 320,498.3 C346.7,499.3 373.3,496.1 400,496.3 C426.7,496.5 453.3,500.6 480,499.6 C506.7,498.6 533.3,492.2 560,490.3 C586.7,488.4 613.3,490.8 640,488.3 C666.7,485.9 693.3,478.7 720,475.6 C746.7,472.6 773.3,471.9 800,470.2 C826.7,468.5 853.3,467.4 880,465.6 C906.7,463.8 933.3,461.6 960,459.1 C986.7,456.7 1013.3,452.1 1040,450.7 C1066.7,449.3 1093.3,451.3 1120,450.9 C1146.7,450.5 1173.3,448.8 1200,448.2 C1226.7,447.6 1253.3,447.8 1280,447.4 C1306.7,447 1333.3,445.6 1360,445.7 C1386.7,445.8 1413.3,445.7 1440,448.1 C1466.7,450.4 1493.3,455.8 1520,459.8 C1546.7,463.8 1573.3,469.8 1600,471.9 C1626.7,474.1 1653.3,471.9 1680,472.6 C1706.7,473.3 1733.3,473.2 1760,476.1 C1786.7,479.1 1813.3,488.1 1840,490.3 C1866.7,492.6 1906.7,489.7 1920,489.6 L1920,700 L0,700 Z" fill="#7c634e" fill-opacity="0.55"/>
+<path d="M0,700 L0,562.5 L12,562.7 L24,560.8 L36,557.4 L48,556.9 L60,555.1 L72,557.5 L84,557 L96,550.7 L108,550.3 L120,543.9 L132,543.9 L144,543.2 L156,543.1 L168,536.6 L180,530.9 L192,531.8 L204,533 L216,530.6 L228,528.2 L240,527.3 L252,522.1 L264,520 L276,521.1 L288,523.9 L300,522.3 L312,521.2 L324,523.1 L336,525.8 L348,525.9 L360,525.8 L372,523.2 L384,522.8 L396,524 L408,524.1 L420,524.9 L432,525.2 L444,530.7 L456,528.9 L468,530.2 L480,535.2 L492,537.8 L504,536.4 L516,537.4 L528,538.1 L540,542.4 L552,543.5 L564,543.5 L576,544.7 L588,542.6 L600,544.6 L612,549.2 L624,548.8 L636,546.2 L648,546.3 L660,548.6 L672,547 L684,545.3 L696,539.2 L708,540.1 L720,539.6 L732,531.6 L744,528.5 L756,527.7 L768,522.5 L780,518.6 L792,516.5 L804,510.9 L816,510.1 L828,510.8 L840,510.3 L852,506.5 L864,503.4 L876,505.6 L888,505.8 L900,503.2 L912,501.7 L924,498.8 L936,497.5 L948,500 L960,504.6 L972,502.1 L984,502.5 L996,504 L1008,507.3 L1020,511.5 L1032,512.3 L1044,517.5 L1056,520.9 L1068,523.2 L1080,521.8 L1092,523.2 L1104,523 L1116,525 L1128,524.3 L1140,528.9 L1152,533.2 L1164,532.4 L1176,531.4 L1188,531.6 L1200,534.6 L1212,536.6 L1224,539.3 L1236,537.8 L1248,539.7 L1260,538 L1272,538.5 L1284,542.4 L1296,538.2 L1308,541.7 L1320,540.1 L1332,537.8 L1344,539.2 L1356,540.2 L1368,537.9 L1380,536.6 L1392,529.7 L1404,530.8 L1416,529.2 L1428,527.4 L1440,526.2 L1452,529.7 L1464,528 L1476,525.8 L1488,524.1 L1500,526.3 L1512,525.8 L1524,523 L1536,526.3 L1548,528.7 L1560,524.5 L1572,525.7 L1584,525.9 L1596,531.2 L1608,528 L1620,527.8 L1632,532.8 L1644,533.4 L1656,537.8 L1668,541 L1680,539.8 L1692,536.8 L1704,540.8 L1716,545.4 L1728,541.6 L1740,545.1 L1752,547.3 L1764,551.5 L1776,546.9 L1788,545.3 L1800,550.1 L1812,554.7 L1824,556.6 L1836,554.4 L1848,558.3 L1860,559.2 L1872,558 L1884,560.8 L1896,557 L1908,553.9 L1920,552.5 L1920,700 Z" fill="#0f0b09" fill-opacity="0.72"/>
+<g data-p="Puente Alto a lo lejos (iglesia [P])" fill="#0f0b09" fill-opacity="0.85"><rect x="1553" y="482.5" width="14" height="44"/><path d="M1552,482.5 Q1560,470.5 1568,482.5 Z"/><path d="M1560,470.5 L1560,462.5 M1557,465.5 L1563,465.5" stroke="#0f0b09" stroke-width="1.2"/><path d="M1520,526.5 L1520,510.5 L1540,500.5 L1552,510.5 L1552,526.5 Z"/><path d="M1450,526.5 L1450,517.5 L1465,512.5 L1480,517.5 L1480,526.5 Z"/><path d="M1484,526.5 L1484,518.5 L1496,513.5 L1508,518.5 L1508,526.5 Z"/><path d="M1582,526.5 L1582,516.5 L1599,511.5 L1616,516.5 L1616,526.5 Z"/><path d="M1622,526.5 L1622,518.5 L1635,513.5 L1648,518.5 L1648,526.5 Z"/><path d="M1656,526.5 L1656,519.5 L1671,514.5 L1686,519.5 L1686,526.5 Z"/></g>
+<circle cx="359.3" cy="358.4" r="2.4" fill="#eee6d2" fill-opacity="0.9"/>
+<path d="M352.3,358.4 L366.3,358.4 M359.3,351.4 L359.3,365.4" stroke="#eee6d2" stroke-width="1" stroke-opacity="0.6"/>
+<circle cx="932.2" cy="203.7" r="1.6" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1799.3" cy="385.1" r="2" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="194.9" cy="312.9" r="1.8" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1355.9" cy="239.2" r="1.7" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1752.5" cy="108.1" r="1.7" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="24.8" cy="164.6" r="1.6" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1329.2" cy="24.4" r="2.4" fill="#eee6d2" fill-opacity="0.9"/>
+<path d="M1322.2,24.4 L1336.2,24.4 M1329.2,17.4 L1329.2,31.4" stroke="#eee6d2" stroke-width="1" stroke-opacity="0.6"/>
+<circle cx="1606.5" cy="63.8" r="1.6" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="256.5" cy="154.7" r="1.9" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1080.4" cy="298.3" r="1.7" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="843.3" cy="312.7" r="1.7" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="557.8" cy="294.2" r="1.6" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="465.9" cy="166.2" r="1.8" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1186.1" cy="106.5" r="2.4" fill="#eee6d2" fill-opacity="0.9"/>
+<path d="M1179.1,106.5 L1193.1,106.5 M1186.1,99.5 L1186.1,113.5" stroke="#eee6d2" stroke-width="1" stroke-opacity="0.6"/>
+<circle cx="861.4" cy="24.4" r="1.6" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="662.2" cy="65.7" r="1.6" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1649.6" cy="239.4" r="1.8" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1215.5" cy="369.8" r="1.7" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1439.4" cy="360.1" r="2" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="154.4" cy="31.9" r="1.7" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1882.6" cy="268.4" r="2.4" fill="#eee6d2" fill-opacity="0.9"/>
+<path d="M1875.6,268.4 L1889.6,268.4 M1882.6,261.4 L1882.6,275.4" stroke="#eee6d2" stroke-width="1" stroke-opacity="0.6"/>
+<circle cx="722.8" cy="222.1" r="1.6" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1473.6" cy="132.8" r="1.7" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="1042.5" cy="114" r="1.8" fill="#eee6d2" fill-opacity="0.65"/>
+<circle cx="365.5" cy="65.4" r="1.9" fill="#eee6d2" fill-opacity="0.65"/>
+</svg>

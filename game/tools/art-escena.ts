@@ -1,6 +1,7 @@
 // Compone un escenario como lo verá la cámara, sin navegador (Daniel y Claude).
 //   node tools/art-escena.ts [escenario] [scrollX…]
 //   p. ej. node tools/art-escena.ts puente-alto 0 1460 2900
+// Los nombres de escenario están en src/core/escenarios/catalogo.ts.
 // Usa los PNG recortados de art/build/png y sus recortes del atlas: corre antes `pnpm art:build`.
 // Salida en art/build/revision/: escena-<escenario>-<scrollX>.png (1920×1080, una por posición)
 // y escena-<escenario>.png (todas apiladas a 1/2). Las nubes salen en su x inicial.
@@ -17,6 +18,7 @@ import {
   VIEWPORT,
   Y_SUELO,
 } from '../src/core/escena/escala.ts';
+import { ESCENARIOS } from '../src/core/escenarios/catalogo.ts';
 import {
   copiasMosaico,
   type DefinicionEscenario,
@@ -24,21 +26,25 @@ import {
   xEnPantalla,
   yArriba,
 } from '../src/core/escenarios/escenario.ts';
-import { PUENTE_ALTO } from '../src/core/escenarios/puente-alto.ts';
 import type { Atlas, FrameAtlas } from './art-build.ts';
 
-const ESCENARIOS: Record<string, DefinicionEscenario> = {
-  'puente-alto': PUENTE_ALTO,
-};
-
-/** Papel de la paleta (game/art/paleta.json): el fondo de cámara de las escenas. */
-const FONDO = (
-  JSON.parse(
-    readFileSync(resolve(import.meta.dirname, '../art/paleta.json'), 'utf8'),
-  ) as { colores: { id: string; hex: string }[] }
-).colores.find((c) => c.id === 'papel')?.hex;
-if (!FONDO) throw new Error('paleta.json sin el color papel');
+/** Colores de la paleta (game/art/paleta.json), para el fondo de cámara de cada escena. */
+const COLORES = new Map(
+  (
+    JSON.parse(
+      readFileSync(resolve(import.meta.dirname, '../art/paleta.json'), 'utf8'),
+    ) as { colores: { id: string; hex: string }[] }
+  ).colores.map((c) => [c.id, c.hex]),
+);
 const MARCA = '#d0006f';
+
+/** Fondo de cámara del escenario: papel, o el cielo de las escenas de noche. */
+function fondoDe(def: DefinicionEscenario): string {
+  const id = def.fondo ?? 'papel';
+  const hex = COLORES.get(id);
+  if (!hex) throw new Error(`paleta.json sin el color ${id}`);
+  return hex;
+}
 
 interface Pieza {
   id: string;
@@ -123,7 +129,7 @@ function vista(
   usos.push(
     `<rect x="632" y="${Y_SUELO - alto}" width="16" height="${alto}" fill="none" stroke="${MARCA}" stroke-width="2" stroke-dasharray="8 5"/>`,
   );
-  return `<rect width="${VIEWPORT.ancho}" height="${VIEWPORT.alto}" fill="${FONDO}"/>${usos.join('')}`;
+  return `<rect width="${VIEWPORT.ancho}" height="${VIEWPORT.alto}" fill="${fondoDe(def)}"/>${usos.join('')}`;
 }
 
 if (import.meta.main) {

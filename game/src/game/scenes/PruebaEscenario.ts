@@ -1,6 +1,8 @@
-import { type GameObjects, Scene } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 import { color, colorNumero } from '../../core/arte/paleta.ts';
 import { VIEWPORT, Y_SUELO } from '../../core/escena/escala.ts';
+import { ESCENARIOS } from '../../core/escenarios/catalogo.ts';
+import type { DefinicionEscenario } from '../../core/escenarios/escenario.ts';
 import { PUENTE_ALTO } from '../../core/escenarios/puente-alto.ts';
 import { cargarAtlas } from '../arte.ts';
 import { Escenario, precargarEscenario } from '../escenarios/Escenario.ts';
@@ -9,15 +11,42 @@ import {
   APOYO_ROSALBA,
   CAMINATA_ROSALBA,
   ESCALA_ROSALBA,
+  PIEZA_CINTA,
   ROSALBA_MERCADO,
 } from '../personajes/rosalba.ts';
 
 /**
- * Escena de prueba de escenarios: la plaza de Puente Alto en sus cinco capas (planeacion/arte/
- * tomo1/escenarios/puente-alto.md) con Rosalba cruzándola. No es contenido del juego.
- * En desarrollo: ?escena=PruebaEscenario. Sin navegador: pnpm art:escena puente-alto.
+ * Tinte de prueba para ver a Rosalba en las escenas de noche: multiplica el color de sus piezas
+ * (una luz pareja; la luz real por zonas queda para la escena del juego).
+ */
+const TINTE_NOCHE: Readonly<Record<string, number>> = {
+  'casa-interior': 0xcbb9a0,
+  'casa-interior-acto1': 0xcbb9a0,
+  'casa-exterior': 0x7a6a5c,
+  'casa-exterior-acto1': 0x7a6a5c,
+};
+
+/** Tiñe todas las piezas menos la cinta: el rojo de partido va entero (paleta.md §6). */
+function aplicarTinte(objeto: GameObjects.GameObject, tinte: number): void {
+  if (objeto instanceof GameObjects.Container) {
+    for (const hijo of objeto.list) aplicarTinte(hijo, tinte);
+  } else if (
+    objeto instanceof GameObjects.Image &&
+    !objeto.frame.name.endsWith(`/${PIEZA_CINTA}`)
+  ) {
+    objeto.setTint(tinte);
+  }
+}
+
+/**
+ * Escena de prueba de escenarios (src/core/escenarios/catalogo.ts) con Rosalba cruzándolos: la
+ * plaza de Puente Alto y la casa de los Insuasty de noche. No es contenido del juego.
+ * En desarrollo: ?escena=PruebaEscenario&escenario=casa-exterior (por defecto, puente-alto).
+ * Sin navegador: pnpm art:escena <escenario>.
  */
 export class PruebaEscenario extends Scene {
+  private nombre = 'puente-alto';
+  private def: DefinicionEscenario = PUENTE_ALTO;
   private escenario?: Escenario;
   private camaraX?: GameObjects.Text;
 
@@ -25,14 +54,25 @@ export class PruebaEscenario extends Scene {
     super('PruebaEscenario');
   }
 
+  init(): void {
+    const pedido = new URLSearchParams(window.location.search).get('escenario');
+    const def = pedido ? ESCENARIOS[pedido] : undefined;
+    if (pedido && !def) console.warn(`Escenario desconocido: ${pedido}`);
+    if (pedido && def) {
+      this.nombre = pedido;
+      this.def = def;
+    }
+  }
+
   preload(): void {
     cargarAtlas(this, 'personajes');
-    precargarEscenario(this, PUENTE_ALTO);
+    precargarEscenario(this, this.def);
   }
 
   create(): void {
-    this.cameras.main.setBackgroundColor(colorNumero('papel'));
-    const escenario = new Escenario(this, PUENTE_ALTO);
+    const fondo = this.def.fondo ?? 'papel';
+    this.cameras.main.setBackgroundColor(colorNumero(fondo));
+    const escenario = new Escenario(this, this.def);
     this.escenario = escenario;
 
     const rosalba = new Personaje(
@@ -46,6 +86,8 @@ export class PruebaEscenario extends Scene {
       { caminata: CAMINATA_ROSALBA },
     );
     rosalba.raiz.setScale(ESCALA_ROSALBA);
+    const tinte = TINTE_NOCHE[this.nombre];
+    if (tinte !== undefined) aplicarTinte(rosalba.raiz, tinte);
     escenario.capa('juego').add(rosalba.raiz);
 
     const camara = this.cameras.main;
@@ -60,7 +102,7 @@ export class PruebaEscenario extends Scene {
       .text(24, 20, '', {
         fontFamily: 'Georgia, serif',
         fontSize: '18px',
-        color: color('tinta'),
+        color: color(fondo === 'papel' ? 'tinta' : 'papel'),
       })
       .setScrollFactor(0);
 
@@ -75,7 +117,7 @@ export class PruebaEscenario extends Scene {
   update(_tiempo: number, delta: number): void {
     this.escenario?.actualizar(delta);
     this.camaraX?.setText(
-      `Puente Alto · cámara x=${Math.round(this.cameras.main.scrollX)}`,
+      `${this.nombre} · cámara x=${Math.round(this.cameras.main.scrollX)}`,
     );
   }
 }

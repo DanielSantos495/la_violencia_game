@@ -40,6 +40,8 @@ export interface DefinicionEscenario {
   atlas: string;
   /** Ancho del nivel en el plano de juego, en px. */
   anchoNivel: number;
+  /** Color de la paleta (id) del fondo de cámara: el cielo de las escenas de noche. Por defecto 'papel'. */
+  fondo?: string;
   capas: Partial<Record<IdCapa, CapaEscenario>>;
 }
 

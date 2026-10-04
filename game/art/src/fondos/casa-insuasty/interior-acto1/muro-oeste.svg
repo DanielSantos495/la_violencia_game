@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="1080" viewBox="0 0 120 1080">
+  <!--
+    Casa Insuasty · muro de tapia cortado
+    Capa: juego (paralaje 1.0, 200 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Canal de papel entre viñetas; se coloca arriba (y=0) y monta 10 px sobre cada cuarto.
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (tinta), rojo y azul enteros.
+    GENERADO por game/art/gen/casa_insuasty.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#1d1713" stroke-width="1.2"/></pattern>
+  </defs>
+<rect x="0" y="0" width="120" height="1080" fill="#eee6d2"/><path d="M10,44 L10,924 M110,44 L110,924" stroke="#1d1713" stroke-width="3.9" fill="none"/><path d="M38.7,320.4 l28.7,-0.5" stroke="#1d1713" stroke-width="0.8" opacity="0.45"/><path d="M31.1,745.6 l39.7,0.4" stroke="#1d1713" stroke-width="0.8" opacity="0.45"/><path d="M47.8,321.3 l39.6,0.4" stroke="#1d1713" stroke-width="0.8" opacity="0.45"/><path d="M33.8,601.1 l27.8,-0.5" stroke="#1d1713" stroke-width="0.8" opacity="0.45"/><path d="M31.7,695.8 l40,-1.7" stroke="#1d1713" stroke-width="0.8" opacity="0.45"/>
+</svg>

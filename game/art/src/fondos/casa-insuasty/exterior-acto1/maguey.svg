@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="340" viewBox="0 0 520 340">
+  <!--
+    Casa Insuasty · mata de fique en primer plano
+    Capa: frente (paralaje 1.3, 260 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Se coloca con la base por debajo del cuadro: solo asoman las puntas.
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (tinta), rojo y azul enteros.
+    GENERADO por game/art/gen/casa_insuasty.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#1d1713" stroke-width="1.2"/></pattern>
+  </defs>
+<g data-p="mata de fique: por verificar"><path d="M228.2,340 Q115.3,323.6 8.4,307.2 Q137.3,331.6 256.2,340 Z" fill="#1d1713"/><path d="M242.2,330 Q125.3,327.6 8.4,307.2" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M229.4,340 Q107.3,284 -8.7,228 Q129.3,292 257.4,340 Z" fill="#1d1713"/><path d="M243.4,330 Q117.3,288 -8.7,228" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M232.1,340 Q142.6,257.8 59.1,175.5 Q164.6,265.8 260.1,340 Z" fill="#1d1713"/><path d="M246.1,330 Q152.6,261.8 59.1,175.5" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M237.6,340 Q189.6,233.1 147.6,126.3 Q211.6,241.1 265.6,340 Z" fill="#1d1713"/><path d="M251.6,330 Q199.6,237.1 147.6,126.3" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M242.5,340 Q220.7,202.4 204.9,64.9 Q242.7,210.4 270.5,340 Z" fill="#1d1713"/><path d="M256.5,330 Q230.7,206.4 204.9,64.9" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M246.2,340 Q251.2,205.7 262.3,71.4 Q273.2,213.7 274.2,340 Z" fill="#1d1713"/><path d="M260.2,330 Q261.2,209.7 262.3,71.4" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M251.2,340 Q287,226.5 328.8,113 Q309,234.5 279.2,340 Z" fill="#1d1713"/><path d="M265.2,330 Q297,230.5 328.8,113" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M256.8,340 Q328.3,243.2 405.7,146.4 Q350.3,251.2 284.8,340 Z" fill="#1d1713"/><path d="M270.8,330 Q338.3,247.2 405.7,146.4" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M260.3,340 Q374.6,251 494.9,162 Q396.6,259 288.3,340 Z" fill="#1d1713"/><path d="M274.3,330 Q384.6,255 494.9,162" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M261.5,340 Q354.5,282.5 453.6,225 Q376.5,290.5 289.5,340 Z" fill="#1d1713"/><path d="M275.5,330 Q364.5,286.5 453.6,225" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M263.7,340 Q401.7,314.2 545.7,288.5 Q423.7,322.2 291.7,340 Z" fill="#1d1713"/><path d="M277.7,330 Q411.7,318.2 545.7,288.5" stroke="#7c634e" stroke-width="1.4" fill="none"/></g>
+</svg>
