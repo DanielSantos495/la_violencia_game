@@ -46,6 +46,14 @@ const CABEZAS_AGACHADA = 'personajes/rosalba-agachada-cabezas';
 /** Punto de apoyo entre los pies, común a todas las poses (coordenadas del SVG). */
 export const APOYO_ROSALBA = { x: 150, y: 474 };
 
+/**
+ * La cinta roja de la trenza es una pieza propia (hija de `trenza`): en la historia se la quitan
+ * (Prólogo b4) y va sin ella desde la M2 hasta que vuelve a atársela en el Acto II
+ * (planeacion/historia/tomo1/10_registro_propuestas.md P31–P32). Sin cinta, la trenza termina
+ * en un amarre oscuro: `new Personaje(..., { ocultas: [PIEZA_CINTA] })` o `mostrarPieza`.
+ */
+export const PIEZA_CINTA = 'cinta';
+
 export const ROSALBA_MERCADO: Record<string, DefinicionPose> = {
   'de-pie': {
     base: 'personajes/rosalba',
@@ -65,6 +73,7 @@ export const ROSALBA_MERCADO: Record<string, DefinicionPose> = {
       'antebrazo-der',
       'panolon',
       'trenza',
+      'cinta',
     ],
   },
 };
@@ -86,6 +95,7 @@ export const ROSALBA_MONTE: Record<string, DefinicionPose> = {
       'mechones',
       'ruana',
       'trenza',
+      'cinta',
       'brazo-der',
       'antebrazo-der',
       'ruana-doblez',
@@ -103,6 +113,7 @@ export const ROSALBA_MONTE: Record<string, DefinicionPose> = {
       'mechones',
       'ruana',
       'trenza',
+      'cinta',
       'brazo-der',
       'antebrazo-der',
       'ruana-doblez',

@@ -87,3 +87,32 @@ describe('el retrato de Rosalba tiene todas sus capas', () => {
     );
   });
 });
+
+// Guarda de la cinta roja (doc 10 P31–P32): es una pieza propia, hija de la trenza, en todas las
+// poses y en el retrato, y existe suelta como objeto para el Prólogo b2.
+describe('la cinta roja de Rosalba se quita y se pone', () => {
+  for (const nombre of ['rosalba', 'rosalba-monte', 'rosalba-agachada']) {
+    it(`${nombre}: cinta hija de la trenza`, () => {
+      const frames = framesDeSvg(leer(nombre), nombre);
+      const cinta = frames.find((f) => f.nombre === `${nombre}/cinta`);
+      expect(cinta?.padre).toBe('trenza');
+    });
+  }
+  it('rosalba-retrato: capa de la cinta', () => {
+    const nombres = framesDeSvg(leer('rosalba-retrato'), 'rosalba-retrato').map(
+      (f) => f.nombre,
+    );
+    expect(nombres).toContain('rosalba-retrato/cinta');
+  });
+  it('cinta-roja: suelta a escala de personaje y de viñeta', () => {
+    const nombres = framesDeSvg(leer('cinta-roja'), 'cinta-roja').map(
+      (f) => f.nombre,
+    );
+    expect(nombres).toEqual(
+      expect.arrayContaining([
+        'cinta-roja/cinta-suelta',
+        'cinta-roja/cinta-suelta-vineta',
+      ]),
+    );
+  });
+});
