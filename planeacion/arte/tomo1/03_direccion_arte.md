@@ -10,7 +10,7 @@
 | Elemento | Regla |
 |---|---|
 | Línea | Tinta negra de grosor variable: gruesa en siluetas y primeros planos, fina en fondos |
-| Relleno | Manchas planas de negro; grises por trama (rayado o puntos de semitono), sin degradados complejos |
+| Relleno | Manchas planas de negro y lavados de la paleta. **Detalle limpio** (decisión del 04-oct-2026): el color da el valor y la trama solo dice sombra, nunca textura de relleno (nada de puntos de semitono, rayas horizontales o verticales, cuadrículas ni veta en toda una superficie). Sombras chicas en aguada plana de tinta; rayado abierto (paso de al menos 9 px ya en pantalla y línea de al menos 1 px) solo en las sombras grandes de los planos cercanos; las capas lejanas, sin trama. La textura de un material se sugiere con pocas marcas dibujadas e irregulares (una veta, una grieta, unas juntas) y el detalle se concentra en lo que importa, con zonas de descanso entre medias. Las marcas interiores (franjas, pliegues, costuras, sombras) nunca se salen de la silueta del objeto. Sin degradados. El semitono queda solo para el modo registro |
 | Papel | Fondo color hueso con textura leve de papel de prensa |
 | Color | **Rojo liberal** (`#ca2d23`) y **azul conservador** (`#1d4aac`) como únicos colores enteros, en tinta plana de imprenta: pañuelos, banderas, afiches, fachadas de tiendas partidistas. El color cuenta la división. El mundo lleva lavados apagados con techo de intensidad, como la fotografía iluminada a mano, y nada fuera del partido entra en los tonos rojo o azul (`paleta.md`, decisión del 02-oct-2026). Única excepción: la sangre, roja solo un instante (ver "Violencia") |
 | Encuadre de juego | Plano lateral con 2–3 capas de fondo en paralaje |
@@ -141,7 +141,7 @@ Sin licencia, estas fuentes solo se usan como referencia interna para dibujar.
 - Grabaciones históricas reales (discursos, radio) solo en el Archivo y con licencia.
 
 ## 6. Entregables de arte de preproducción
-1. Hoja de estilo: grosores de línea, tramas, paleta exacta (hueso, grises, negro, rojo, azul en hex). Paleta aprobada: `paleta.md` (grosores y tramas pendientes).
+1. Hoja de estilo: grosores de línea, tramas, paleta exacta (hueso, grises, negro, rojo, azul en hex). Paleta aprobada: `paleta.md`; tramas: §1 «Relleno» (detalle limpio, 04-oct-2026); grosores pendientes.
 2. Hoja de personaje de Rosalba, Aurelio y Custodia (frente, perfil, piezas de recorte). Rosalba en curso: `personajes/rosalba.md`.
 3. Kit modular de arquitectura boyacense en SVG.
 4. Prueba de escena: plaza de Puente Alto con paralaje y una página de cómic.
