@@ -37,7 +37,27 @@ Y_MARCO, Y_PISO, Y_BAJO = 44, 900, 924   # borde de arriba de la viñeta, suelo,
 Y_SOLERA = Y_PISO - 2.7 * M              # remate de la tapia: encima, el envés del tejado
 Y_DINTEL = Y_PISO - 1.9 * M              # dintel de las puertas entre cuartos
 # Aguada de la noche por escalones (fill-opacity de la tinta): sin degradados.
-OSCURO, PENUMBRA, MEDIA = 0.8, 0.58, 0.32
+# Tratamiento de la noche (muestras A–D, casa-insuasty.md §7). 'adentro': escalones de la aguada en
+# los cuartos (oscuro, penumbra, media luz); 'nucleo': lavado de la llama en el centro del charco;
+# 'afuera' y 'lejos': cuánto se mezcla con la tinta lo de fuera; 'sepia': la noche quita el color y
+# solo lo guardan la luz y el partido; 'luna': luna de papel y corredor en sombra; 'halo': fuerza de
+# la luz que se cuela por las rendijas.
+ESTILOS_NOCHE = {
+    'escalonada': {'adentro': (0.8, 0.58, 0.32), 'nucleo': 0.35, 'afuera': 0.84, 'lejos': 0.86,
+                   'sepia': False, 'luna': False, 'halo': 1.0},
+    'tinta': {'adentro': (0.93, 0.74, 0.46), 'nucleo': 0.42, 'afuera': 0.95, 'lejos': 0.95,
+              'sepia': False, 'luna': False, 'halo': 1.6},
+    'sepia': {'adentro': (0.8, 0.58, 0.32), 'nucleo': 0.4, 'afuera': 0.8, 'lejos': 0.84,
+              'sepia': True, 'luna': False, 'halo': 1.2},
+    'luna': {'adentro': (0.8, 0.58, 0.32), 'nucleo': 0.35, 'afuera': 0.7, 'lejos': 0.74,
+             'sepia': False, 'luna': True, 'halo': 1.0},
+}
+NOCHE = dict(ESTILOS_NOCHE['escalonada'])
+
+
+def usar_noche(nombre):
+    NOCHE.clear()
+    NOCHE.update(ESTILOS_NOCHE[nombre])
 
 # Cuartos en x del nivel (plano de juego). Los muros cortados miden 0,5 m y su módulo se monta
 # 10 px sobre cada viñeta para que no quede costura.
@@ -78,6 +98,7 @@ def noche(W, fuente=None, derrame=None, tinte='lampara'):
     """Aguada de la noche sobre la viñeta. fuente=(cx, cy, escala): charcos escalonados de luz
     alrededor de una llama; derrame: polígono de media luz que entra por una puerta."""
     rnd = random.Random(int(W) * 7 + (int(fuente[0]) if fuente else 0))
+    OSCURO, PENUMBRA, MEDIA = NOCHE['adentro']
     todo = rect_d(0, Y_MARCO, W, Y_BAJO)
     out = [f'<clipPath id="vineta"><path d="{todo}"/></clipPath><g clip-path="url(#vineta)">']
     if fuente:
@@ -88,7 +109,7 @@ def noche(W, fuente=None, derrame=None, tinte='lampara'):
         out.append(f'<path d="{todo} {c3}" fill-rule="evenodd" fill="#000" fill-opacity="{OSCURO}"/>')
         out.append(f'<path d="{c3} {c2}" fill-rule="evenodd" fill="#000" fill-opacity="{PENUMBRA}"/>')
         out.append(f'<path d="{c2} {c1}" fill-rule="evenodd" fill="#000" fill-opacity="{MEDIA}"/>')
-        out.append(f'<path d="{c1}" fill="{col(tinte)}" fill-opacity="0.35"/>')
+        out.append(f'<path d="{c1}" fill="{col(tinte)}" fill-opacity="{NOCHE["nucleo"]}"/>')
     elif derrame:
         d = 'M' + ' L'.join(f'{f(x)},{f(y)}' for x, y in derrame) + ' Z'
         out.append(f'<path d="{todo} {d}" fill-rule="evenodd" fill="#000" fill-opacity="{OSCURO}"/>')
@@ -507,6 +528,9 @@ def vineta(nombre, W, titulo, fondo, luz_y_brillos, notas=''):
     """Una viñeta: lo de la escena, la noche encima, lo que brilla y los márgenes de papel."""
     rnd = random.Random(sum(map(ord, nombre)))
     fondo_dibujo = fondo(rnd)
+    if NOCHE['sepia']:
+        # la noche quita el color: el cuarto pasa a sepia y solo la llama lo conserva
+        fondo_dibujo = de_noche(W, H, fondo_dibujo, a=0, id_='sepia')
     noche_, brillos = luz_y_brillos
     cuerpo = '\n'.join([fondo_dibujo, noche_, brillos, margenes(W, rnd)])
     archivo(nombre, W, H, 'juego', titulo, cuerpo,
@@ -604,6 +628,7 @@ def muro_cortado(nombre, puerta=None):
     puerta, se ve su hueco: el telar de la tapia en sombra, el dintel y el umbral."""
     W = 120
     x0, x1 = 10, 110
+    _, PENUMBRA, MEDIA = NOCHE['adentro']
     out = [f'<rect x="0" y="0" width="{W}" height="{H}" fill="#fff"/>']
     if puerta:
         hueco = rect_d(x0, Y_DINTEL, x1, Y_PISO)
@@ -660,26 +685,44 @@ def interior():
 EXT_ANCHO = 4600
 EXT = {'solar': (0, 900), 'casa-cocina': (900, 1900), 'casa-sala': (1900, 3100),
        'casa-alcoba': (3100, 3800), 'patio': (3800, 4600)}
-NOCHE_AFUERA = 0.84
 Y_CORREDOR = 900 - 0.25 * M  # piso del corredor (fachada_con_corredor)
 
 
-def filtro_noche(W, Hh, a=NOCHE_AFUERA, id_='noche'):
-    """Aguada de tinta plana sobre lo dibujado, no sobre lo transparente: mezcla cada color con la
-    tinta en la proporción a. Así el cielo de los módulos sigue transparente."""
-    tr, tg, tb = (int(pa.TINTA[i:i + 2], 16) / 255 for i in (1, 3, 5))
+def matriz_noche(a, sepia):
+    """Matriz de color de la noche: mezcla con la tinta en la proporción a; con sepia, antes deja
+    cada color en su luz sobre el papel (la noche quita el color)."""
+    tinta = [int(pa.TINTA[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    papel = [int(pa.PAPEL[i:i + 2], 16) / 255 for i in (1, 3, 5)]
     k = 1 - a
+    filas = []
+    for i, t in enumerate(tinta):
+        if sepia:
+            p = papel[i]
+            filas.append(f'{k * p * 0.2126:.4f} {k * p * 0.7152:.4f} {k * p * 0.0722:.4f} 0 {t * a:.3f}')
+        else:
+            fila = ['0', '0', '0']
+            fila[i] = f'{k:.3f}'
+            filas.append(f'{" ".join(fila)} 0 {t * a:.3f}')
+    return ' '.join(filas) + ' 0 0 0 1 0'
+
+
+def filtro_noche(W, Hh, a=None, id_='noche'):
+    """Aguada de tinta plana sobre lo dibujado, no sobre lo transparente: mezcla cada color con la
+    tinta en la proporción a (por defecto, la del estilo de noche). Así el cielo de los módulos
+    sigue transparente."""
+    a = NOCHE['afuera'] if a is None else a
     return (f'<filter id="{id_}" filterUnits="userSpaceOnUse" x="0" y="0" width="{f(W)}" height="{f(Hh)}" color-interpolation-filters="sRGB">'
-            f'<feColorMatrix type="matrix" values="{k:.3f} 0 0 0 {tr * a:.3f} 0 {k:.3f} 0 0 {tg * a:.3f} 0 0 {k:.3f} 0 {tb * a:.3f} 0 0 0 1 0"/></filter>')
+            f'<feColorMatrix type="matrix" values="{matriz_noche(a, NOCHE["sepia"])}"/></filter>')
 
 
-def de_noche(W, Hh, dibujo, a=NOCHE_AFUERA, id_='noche'):
+def de_noche(W, Hh, dibujo, a=None, id_='noche'):
     return f'{filtro_noche(W, Hh, a, id_)}<g filter="url(#{id_})">{dibujo}</g>'
 
 
 def rendija(x0, y0, x1, y1, ancho=3):
     """Luz de lámpara que se cuela por una rendija: línea clara con un halo plano."""
-    return (f'<line x1="{f(x0)}" y1="{f(y0)}" x2="{f(x1)}" y2="{f(y1)}" stroke="{col("lampara")}" stroke-width="{f(ancho * 3)}" stroke-opacity="0.22" stroke-linecap="round"/>'
+    halo = NOCHE['halo']
+    return (f'<line x1="{f(x0)}" y1="{f(y0)}" x2="{f(x1)}" y2="{f(y1)}" stroke="{col("lampara")}" stroke-width="{f(ancho * 3 * halo)}" stroke-opacity="{min(0.4, 0.22 * halo):.2f}" stroke-linecap="round"/>'
             f'<line x1="{f(x0)}" y1="{f(y0)}" x2="{f(x1)}" y2="{f(y1)}" stroke="{col("lampara")}" stroke-width="{f(ancho)}" stroke-linecap="round"/>')
 
 
@@ -788,7 +831,11 @@ def casa_modulo(nombre, pilares, huecos, esquinas, luz='', delante='', titulo=''
     fachada = pa.fachada_con_corredor(W + izq + der, rnd, None, [p + izq for p in pilares],
                                       [corrido(h) for h in huecos], esquinas=esquinas)
     fachada = f'<g transform="translate({-izq} 0)">{fachada}</g>'
+    # con luna, el tejado y el patio quedan a la luz y el corredor, bajo el alero, en sombra
+    sombra_luna = (f'<rect x="0" y="{f(Y_CORREDOR - 3.32 * M)}" width="{f(W)}" height="{f(3.32 * M)}" fill="#000" fill-opacity="0.45"/>'
+                   if NOCHE['luna'] else '')
     cuerpo = (de_noche(W, H, fachada + suelo_patio(W, rnd))
+              + sombra_luna
               + luz
               + (de_noche(W, H, delante, id_='noche2') if delante else ''))
     archivo(nombre, W, H, 'juego', titulo, cuerpo,
@@ -842,8 +889,9 @@ def exterior_casa():
     luz_puerta = (rendija(p_x0 + 4, Y_CORREDOR - 2, p_x0 + p_w - 4, Y_CORREDOR - 2, 3)
                   + rendija(p_x0 + p_w - 3, Y_CORREDOR - 2.0 * M, p_x0 + p_w - 3, Y_CORREDOR - 10, 1.5)
                   + f'<circle cx="{f(p_x0 + p_w * 0.85)}" cy="{f(Y_CORREDOR - 2.05 * M * 0.48)}" r="3" fill="{col("lampara")}"/>')
-    rayas = (f'<path d="M{f(p_x0 + 6)},{f(Y_CORREDOR)} L{f(p_x0 + p_w - 6)},{f(Y_CORREDOR)} L{f(p_x0 + p_w + 40)},{f(900)} L{f(p_x0 - 30)},{f(900)} Z" fill="{col("lampara")}" fill-opacity="0.22"/>'
-             f'<path d="M{f(p_x0 - 30)},{f(900)} L{f(p_x0 + p_w + 40)},{f(900)} L{f(p_x0 + p_w + 90)},{f(960)} L{f(p_x0 - 70)},{f(960)} Z" fill="{col("lampara")}" fill-opacity="0.1"/>')
+    halo = NOCHE['halo']
+    rayas = (f'<path d="M{f(p_x0 + 6)},{f(Y_CORREDOR)} L{f(p_x0 + p_w - 6)},{f(Y_CORREDOR)} L{f(p_x0 + p_w + 40)},{f(900)} L{f(p_x0 - 30)},{f(900)} Z" fill="{col("lampara")}" fill-opacity="{0.22 * halo:.2f}"/>'
+             f'<path d="M{f(p_x0 - 30)},{f(900)} L{f(p_x0 + p_w + 40)},{f(900)} L{f(p_x0 + p_w + 90)},{f(960)} L{f(p_x0 - 70)},{f(960)} Z" fill="{col("lampara")}" fill-opacity="{0.1 * halo:.2f}"/>')
     casa_modulo('casa-sala', [160, 700], [ventana, banca_corredor, puerta], (False, False),
                 luz=luz_v + luz_puerta + rayas, delante=delante,
                 titulo='fachada: la sala con los postigos cerrados; la luz se cuela por las juntas y bajo la puerta',
@@ -941,7 +989,13 @@ def cielo_noche():
         out.append(f'<circle cx="{f(x)}" cy="{f(y)}" r="{f(r)}" fill="#fff" fill-opacity="{0.9 if i % 7 == 0 else 0.65}"/>')
         if i % 7 == 0:
             out.append(f'<path d="M{f(x - 7)},{f(y)} L{f(x + 7)},{f(y)} M{f(x)},{f(y - 7)} L{f(x)},{f(y + 7)}" stroke="#fff" stroke-width="1" stroke-opacity="0.6"/>')
-    archivo('cielo-noche', W, Hh, 'cielo', 'cielo de noche sin luna, sierra y Puente Alto a lo lejos', '\n'.join(out),
+    if NOCHE['luna']:
+        # luna de papel con un halo plano [P: la fase de la luna en las fechas del guion]
+        out.append('<circle cx="1480" cy="150" r="84" fill="#fff" fill-opacity="0.08"/>'
+                   '<circle cx="1480" cy="150" r="46" fill="#fff" fill-opacity="0.12"/>'
+                   '<circle cx="1480" cy="150" r="26" fill="#fff"/>'
+                   f'<path d="M1470,140 q6,-4 12,2 M1488,158 q4,2 2,8" stroke="{col("sepia-claro")}" stroke-width="2" fill="none"/>')
+    archivo('cielo-noche', W, Hh, 'cielo', 'cielo de noche, sierra y Puente Alto a lo lejos', '\n'.join(out),
             notas='Se coloca arriba (y=0). El color del cielo lo pone el fondo de cámara (sepia-oscuro).')
 
 
@@ -970,7 +1024,7 @@ def lomas(nombre, x_capa0, W, semilla, casas):
         out.append(f'<path d="M{f(cx - 14)},{f(cy)} L{f(cx - 14)},{f(cy - 10)} L{f(cx)},{f(cy - 17)} L{f(cx + 14)},{f(cy - 10)} L{f(cx + 14)},{f(cy)} Z" fill="{lav("cal", m)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>')
         luces.append(f'<circle cx="{f(cx + 5)}" cy="{f(cy - 5)}" r="7" fill="{col("lampara")}" fill-opacity="0.25"/>'
                      f'<rect x="{f(cx + 3)}" y="{f(cy - 7)}" width="4" height="4" fill="{col("lampara")}"/>')
-    cuerpo = de_noche(W, Hh, '\n'.join(out), a=0.86) + ''.join(luces)
+    cuerpo = de_noche(W, Hh, '\n'.join(out), a=NOCHE['lejos']) + ''.join(luces)
     archivo(nombre, W, Hh, 'lejos', 'lomas de la vereda de noche, con alguna lámpara', cuerpo,
             notas=f'Se coloca arriba en y={y0} (cubre el suelo lejano, y=628) y en x={x_capa0}.')
 
@@ -1009,7 +1063,7 @@ def campo(nombre, x_capa0, W, semilla, vecina=None):
             out.append(f'<circle cx="{f(x)}" cy="{f(y - r * 0.6)}" r="{f(r)}" fill="{lav("sementera", m)}" stroke="#000" stroke-width="{f(sw * 0.4)}"/>')
             x += r * rnd.uniform(6, 10)
         y += 18 + (y - suelo) * 0.16
-    cuerpo = de_noche(W, Hh, '\n'.join(out), a=0.86) + luz
+    cuerpo = de_noche(W, Hh, '\n'.join(out), a=NOCHE['lejos']) + luz
     archivo(nombre, W, Hh, 'medio', 'cultivos de la vereda de noche' + (', con la casa de los vecinos' if vecina else ''), cuerpo,
             notas=f'Se coloca arriba en y={y0} (cubre el suelo medio, y=724) y en x={x_capa0}.')
 

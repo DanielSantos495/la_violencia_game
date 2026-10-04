@@ -31,6 +31,9 @@
 
 ## 2. Interior en corte
 
+**Viñetas con canal de papel: aprobadas por Daniel el 04-oct-2026.** Es la manera de dibujar los
+interiores (contrato_escala.md §4).
+
 Se mira desde el solar, sin el muro de atrás: el muro que se ve es la fachada por dentro, con la
 puerta de la casa, la ventana de la sala y la puerta de la cocina. Cada cuarto es una **viñeta**
 de la página. Los muros cortados (0,5 m) quedan en papel, como el canal entre viñetas, y por sus
@@ -46,7 +49,7 @@ del tejado: varas, cañizo y la solera.
 | Puerta de la cocina | 2200–2320 | Hueco abierto |
 | Cocina | 2310–3110 | Leña (2324–2414) y fogón con brasas (2420–2730). Zarzo con mazorcas encima (y ≈ 460) y escalera. Repisa con loza, mazorcas colgadas y un costal. **Puerta al solar** (2920–3100): por ahí se huye en la M2 |
 
-**Luz.** La noche es una aguada de tinta plana por escalones (80, 58 y 32 %) con charcos de luz
+**Luz** (estilo A de §7). La noche es una aguada de tinta plana por escalones (80, 58 y 32 %) con charcos de luz
 alrededor de la lámpara y del fogón. El centro lleva un lavado de `lampara` (la sala) o de `llama`
 (la cocina). La media luz de la sala entra por la puerta de la alcoba y el envés del tejado queda
 un escalón más oscuro. La llama, el vidrio y las brasas van encima de la noche. No hay degradados
@@ -77,7 +80,7 @@ contrario.
 
 La casa tapa el plano medio y el lejano salvo por los extremos del nivel.
 
-**Noche.** Un filtro de matriz de color mezcla lo dibujado con la tinta (84 % en juego, 86 % en
+**Noche** (estilo A de §7). Un filtro de matriz de color mezcla lo dibujado con la tinta (84 % en juego, 86 % en
 medio y lejos) y deja transparente lo que no está dibujado. Es una aguada plana, sin degradados. La
 luz se dibuja encima: rendijas, charcos y lámparas.
 
@@ -114,5 +117,20 @@ dramáticos, que va en la escena del juego.
 - Variantes de la M2: la lámpara apagada cuando llega la partida y la puerta abierta.
 - La quema de la casa vista a distancia (M2 b4) y los fondos de la huida: cultivos, quebrada y
   monte al amanecer.
-- Decidir si las viñetas con canal de papel sirven para todos los interiores (p. ej. la iglesia
-  por dentro).
+- Elegir el estilo de noche (§7).
+
+## 7. Muestras de noche (decisión de Daniel)
+
+Las cuatro salen del mismo generador: `usar_noche('<estilo>')` en `casa_insuasty.py`. Todas cumplen
+la paleta: la noche no es azul, la luz es ocre y amarilla, y el rojo y el azul no se oscurecen.
+
+| Estilo | Cómo es | A favor | En contra |
+|---|---|---|---|
+| **A. Escalonada** (la de ahora) | Aguada de tinta al 84 %; tres escalones de luz alrededor de la lámpara | Se lee bien todo | La más gris: la noche dice poco |
+| **B. Tinta** | Casi negro (95 %); solo existe lo que toca la luz | La más dramática y de novela gráfica: la lámpara es refugio y la oscuridad amenaza | Afuera, en el sigilo y la huida de la M2, se pierden la senda y los postes |
+| **C. Sepia** | La noche quita el color: el mundo queda en sepia y solo la luz conserva su ocre | Encaja con el guion de color («el color se va»). Distingue la noche del día. Lo único que queda en color es la lámpara y la cinta roja, hasta que la madre se la quita (P32) | Más plana que B |
+| **D. Luna** | Luna de papel con halo; el tejado y el patio a la luz, el corredor en sombra | La más legible y bella | Menos amenazante. La fase de la luna en las fechas del guion es [P] |
+
+**Recomendación:** C como noche base de las dos noches (Prólogo b4 y M2), y B para el momento en que
+llama la Seccional o llega la partida. Ese momento va con el filtro en tiempo real (b) que
+`paleta.md` §5 prevé para la noche de la M2.
