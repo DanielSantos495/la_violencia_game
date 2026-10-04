@@ -24,7 +24,7 @@ R = PALETA['rojo-liberal']  # cinta de la trenza (Ocampo: «van las cintas rojas
 def f(x): return f"{x:.1f}".rstrip('0').rstrip('.')
 
 # ---------- helpers ----------
-def fringes(points, step=2.6, length=16, sway=-2.5):
+def fringes(points, step=4.4, length=16, sway=-2.5):
     """Flecos a lo largo de una polilínea: halo blanco + hebra negra."""
     segs = []
     for (x1, y1), (x2, y2) in zip(points, points[1:]):
@@ -67,7 +67,6 @@ def trenza(x0=134.0, y0=110.0, x1=124.0, y1=214.0, n=14):
         ex = cx + dx
         out.append(f'<g transform="rotate({rot} {f(ex)} {f(cy)})">'
                    f'<ellipse cx="{f(ex)}" cy="{f(cy)}" rx="{f(rx)}" ry="{f(ry)}" fill="#000" stroke="#fff" stroke-width="0.6"/>'
-                   f'<path d="M{f(ex-rx*0.15)},{f(cy-ry*0.6)} Q{f(ex+rx*0.45)},{f(cy)} {f(ex-rx*0.1)},{f(cy+ry*0.6)}" stroke="#fff" stroke-width="0.7" fill="none"/>'
                    f'</g>')
     # moño de cinta al final (cintas rojas en las trenzas: Ocampo López, cap. 4)
     bx, by = x1 + 0.5, y1 + 3
@@ -126,8 +125,8 @@ def zigzag(y1, y2):
     up = True
     while x < xr(y2) - 2:
         pts.append(f"{f(x)},{f((y1+1.5) if up else (y2-1.5))}")
-        x += 4; up = not up
-    return f'<path d="M{" L".join(pts)}" stroke="#000" stroke-width="1" fill="none"/>'
+        x += 8; up = not up
+    return f'<path d="M{" L".join(pts)}" stroke="#000" stroke-width="1.3" fill="none"/>'
 
 def rombos(y1, y2):
     out = []
@@ -135,8 +134,7 @@ def rombos(y1, y2):
     cy = (y1 + y2) / 2 + 1.5
     while x < xr(y2) - 4:
         out.append(f'<path d="M{f(x)},{f(cy-3.5)} L{f(x+3)},{f(cy)} L{f(x)},{f(cy+3.5)} L{f(x-3)},{f(cy)} Z" fill="#000"/>')
-        out.append(f'<circle cx="{f(x+5)}" cy="{f(cy)}" r="0.9" fill="#000"/>')
-        x += 10
+        x += 13
     return ''.join(out)
 
 # ---------- encaje de la enagua ----------
@@ -149,9 +147,7 @@ def enagua():
         b = bottom(x)
         path += f' Q{f(x+3.2)},{f(b+4)} {f(x)},{f(b)}'
     path += ' Z'
-    holes = ''.join(f'<circle cx="{f(x+3.2)}" cy="{f(bottom(x)-2.5)}" r="1.1" fill="none" stroke="#000" stroke-width="0.7"/>' for x in xs[:-1])
-    return (f'<path d="{path}" fill="{TELA}" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/>' + holes +
-            '<path d="M98,434 C130,437 165,435 196,432" stroke="#000" stroke-width="0.7" stroke-dasharray="1.5 1.5" fill="none"/>')
+    return f'<path d="{path}" fill="{TELA}" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/>'
 
 # ---------- alpargata ----------
 def alpargata(dx, lejana=False):
@@ -163,14 +159,12 @@ def alpargata(dx, lejana=False):
     # suela de fique trenzado
     sole = f'M{P(145,466)} C{P(153,469.5)} {P(173,470.5)} {P(188,466)} C{P(190,468)} {P(189.5,472.5)} {P(186,474)} C{P(171,476.5)} {P(151,476)} {P(145,473)} C{P(143.5,471)} {P(143.5,468)} {P(145,466)} Z'
     s.append(f'<path d="{sole}" fill="{PAJA}" stroke="#000" stroke-width="{sw}"/>')
-    s.append(f'<path d="{sole}" fill="url(#fique-trenza)"/>')
     # talonera
     s.append(f'<path d="M{P(146,456)} C{P(144.5,460)} {P(144.5,464)} {P(146,467)} L{P(152,467)} C{P(151,463)} {P(151,459)} {P(152,455)} Z" fill="{TELA}" stroke="#000" stroke-width="{sw*0.8}"/>')
     # capellada de algodón, labrada
     cap = f'M{P(150,453)} C{P(154,448)} {P(163,447)} {P(168,451)} C{P(175,454)} {P(184,458)} {P(188,465)} C{P(186,467.5)} {P(183,468)} {P(180,468)} L{P(151,467)} C{P(150,462)} {P(149,457)} {P(150,453)} Z'
     s.append(f'<path d="{cap}" fill="{TELA}" stroke="#000" stroke-width="{sw}"/>')
-    s.append(f'<path d="M{P(160,458)} L{P(163,461)} L{P(166,458)} L{P(169,461)} L{P(172,458)} L{P(175,461)} L{P(178,459)} M{P(165,464)} L{P(168,466)} L{P(171,464)} L{P(174,466)} L{P(177,464)} L{P(180,466)}" stroke="#000" stroke-width="0.8" fill="none"/>')
-    s.append(f'<path d="M{P(152,456)} C{P(162,455)} {P(176,458)} {P(186,464)}" stroke="#000" stroke-width="0.8" stroke-dasharray="1.6 1.4" fill="none"/>')
+    s.append(f'<path d="M{P(159,459)} L{P(164,463)} L{P(169,459)} L{P(174,463)} L{P(179,460)}" stroke="#000" stroke-width="1.1" fill="none"/>')
     # galones negros cruzados al tobillo y nudo en rosa sobre el empeine
     s.append(f'<path d="M{P(150,449)} C{P(155,445.5)} {P(161,445.5)} {P(166,448.5)} M{P(150,445)} C{P(156,448.5)} {P(160,449.5)} {P(166,452)} M{P(147,457)} C{P(152,454)} {P(158,451)} {P(166,449)}" stroke="#000" stroke-width="2.4" fill="none" stroke-linecap="round"/>')
     rx, ry = 167 + dx, 449
@@ -178,8 +172,8 @@ def alpargata(dx, lejana=False):
     s.append(f'<path d="M{f(rx-2.6)},{f(ry-0.5)} C{f(rx-2)},{f(ry-3)} {f(rx+2.4)},{f(ry-3)} {f(rx+2.4)},{f(ry)} C{f(rx+2.4)},{f(ry+2.4)} {f(rx-1)},{f(ry+2.6)} {f(rx-1.2)},{f(ry+0.4)} C{f(rx-1.2)},{f(ry-1)} {f(rx+0.8)},{f(ry-1.2)} {f(rx+0.8)},{f(ry+0.2)}" stroke="#fff" stroke-width="0.8" fill="none"/>')
     s.append(f'<path d="M{f(rx+1)},{f(ry+3.5)} C{f(rx+3)},{f(ry+6)} {f(rx+3)},{f(ry+8)} {f(rx+5)},{f(ry+10)} M{f(rx-1)},{f(ry+3.5)} C{f(rx-1)},{f(ry+6)} {f(rx-3)},{f(ry+8)} {f(rx-3)},{f(ry+10)}" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>')
     if lejana:
-        s.append(f'<path d="{cap}" fill="url(#trama-fina)"/>')
-        s.append(f'<path d="M{P(151,430)} L{P(163,430)} C{P(163,440)} {P(163,447)} {P(164,452)} L{P(152,452)} C{P(152,446)} {P(151,438)} {P(151,430)} Z" fill="url(#trama-fina)"/>')
+        s.append(f'<path d="{cap}" fill="#000" fill-opacity="0.1"/>')
+        s.append(f'<path d="M{P(151,430)} L{P(163,430)} C{P(163,440)} {P(163,447)} {P(164,452)} L{P(152,452)} C{P(152,446)} {P(151,438)} {P(151,430)} Z" fill="#000" fill-opacity="0.1"/>')
     return ''.join(s)
 
 # ---------- brazo + antebrazo ----------
@@ -188,13 +182,13 @@ def brazo(dx, lejano=False):
     sw = 2.2 if lejano else 2.7
     up = (f'<path d="M{P(138,138)} C{P(146,128)} {P(166,130)} {P(168,146)} C{P(169,160)} {P(167,182)} {P(166,200)} C{P(162,208)} {P(150,208)} {P(147,200)} C{P(144,180)} {P(141,160)} {P(138,138)} Z" fill="{TELA}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
           f'<path d="M{P(146,134)} C{P(147,140)} {P(148,146)} {P(148,150)} M{P(153,132)} C{P(154,138)} {P(155,144)} {P(155,150)} M{P(160,134)} C{P(160,140)} {P(161,145)} {P(161,150)}" stroke="#000" stroke-width="0.9" fill="none"/>'
-          f'<path d="M{P(142,160)} C{P(144,178)} {P(146,192)} {P(148,200)} L{P(152,201)} C{P(150,190)} {P(148,176)} {P(147,158)} Z" fill="url(#trama-fina)"/>')
+          f'<path d="M{P(142,160)} C{P(144,178)} {P(146,192)} {P(148,200)} L{P(152,201)} C{P(150,190)} {P(148,176)} {P(147,158)} Z" fill="#000" fill-opacity="0.1"/>')
     if lejano:
-        up += f'<path d="M{P(138,138)} C{P(146,128)} {P(166,130)} {P(168,146)} C{P(169,160)} {P(167,182)} {P(166,200)} C{P(162,208)} {P(150,208)} {P(147,200)} C{P(144,180)} {P(141,160)} {P(138,138)} Z" fill="url(#trama-media)"/>'
+        up += f'<path d="M{P(138,138)} C{P(146,128)} {P(166,130)} {P(168,146)} C{P(169,160)} {P(167,182)} {P(166,200)} C{P(162,208)} {P(150,208)} {P(147,200)} C{P(144,180)} {P(141,160)} {P(138,138)} Z" fill="#000" fill-opacity="0.18"/>'
     fore = (
         # manga larga hasta la muñeca
         f'<path d="M{P(148,196)} L{P(166,195)} C{P(168,218)} {P(170,236)} {P(171.5,250)} L{P(156.5,253)} C{P(155,238)} {P(151,218)} {P(148,196)} Z" fill="{TELA}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
-        f'<path d="M{P(150,206)} C{P(152,222)} {P(154,236)} {P(157,250)} L{P(161,249)} C{P(158,236)} {P(155,222)} {P(153,206)} Z" fill="url(#trama-fina)"/>'
+        f'<path d="M{P(150,206)} C{P(152,222)} {P(154,236)} {P(157,250)} L{P(161,249)} C{P(158,236)} {P(155,222)} {P(153,206)} Z" fill="#000" fill-opacity="0.1"/>'
         f'<path d="M{P(160,212)} C{P(162,224)} {P(164,236)} {P(165,246)}" stroke="#000" stroke-width="0.9" fill="none"/>'
         # puño bordado con abalorios
         f'<path d="M{P(155.5,249)} L{P(172,246.5)} L{P(173.5,257)} L{P(157,260)} Z" fill="{TELA}" stroke="#000" stroke-width="{sw*0.85}" stroke-linejoin="round"/>'
@@ -211,11 +205,11 @@ def brazo(dx, lejano=False):
         f'<path d="M{P(164.6,295.4)} Q{P(165.8,296.4)} {P(166.8,295.6)} M{P(169.4,295.6)} Q{P(170.6,296.6)} {P(171.6,295.4)}" stroke="#000" stroke-width="0.7" fill="none"/>'
         # tendones y sombra del canto
         f'<path d="M{P(161,263)} C{P(161.4,267)} {P(161.8,271)} {P(161.8,274)} M{P(165,262.5)} C{P(165.4,267)} {P(165.8,271)} {P(165.8,274)}" stroke="#000" stroke-width="0.55" fill="none"/>'
-        f'<path d="M{P(157.4,266)} C{P(156.8,274)} {P(157.6,283)} {P(160,290)} L{P(161.4,289)} C{P(159.6,282)} {P(159,274)} {P(159.8,266)} Z" fill="url(#semitono)"/>'
+        f'<path d="M{P(157.4,266)} C{P(156.8,274)} {P(157.6,283)} {P(160,290)} L{P(161.4,289)} C{P(159.6,282)} {P(159,274)} {P(159.8,266)} Z" fill="#000" fill-opacity="0.1"/>'
     )
     if lejano:
-        fore += (f'<path d="M{P(148,196)} L{P(166,195)} C{P(168,218)} {P(170,236)} {P(171.5,250)} L{P(156.5,253)} C{P(155,238)} {P(151,218)} {P(148,196)} Z" fill="url(#trama-media)"/>'
-                 f'<path d="M{P(158,260)} C{P(156,266)} {P(156,272)} {P(157,277)} C{P(157,283)} {P(158,288)} {P(161,292)} C{P(163,295)} {P(167,295.5)} {P(169,293.5)} C{P(171,291)} {P(171.5,287)} {P(171,284)} C{P(173,282)} {P(175.5,280)} {P(177.5,277.5)} C{P(179.5,275)} {P(179,271.5)} {P(177,270)} C{P(175,268.5)} {P(173,267.5)} {P(172,264)} L{P(172,258)} Z" fill="url(#trama-fina)"/>')
+        fore += (f'<path d="M{P(148,196)} L{P(166,195)} C{P(168,218)} {P(170,236)} {P(171.5,250)} L{P(156.5,253)} C{P(155,238)} {P(151,218)} {P(148,196)} Z" fill="#000" fill-opacity="0.18"/>'
+                 f'<path d="M{P(158,260)} C{P(156,266)} {P(156,272)} {P(157,277)} C{P(157,283)} {P(158,288)} {P(161,292)} C{P(163,295)} {P(167,295.5)} {P(169,293.5)} C{P(171,291)} {P(171.5,287)} {P(171,284)} C{P(173,282)} {P(175.5,280)} {P(177.5,277.5)} C{P(179.5,275)} {P(179,271.5)} {P(177,270)} C{P(175,268.5)} {P(173,267.5)} {P(172,264)} L{P(172,258)} Z" fill="#000" fill-opacity="0.1"/>')
     return up, fore
 
 def piece(gid, pivot, body, comment='', extra=''):
@@ -223,17 +217,18 @@ def piece(gid, pivot, body, comment='', extra=''):
     return f'{c}\n  <g id="{gid}" data-pieza="" data-pivote="{pivot}"{extra}>\n    {body}\n  </g>'
 
 # ================= ensamblaje =================
-defs = f'''
-  <defs>
-    <pattern id="trama-fina" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#000" stroke-width="0.8"/></pattern>
-    <pattern id="trama-media" width="3.4" height="3.4" patternUnits="userSpaceOnUse" patternTransform="rotate(60)"><line x1="0" y1="0" x2="0" y2="3.4" stroke="#000" stroke-width="1.1"/></pattern>
-    <pattern id="trama-cruzada" width="3.2" height="3.2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="3.2" stroke="#000" stroke-width="1.1"/><line x1="0" y1="0" x2="3.2" y2="0" stroke="#000" stroke-width="1.1"/></pattern>
-    <pattern id="trama-densa" width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="2.6" stroke="#000" stroke-width="1.3"/><line x1="0" y1="0" x2="2.6" y2="0" stroke="#000" stroke-width="1.1"/></pattern>
-    <pattern id="semitono" width="3.2" height="3.2" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r="0.75" fill="#000"/></pattern>
-    <pattern id="trencilla" width="6" height="4" patternUnits="userSpaceOnUse"><path d="M0,1 L1.5,3 L3,1 L4.5,3 L6,1" stroke="#000" stroke-width="0.6" fill="none"/></pattern>
-    <pattern id="lana-blanca" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><line x1="0" y1="0" x2="0" y2="4" stroke="{LANA}" stroke-width="0.5" stroke-opacity="0.85"/><line x1="0" y1="2" x2="1.6" y2="2" stroke="{LANA}" stroke-width="0.5"/></pattern>
-    <pattern id="fique-trenza" width="4" height="3" patternUnits="userSpaceOnUse"><path d="M0,0 L2,1.5 L4,0 M0,1.5 L2,3 L4,1.5" stroke="#000" stroke-width="0.7" fill="none"/></pattern>
-  </defs>'''
+# Detalle limpio (doc 03 §1 «Relleno», 04-oct-2026): el color de la paleta da el valor y la
+# trama solo dice sombra. Rosalba no tiene sombras grandes de primer plano: todas sus sombras
+# son aguada plana de tinta (cuatro niveles) y las texturas, pocas marcas dibujadas.
+SOMBRA_SUAVE = 'fill="#000" fill-opacity="0.1"'
+SOMBRA = 'fill="#000" fill-opacity="0.18"'
+SOMBRA_FUERTE = 'fill="#000" fill-opacity="0.26"'
+SOMBRA_HONDA = 'fill="#000" fill-opacity="0.4"'
+defs = ''
+
+def recortar(cid, silueta, marcas):
+    """Marcas interiores (pliegues, cintas, listas) recortadas a la silueta: nada se sale del borde."""
+    return f'<clipPath id="{cid}"><path d="{silueta}"/></clipPath><g clip-path="url(#{cid})">{marcas}</g>'
 
 bi_up, bi_fore = brazo(-12, lejano=True)
 bd_up, bd_fore = brazo(0)
@@ -241,14 +236,14 @@ bd_up, bd_fore = brazo(0)
 cabeza = f'''
     <!-- cuello -->
     <path d="M140,108 L161,118 C161,125 161,131 163,137 L137,137 C138,128 139,118 140,108 Z" fill="{PIEL}" stroke="#000" stroke-width="2.4"/>
-    <path d="M141,114 C142,124 141,131 140,136 L147,136 C146,129 146,121 148,116 Z" fill="url(#trama-fina)"/>
+    <path d="M141,114 C142,124 141,131 140,136 L147,136 C146,129 146,121 148,116 Z" fill="#000" fill-opacity="0.1"/>
     <path d="M149,118 C153,124 157,130 159,136" stroke="#000" stroke-width="0.8" fill="none"/>
     <!-- rostro de perfil: frente, entrecejo, nariz recta con punta redonda, labios definidos, mentón firme -->
     <path d="M166,58 C169,62 171,68 172,74 C173,77 172,79 171,81 C174,86 178,90 180,93 C181.5,95.5 180,98 177,98.5 C175.5,98.8 174.5,99.5 174,100.5 C175,102 176.2,103.5 176,105 C175.6,106.2 174,106.6 173.2,107 C174.5,107.8 175.4,109 175,110.2 C174.6,111.2 173,111.5 172.4,112 C173.6,113.4 174.4,115.4 173.4,117.4 C172,119.6 168.5,120.6 164,120.8 C158,121 152,119 147,115 C138,108 128,96 126,80 C125,62 136,47 152,46 C159,46 164,50 166,58 Z" fill="{PIEL}" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>
     <!-- sombra del ala del sombrero sobre la frente -->
-    <path d="M154,60 C160,60 166,61 170,64 C169,67 166,68 160,67 C156,66 154,64 154,60 Z" fill="url(#trama-fina)"/>
+    <path d="M154,60 C160,60 166,61 170,64 C169,67 166,68 160,67 C156,66 154,64 154,60 Z" fill="#000" fill-opacity="0.1"/>
     <!-- sombra bajo la mandíbula -->
-    <path d="M150,116 C156,119 162,120.5 168,120.5 C163,123 155,122 150,119 Z" fill="url(#trama-media)"/>
+    <path d="M150,116 C156,119 162,120.5 168,120.5 C163,123 155,122 150,119 Z" fill="#000" fill-opacity="0.18"/>
     <!-- rubor de campo: tres trazos cortos en la mejilla -->
     <path d="M158,95 L156.5,99 M160.5,95.5 L159,99.5 M163,96 L161.5,100" stroke="#000" stroke-width="0.8" stroke-linecap="round"/>
     <path d="M155,90 C157,93 159,95 162,96" stroke="#000" stroke-width="0.7" fill="none"/>
@@ -290,16 +285,13 @@ zarcillo = '''<path d="M143.6,100.6 C143.4,102 143.4,103 143.6,104" stroke="#000
 sombrero = f'''
     <!-- copa de caña: trencilla enrollada -->
     <path d="M128,58 C127,40 136,30 151,29 C166,29 174,38 172,58 Z" fill="{PAJA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>
-    <path d="M128,58 C127,40 136,30 151,29 C166,29 174,38 172,58 Z" fill="url(#trencilla)"/>
     <path d="M131,46 C144,43.5 158,43.5 171,46 M130,40 C142,37 160,37 170.5,40 M134,34 C144,32 158,32 167,34" stroke="#000" stroke-width="0.9" fill="none"/>
-    <path d="M128,58 C127.5,48 129,41 133,36 C131,44 131,51 132,58 Z" fill="url(#trama-media)"/>
+    <path d="M128,58 C127.5,48 129,41 133,36 C131,44 131,51 132,58 Z" fill="#000" fill-opacity="0.18"/>
     <!-- cinta negra con moño atrás -->
     <path d="M128.5,50 C142,47 158,47 171.5,50 L171.8,57 C158,54.5 142,54.5 128.4,57 Z" fill="#000"/>
-    <path d="M129,53.4 C142,50.8 158,50.8 171.4,53.4" stroke="#fff" stroke-width="0.6" fill="none" stroke-dasharray="2 1.5"/>
     <path d="M129,52 C125,50.5 123.5,52.5 125,54.5 C126.5,55.5 128,55 129,54.5 M129,55 C127,57 126.5,59.5 127.5,61.5" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>
     <!-- ala -->
     <path d="M102,60 C120,53 180,51 200,57 C195,63 180,66 151,65 C128,65 110,66 102,60 Z" fill="{PAJA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>
-    <path d="M102,60 C120,53 180,51 200,57 C195,63 180,66 151,65 C128,65 110,66 102,60 Z" fill="url(#trencilla)"/>
     <path d="M106,60.5 C128,57 172,55 196,57.5" stroke="#000" stroke-width="0.8" fill="none"/>
     <path d="M110,62.6 C132,65 176,64 196,59.6 C186,64.5 168,66.5 150,66.2 C132,66 118,66 110,62.6 Z" fill="#000"/>
     <!-- barbuquejo: cinta que baja por la mejilla y se ata bajo el mentón -->
@@ -310,7 +302,7 @@ sombrero = f'''
 
 torso = '''
     <path d="M136,130 C150,126 163,128 167,136 C173,150 175,168 171,184 C168,200 166,216 165,232 L128,232 C126,210 123,188 125,164 C126,148 128,138 136,130 Z" fill="''' + TELA + '''" stroke="#000" stroke-width="2.8"/>
-    <path d="M125,164 C125,190 126,212 128,231 L135,231 C132,208 131,186 132,160 Z" fill="url(#trama-fina)"/>
+    <path d="M125,164 C125,190 126,212 128,231 L135,231 C132,208 131,186 132,160 Z" fill="#000" fill-opacity="0.1"/>
     <!-- escote redondo con festón -->
     <path d="M141,131 C148,136 157,137 163,134" stroke="#000" stroke-width="1.2" fill="none"/>
     <path d="M142,133.5 Q144,136 146,134.6 Q148,137 150,135.4 Q152,137.6 154,135.8 Q156,137.8 158,135.6 Q160,137.2 162,135" stroke="#000" stroke-width="0.7" fill="none"/>
@@ -319,19 +311,20 @@ torso = '''
     <!-- collar de abalorios (cuentas negras y blancas) -->
     ''' + collar()
 
+FALDA_D = 'M126,230 L166,230 C172,280 186,360 198,432 Q146,438 94,432 C106,360 118,280 126,230 Z'
 falda = (
-    f'<path d="M126,230 L166,230 C172,280 186,360 198,432 Q146,438 94,432 C106,360 118,280 126,230 Z" fill="{FALDA}" stroke="#000" stroke-width="3.2" stroke-linejoin="round"/>'
-    '<path d="M126,230 L166,230 C172,280 186,360 198,432 Q146,438 94,432 C106,360 118,280 126,230 Z" fill="url(#trama-densa)"/>'
-    '<path d="M126,230 C118,280 106,360 94,432 Q104,434 112,434.6 C114,360 120,290 132,232 Z" fill="#000"/>'
+    f'<path d="{FALDA_D}" fill="{FALDA}" stroke="#000" stroke-width="3.2" stroke-linejoin="round"/>'
+    + recortar('falda-marcas', FALDA_D,
+    f'<path d="M126,230 C118,280 106,360 94,432 Q104,434 112,434.6 C114,360 120,290 132,232 Z" {SOMBRA_HONDA}/>'
     # pliegues como reflejos blancos sobre la frisa oscura
     '<path d="M138,236 C134,300 126,360 120,392 M147,236 C146,300 143,360 140,392 M155,236 C158,300 162,360 164,392 M162,238 C169,300 177,350 184,392 M131,250 C125,300 116,350 108,392" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-opacity="0.5"/>'
     # cintas de colores vistosos en el ruedo (Ocampo López): lavados de la paleta, con su labor en tinta
     + banda(394, 402, CINTAS[0], zigzag(394, 402))
     + banda(406, 412, CINTAS[1])
-    + banda(416, 428, CINTAS[2], rombos(416, 428)) +
+    + banda(416, 428, CINTAS[2], rombos(416, 428))) +
+    f'<path d="{FALDA_D}" fill="none" stroke="#000" stroke-width="3.2" stroke-linejoin="round"/>'
     '<path d="M126,232 L166,232" stroke="#000" stroke-width="1"/>'
     '<path d="M124,226 L168,226 L168.6,236 L123.4,236 Z" fill="#000"/>'
-    '<path d="M126,231 L166,231" stroke="#fff" stroke-width="0.7" stroke-dasharray="3 2"/>'
 )
 
 panolon = (
@@ -368,14 +361,14 @@ def punto_en(p1, p2, t, off=0.0):
 def zigzag_x(x1, x2, y1, y2):
     pts, x, up = [], x1 + 2, True
     while x < x2 - 2:
-        pts.append(f"{f(x)},{f((y1+1.5) if up else (y2-1.5))}"); x += 4; up = not up
-    return f'<path d="M{" L".join(pts)}" stroke="#000" stroke-width="1" fill="none"/>'
+        pts.append(f"{f(x)},{f((y1+1.5) if up else (y2-1.5))}"); x += 8; up = not up
+    return f'<path d="M{" L".join(pts)}" stroke="#000" stroke-width="1.3" fill="none"/>'
 
 def rombos_x(x1, x2, y1, y2):
     out, x, cy = [], x1 + 5, (y1 + y2) / 2
     while x < x2 - 4:
         out.append(f'<path d="M{f(x)},{f(cy-3.5)} L{f(x+3)},{f(cy)} L{f(x)},{f(cy+3.5)} L{f(x-3)},{f(cy)} Z" fill="#000"/>')
-        out.append(f'<circle cx="{f(x+5)}" cy="{f(cy)}" r="0.9" fill="#000"/>'); x += 10
+        x += 13
     return ''.join(out)
 
 def barro(puntos, semilla=3):
@@ -528,23 +521,22 @@ torso_monte = torso.split('    <!-- collar de abalorios')[0]
 
 barro_ruedo = barro([(104, 425), (112, 419), (121, 429), (133, 422), (147, 430), (160, 424), (171, 431), (183, 421), (193, 428), (100, 438), (126, 440), (152, 441), (178, 439)])
 falda_monte = falda + barro_ruedo
-enagua_monte = enagua() + '<path d="M97,437 C130,441 165,439 197,435 L197,442 C165,446 130,448 97,444 Z" fill="url(#semitono)"/>' + barro([(105, 440), (118, 445), (131, 441), (146, 446), (160, 442), (174, 445), (188, 440)], 5)
+enagua_monte = enagua() + '<path d="M97,437 C130,441 165,439 197,435 L197,442 C165,446 130,448 97,444 Z" fill="#000" fill-opacity="0.1"/>' + barro([(105, 440), (118, 445), (131, 441), (146, 446), (160, 442), (174, 445), (188, 440)], 5)
 
 RUANA_PIE = 'M144,124 C134,122 124,128 119,140 C111,170 106,220 104,272 C120,280 150,282 172,276 C174,236 172,190 168,156 C165,140 157,127 144,124 Z'
 ruana_pie = (
     f'<path d="{RUANA_PIE}" fill="{RUANA}" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>'
-    f'<path d="{RUANA_PIE}" fill="url(#lana-blanca)"/>'
     '<path d="M131,142 C124,180 118,225 116,272 M144,140 C142,185 141,230 142,276 M156,144 C160,190 161,235 162,276" stroke="#fff" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
-    '<path d="M108,264 C125,271 150,273 170,268" stroke="#fff" stroke-width="1.4" fill="none" stroke-dasharray="3 2"/>'
+    + recortar('ruana-listas', RUANA_PIE, f'<path d="M100,258 C122,266 150,268 176,262" stroke="{LANA}" stroke-width="2.4" fill="none"/>'
+                                         f'<path d="M100,264 C122,272 150,274 176,268" stroke="{LANA}" stroke-width="1.3" fill="none"/>') +
     '<path d="M134,124 C144,131 158,133 168,128" stroke="#000" stroke-width="5" fill="none" stroke-linecap="round"/>'
     '<path d="M136,123.5 C146,129.5 158,131 166,127" stroke="#fff" stroke-width="0.8" fill="none" stroke-linecap="round"/>'
 )
 DOBLEZ_PIE = 'M138,124 C152,122 167,129 171,140 C170,154 162,163 151,165 C147,156 143,142 138,130 Z'
 doblez_pie = (
     f'<path d="{DOBLEZ_PIE}" fill="{RUANA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>'
-    f'<path d="{DOBLEZ_PIE}" fill="url(#lana-blanca)"/>'
     '<path d="M145,132 C151,140 155,150 156,160 M154,130 C160,137 164,146 165,153" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
-    '<path d="M151,165 C160,163 168,156 171,146" stroke="#fff" stroke-width="1.4" fill="none" stroke-dasharray="3 2"/>'
+    f'<path d="M151,165 C160,163 168,156 171,146" stroke="{LANA}" stroke-width="2" fill="none"/>'
 )
 
 def encabezado(titulo, extra):
@@ -625,16 +617,14 @@ cuerpo_ag = (
     # talón de la alpargata asomando atrás (en cuclillas)
     f'<path d="M93,466 C93,461 96,457 101,456 L112,456 L112,468 L95,469 Z" fill="{TELA}" stroke="#000" stroke-width="2"/>'
     f'<path d="M92,468 C96,470 106,471 114,470 L114,474 C106,475.5 96,475 92,473 Z" fill="{PAJA}" stroke="#000" stroke-width="2"/>'
-    '<path d="M92,468 C96,470 106,471 114,470 L114,474 C106,475.5 96,475 92,473 Z" fill="url(#fique-trenza)"/>'
     '<path d="M97,458 C101,460 106,460 111,458" stroke="#000" stroke-width="2.2" fill="none" stroke-linecap="round"/>'
     # enagua al ras del suelo, con barro
     '<path d="M102,458 L222,458 L223,470 Q220,474.5 216,471 Q212,475 208,471 Q204,475 200,471 Q196,475 192,471 Q188,475 184,471 Q180,475 176,471 Q172,475 168,471 Q164,475 160,471 Q156,475 152,471 Q148,475 144,471 Q140,475 136,471 Q132,475 128,471 Q124,475 120,471 Q116,475 112,471 Q108,475 104,471 Q101,474 101,469 Z" fill="' + TELA + '" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
-    '<path d="M103,466 L222,466 L222,472 L103,472 Z" fill="url(#semitono)"/>'
+    '<path d="M103,466 L222,466 L222,472 L103,472 Z" fill="#000" fill-opacity="0.1"/>'
     + barro([(108, 469), (123, 471), (139, 468), (157, 471), (171, 468), (189, 471), (205, 469), (217, 471)], 2) +
     # falda en domo sobre las rodillas
     f'<clipPath id="clip-falda-agachada"><path d="{FALDA_AG}"/></clipPath>'
     f'<path d="{FALDA_AG}" fill="{FALDA}" stroke="#000" stroke-width="3" stroke-linejoin="round"/>'
-    f'<path d="{FALDA_AG}" fill="url(#trama-densa)"/>'
     '<path d="M118,404 C110,414 104,440 104,466 L118,467 C116,440 120,420 128,400 Z" fill="#000"/>'
     '<path d="M206,388 C210,420 212,445 214,462 M194,380 C196,414 196,440 196,462 M178,376 C176,410 172,440 170,462 M160,380 C154,410 148,440 144,462 M140,388 C132,414 124,440 120,462" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-opacity="0.5"/>'
     '<path d="M196,376 C204,374 210,378 213,384" stroke="#fff" stroke-width="1.1" fill="none" stroke-linecap="round"/>'
@@ -650,18 +640,17 @@ cuerpo_ag = (
 RUANA_AG = 'M180,288 C190,290 197,296 199,305 C203,330 205,356 206,382 C190,394 172,406 154,420 C138,432 120,442 104,448 C102,400 110,346 128,316 C142,296 160,286 180,288 Z'
 ruana_ag = '<g transform="translate(2 14)">' + (
     f'<path d="{RUANA_AG}" fill="{RUANA}" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>'
-    f'<path d="{RUANA_AG}" fill="url(#lana-blanca)"/>'
     '<path d="M150,300 C134,330 122,380 116,440 M168,296 C160,330 150,380 140,428 M186,300 C188,330 186,360 182,394" stroke="#fff" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
-    '<path d="M110,440 C130,433 150,422 168,406 C182,396 194,388 202,380" stroke="#fff" stroke-width="1.4" fill="none" stroke-dasharray="3 2"/>'
+    + recortar('ruana-ag-listas', RUANA_AG, f'<path d="M104,438 C126,431 148,420 166,404 C180,394 194,386 206,377" stroke="{LANA}" stroke-width="2.4" fill="none"/>'
+                                            f'<path d="M104,444 C127,437 150,426 168,410 C182,400 196,392 208,383" stroke="{LANA}" stroke-width="1.3" fill="none"/>') +
     '<path d="M170,290 C180,296 192,298 198,296" stroke="#000" stroke-width="5" fill="none" stroke-linecap="round"/>'
     '<path d="M172,289 C181,294 191,296 196,294.6" stroke="#fff" stroke-width="0.8" fill="none" stroke-linecap="round"/>'
 ) + '</g>'
 DOBLEZ_AG = 'M176,298 C188,296 200,302 204,312 C204,324 198,332 190,334 C186,326 181,312 176,302 Z'
 doblez_ag = '<g transform="translate(2 14)">' + (
     f'<path d="{DOBLEZ_AG}" fill="{RUANA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>'
-    f'<path d="{DOBLEZ_AG}" fill="url(#lana-blanca)"/>'
     '<path d="M182,304 C187,312 190,320 191,328 M190,302 C195,308 198,316 199,322" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
-    '<path d="M190,334 C198,332 203,326 204,316" stroke="#fff" stroke-width="1.4" fill="none" stroke-dasharray="3 2"/>'
+    f'<path d="M190,334 C198,332 203,326 204,316" stroke="{LANA}" stroke-width="2" fill="none"/>'
 ) + '</g>'
 
 HOMBRO, CODO, MUNECA = (188, 330), (215, 385), (222, 446)
@@ -669,12 +658,12 @@ brazo_ag = (
     f'<path d="{tubo(HOMBRO, CODO, 10, 8)}" fill="{TELA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>'
     + ''.join(f'<path d="M{f(a[0])},{f(a[1])} L{f(b[0])},{f(b[1])}" stroke="#000" stroke-width="0.9"/>'
               for a, b in [(punto_en(HOMBRO, CODO, 0.05, o), punto_en(HOMBRO, CODO, 0.22, o * 0.9)) for o in (-5, 0, 5)])
-    + f'<path d="M{f(punto_en(HOMBRO, CODO, 0.2, -7)[0])},{f(punto_en(HOMBRO, CODO, 0.2, -7)[1])} L{f(punto_en(HOMBRO, CODO, 0.95, -5.5)[0])},{f(punto_en(HOMBRO, CODO, 0.95, -5.5)[1])} L{f(punto_en(HOMBRO, CODO, 0.95, -2.5)[0])},{f(punto_en(HOMBRO, CODO, 0.95, -2.5)[1])} L{f(punto_en(HOMBRO, CODO, 0.2, -3.5)[0])},{f(punto_en(HOMBRO, CODO, 0.2, -3.5)[1])} Z" fill="url(#trama-fina)"/>'
+    + f'<path d="M{f(punto_en(HOMBRO, CODO, 0.2, -7)[0])},{f(punto_en(HOMBRO, CODO, 0.2, -7)[1])} L{f(punto_en(HOMBRO, CODO, 0.95, -5.5)[0])},{f(punto_en(HOMBRO, CODO, 0.95, -5.5)[1])} L{f(punto_en(HOMBRO, CODO, 0.95, -2.5)[0])},{f(punto_en(HOMBRO, CODO, 0.95, -2.5)[1])} L{f(punto_en(HOMBRO, CODO, 0.2, -3.5)[0])},{f(punto_en(HOMBRO, CODO, 0.2, -3.5)[1])} Z" fill="#000" fill-opacity="0.1"/>'
 )
 pu1, pu2 = punto_en(CODO, MUNECA, 0.8, 0), punto_en(CODO, MUNECA, 0.97, 0)
 antebrazo_ag = (
     f'<path d="{tubo(CODO, MUNECA, 7.6, 6.2)}" fill="{TELA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>'
-    f'<path d="M{f(punto_en(CODO, MUNECA, 0.1, -5)[0])},{f(punto_en(CODO, MUNECA, 0.1, -5)[1])} L{f(punto_en(CODO, MUNECA, 0.78, -4)[0])},{f(punto_en(CODO, MUNECA, 0.78, -4)[1])} L{f(punto_en(CODO, MUNECA, 0.78, -1.5)[0])},{f(punto_en(CODO, MUNECA, 0.78, -1.5)[1])} L{f(punto_en(CODO, MUNECA, 0.1, -2)[0])},{f(punto_en(CODO, MUNECA, 0.1, -2)[1])} Z" fill="url(#trama-fina)"/>'
+    f'<path d="M{f(punto_en(CODO, MUNECA, 0.1, -5)[0])},{f(punto_en(CODO, MUNECA, 0.1, -5)[1])} L{f(punto_en(CODO, MUNECA, 0.78, -4)[0])},{f(punto_en(CODO, MUNECA, 0.78, -4)[1])} L{f(punto_en(CODO, MUNECA, 0.78, -1.5)[0])},{f(punto_en(CODO, MUNECA, 0.78, -1.5)[1])} L{f(punto_en(CODO, MUNECA, 0.1, -2)[0])},{f(punto_en(CODO, MUNECA, 0.1, -2)[1])} Z" fill="#000" fill-opacity="0.1"/>'
     # puño bordado
     f'<path d="{tubo(pu1, pu2, 7.4, 7.2)}" fill="{TELA}" stroke="#000" stroke-width="2"/>'
     + ''.join(f'<circle cx="{f(punto_en(pu1, pu2, 0.5, o)[0])}" cy="{f(punto_en(pu1, pu2, 0.5, o)[1])}" r="0.8" fill="#000"/>' for o in (-4.5, -1.5, 1.5, 4.5)) +
@@ -685,7 +674,7 @@ antebrazo_ag = (
     # pulgar del lado visible, separado
     f'<path d="M224,462 C229,463 234,465 238,468 C240,469.6 239.4,472.4 237,472.6 C232,472.6 227,470.6 223.6,467.6" fill="{PIEL}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
     '<path d="M235.6,469.4 Q237.4,469.6 237.8,471.4 M248.6,470.4 Q250.4,470.8 250.6,472.6" stroke="#000" stroke-width="0.7" fill="none"/>'
-    '<path d="M216,456 C215.4,462 216,468 219,472 L221,471 C218.6,467 218,462 218.4,456 Z" fill="url(#semitono)"/>'
+    '<path d="M216,456 C215.4,462 216,468 219,472 L221,471 C218.6,467 218,462 218.4,456 Z" fill="#000" fill-opacity="0.1"/>'
 )
 
 guardar('rosalba-agachada.svg', encabezado('Rosalba Insuasty — agachada (sigilo), variante monte. Pose dibujada aparte.',
@@ -869,7 +858,7 @@ def sombrero_34():
         if not ala_visible((t0 + t1) / 2, (SOMB_R0 + SOMB_R) / 2):
             bajo.append(polilinea([s_px(ala_p(t0, SOMB_R0)), s_px(ala_p(t1, SOMB_R0)), s_px(ala_p(t1, SOMB_R)), s_px(ala_p(t0, SOMB_R))], True))
     if bajo:
-        v.append(f'<path d="{" ".join(bajo)}" fill="url(#trama-densa)"/>')
+        v.append(f'<path d="{" ".join(bajo)}" fill="#000" fill-opacity="0.26"/>')
     # sombra que la copa arroja sobre el ala (luz de la izquierda)
     sombra_ala = []
     for i in range(60):
@@ -878,24 +867,12 @@ def sombrero_34():
         largo = 26 * max(0.0, math.cos(tm - math.radians(8))) ** 1.5
         if largo > 1 and ala_visible(tm, SOMB_R0 + 4):
             sombra_ala.append(polilinea([s_px(ala_p(t0, SOMB_R0)), s_px(ala_p(t1, SOMB_R0)), s_px(ala_p(t1, SOMB_R0 + largo)), s_px(ala_p(t0, SOMB_R0 + largo))], True))
-    v.append(f'<path d="{" ".join(sombra_ala)}" fill="url(#trama-fina)"/>')
-    anillos = [SOMB_R0 + 2 + i * 8.4 for i in range(int((SOMB_R - SOMB_R0 - 6) / 8.4) + 1)]
-    lineas, puntadas = [], []
-    for r in anillos:
-        lineas += [polilinea(t) for t in arcos(lambda th, r=r: ala_p(th, r), lambda th, r=r: ala_visible(th, r)) if len(t) > 1]
-    for j in range(len(anillos) - 1):
-        r0, r1 = anillos[j], anillos[j + 1]
-        rm = (r0 + r1) / 2
-        n = int(2 * math.pi * rm / 5.6)
-        lado = 1 if j % 2 == 0 else -1
-        for i in range(n):
-            th = 2 * math.pi * i / n
-            if ala_visible(th, rm):
-                d = lado * 2.8 / rm
-                a, b = s_px(ala_p(th - d, r0 + 0.9)), s_px(ala_p(th + d, r1 - 0.9))
-                puntadas.append(f'M{f(a[0])},{f(a[1])} L{f(b[0])},{f(b[1])}')
-    v.append(f'<path d="{" ".join(lineas)}" stroke="#000" stroke-width="0.8" fill="none"/>')
-    v.append(f'<path d="{" ".join(puntadas)}" stroke="#000" stroke-width="0.55" fill="none"/>')
+    v.append(f'<path d="{" ".join(sombra_ala)}" fill="#000" fill-opacity="0.1"/>')
+    # pocas marcas: dos vueltas de la trenza de paja en el ala (doc 03 §1 «Relleno»)
+    for r in (SOMB_R0 + 17, SOMB_R0 + 35):
+        for t in arcos(lambda th, r=r: ala_p(th, r), lambda th, r=r: ala_visible(th, r)):
+            if len(t) > 1:
+                v.append(f'<path d="{polilinea(t)}" stroke="#000" stroke-width="1.2" fill="none"/>')
     # ribete del borde (la última vuelta de trencilla, doblada)
     for t in arcos(lambda th: ala_p(th, SOMB_R - 3), lambda th: ala_visible(th, SOMB_R - 3)):
         v.append(f'<path d="{polilinea(t)}" stroke="#000" stroke-width="1.4" fill="none"/>')
@@ -903,7 +880,7 @@ def sombrero_34():
     pts = [s_px(copa_p(2 * math.pi * i / 72, SOMB_H * k / 30)) for i in range(72) for k in range(31)]
     v.append(f'<path d="{polilinea(envolvente(pts), True)}" fill="{PAJA}" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>')
     luz = unit(LUZ)
-    sombra, anillos_c, puntadas = [], [], []
+    sombra = []
     for i in range(96):
         for k in range(30):
             th0, th1 = 2 * math.pi * i / 96, 2 * math.pi * (i + 1.02) / 96
@@ -911,24 +888,13 @@ def sombrero_34():
             nc = unit(s_cam(copa_n((th0 + th1) / 2, (h0 + h1) / 2)))
             if nc[2] > 0 and sum(a * b for a, b in zip(nc, luz)) < 0.18:
                 sombra.append(polilinea([s_px(copa_p(th0, h0)), s_px(copa_p(th1, h0)), s_px(copa_p(th1, h1)), s_px(copa_p(th0, h1))], True))
-    v.append(f'<path d="{" ".join(sombra)}" fill="url(#trama-fina)"/>')
+    v.append(f'<path d="{" ".join(sombra)}" fill="#000" fill-opacity="0.1"/>')
     vis_c = lambda th, h: s_cam(copa_n(th, h))[2] > 0
-    alturas = [10 + i * 5.6 for i in range(int((SOMB_H - 14) / 5.6) + 1)] + [46.6, 48.8]
-    for h in alturas:
-        anillos_c += [polilinea(t) for t in arcos(lambda th, h=h: copa_p(th, h), lambda th, h=h: vis_c(th, h)) if len(t) > 1]
-    for j in range(len(alturas) - 1):
-        h0, h1 = alturas[j], alturas[j + 1]
-        rm = copa_r((h0 + h1) / 2)
-        n = max(8, int(2 * math.pi * rm / 4.6))
-        lado = 1 if j % 2 == 0 else -1
-        for i in range(n):
-            th = 2 * math.pi * i / n
-            if vis_c(th, (h0 + h1) / 2):
-                d = lado * 2.3 / max(rm, 8)
-                a, b = s_px(copa_p(th - d, h0 + 0.8)), s_px(copa_p(th + d, h1 - 0.8))
-                puntadas.append(f'M{f(a[0])},{f(a[1])} L{f(b[0])},{f(b[1])}')
-    v.append(f'<path d="{" ".join(anillos_c)}" stroke="#000" stroke-width="0.9" fill="none"/>')
-    v.append(f'<path d="{" ".join(puntadas)}" stroke="#000" stroke-width="0.6" fill="none"/>')
+    # y tres vueltas en la copa
+    for h in (15, 27, 38):
+        for t in arcos(lambda th, h=h: copa_p(th, h), lambda th, h=h: vis_c(th, h)):
+            if len(t) > 1:
+                v.append(f'<path d="{polilinea(t)}" stroke="#000" stroke-width="1.2" fill="none"/>')
     tope = s_px(copa_p(0, SOMB_H))
     v.append(f'<ellipse cx="{f(tope[0])}" cy="{f(tope[1] + 3)}" rx="3.2" ry="1.4" fill="none" stroke="#000" stroke-width="0.8"/>')
     # --- cinta negra con puntada y moño al costado de atrás
@@ -937,8 +903,6 @@ def sombrero_34():
         ths = [th for th in ths if vis_c(th, (h0 + h1) / 2)]
         return [s_px(copa_p(th, h0)) for th in ths] + [s_px(copa_p(th, h1)) for th in reversed(ths)]
     v.append(f'<path d="{polilinea(franja(0, 9.5), True)}" fill="#000"/>')
-    for t in arcos(lambda th: copa_p(th, 4.8), lambda th: vis_c(th, 4.8)):
-        v.append(f'<path d="{polilinea(t)}" stroke="#fff" stroke-width="0.8" fill="none" stroke-dasharray="3 2.2"/>')
     mx, my = s_px(copa_p(math.radians(170), 5))
     v.append(f'<g transform="translate({f(mx)} {f(my)})">'
              '<path d="M0,0 C-5,-9 -15,-12 -19,-5 C-21,0 -12,2 0,0 Z" fill="#000" stroke="#fff" stroke-width="0.7"/>'
@@ -1009,9 +973,6 @@ def trenza_34(camino, ancho0, ancho1, n):
         u0 = k / n
         sep = [borde(u0, lado, 0.9), borde(u0 + 0.5 / n, lado, 0.25), borde(u0 + 0.95 / n, -lado, 0.35)]
         out.append(pincel(suave(sep), 1.9, 0.9, 0.1, '#fff', 10))
-        for d, fr in ((0.32, 0.55), (0.62, 0.4)):
-            hebra = [borde(u0 + d / n, lado, 0.75), borde(u0 + (d + 0.42) / n, lado, 0.05), borde(u0 + (d + 0.75) / n, -lado, 0.3 * fr)]
-            out.append(pincel(suave(hebra), 0.8, 0.3, 0.05, '#fff', 8))
     fin, _, _ = en(1.0)
     return ''.join(out), fin
 
@@ -1107,7 +1068,6 @@ def busto_34(variante):
         lejos = ('M236,302 C268,306 302,318 322,336 C336,354 342,410 348,480 L266,480 C264,420 262,362 260,328 '
                  'C258,316 250,308 236,302 Z')
         v.append(f'<path d="{cerca}" fill="#000" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/>')
-        v.append(f'<path d="{cerca}" fill="url(#lana-blanca)" opacity="0.55"/>')
         v.append(f'<path d="{lejos}" fill="#000" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/>')
         v.append(borde_bordado([(182, 320), (178, 370), (174, 420), (170, 480)], 22, 1, flores=(CINTAS[2], CINTAS[0]), hojas=CINTAS[1]))
         v.append(borde_bordado([(266, 332), (268, 380), (270, 430), (272, 480)], 22, -1, semilla=1, flores=(CINTAS[0], CINTAS[2]), hojas=CINTAS[1]))
@@ -1125,16 +1085,16 @@ def busto_34(variante):
         cuerpo = ('M178,292 C164,300 150,318 142,342 C132,372 126,430 124,480 L352,480 C348,410 342,360 330,338 '
                   'C314,318 280,304 244,300 C234,312 212,316 196,308 Z')
         v.append(f'<path d="{cuerpo}" fill="{RUANA}" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/>')
-        v.append(f'<path d="{cuerpo}" fill="url(#lana-blanca)" opacity="0.7"/>')
         for pts, w in [([(166, 338), (158, 372), (154, 404)], 1.6), ([(212, 346), (210, 374), (208, 398)], 1.0),
                        ([(262, 326), (268, 360), (272, 394)], 1.6), ([(300, 336), (312, 370), (318, 404)], 1.2),
                        ([(150, 420), (146, 446), (144, 472)], 1.1), ([(282, 412), (288, 440), (290, 470)], 1.1)]:
             v.append(pincel(suave(pts), w, 0.1, 0.1, '#fff'))
         doblez = 'M180,288 C152,292 118,304 92,322 C82,330 84,344 96,346 C120,334 150,326 174,322 C188,316 190,300 180,288 Z'
         v.append(f'<path d="{doblez}" fill="{RUANA}" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/>')
-        v.append(f'<path d="{doblez}" fill="url(#lana-blanca)"/>')
         v.append(pincel([(96, 344), (120, 332), (150, 324), (174, 320)], 2.2, 0.2, 0.4, '#fff'))
-        v.append('<path d="M100,340 C124,330 150,322 172,318" stroke="#fff" stroke-width="1" fill="none" stroke-dasharray="4 3"/>')
+        v.append(f'<path d="M100,340 C124,330 150,322 172,318" stroke="{LANA}" stroke-width="2" fill="none"/>')
+        v.append(recortar('r34-ruana-listas', cuerpo, f'<path d="M110,452 C180,446 280,446 360,454" stroke="{LANA}" stroke-width="3.2" fill="none"/>'
+                                                     f'<path d="M110,462 C180,456 280,456 360,464" stroke="{LANA}" stroke-width="1.8" fill="none"/>'))
         v.append(pincel([(172, 292), (190, 314), (226, 320), (246, 302)], 12, 0.6, 0.7))
         v.append(pincel([(173, 293), (190, 313), (226, 318.5), (245, 302.5)], 8.4, 0.6, 0.7, RUANA))
         v.append(pincel([(176, 296), (194, 312), (224, 316), (242, 304)], 1.4, 0.2, 0.2, '#fff'))
@@ -1142,8 +1102,7 @@ def busto_34(variante):
     v.append(f'<path d="{CUELLO_34}" fill="{PIEL}" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/>')
     v.append('<g clip-path="url(#r34-cuello)">'
              f'<path d="M176,236 C196,256 222,268 244,262 L244,284 C222,290 196,282 176,262 Z" fill="{PIEL_SOMBRA}"/>'
-             '<path d="M176,236 C196,256 222,268 244,262 L244,284 C222,290 196,282 176,262 Z" fill="url(#trama-media)"/>'
-             '<path d="M176,250 C184,270 186,290 182,312 L170,312 L170,250 Z" fill="url(#trama-fina)"/></g>')
+             '<path d="M176,250 C184,270 186,290 182,312 L170,312 L170,250 Z" fill="#000" fill-opacity="0.1"/></g>')
     v.append(pincel([(200, 276), (208, 288), (216, 298), (222, 305)], 1.0, 0.05, 0.5))
     v.append('<path d="M222,306 C226,310 230,310 234,306" stroke="#000" stroke-width="1" fill="none"/>')
     escote = cadena([(172, 304), (196, 316), (222, 318), (240, 310)], 40)
@@ -1187,7 +1146,7 @@ def busto_34(variante):
     v.append('<ellipse cx="249.5" cy="201" rx="1.6" ry="1.1" fill="#fff"/>')
     # oreja cercana con zarcillo; el pelo tapa su borde de arriba
     v.append(f'<path d="{OREJA_34}" fill="{PIEL}" stroke="#000" stroke-width="2.2" stroke-linejoin="round"/>')
-    v.append('<path d="M162,186 C158,190 158,198 163,203 L167,200 C165,194 165,190 166,186 Z" fill="url(#trama-media)"/>')
+    v.append('<path d="M162,186 C158,190 158,198 163,203 L167,200 C165,194 165,190 166,186 Z" fill="#000" fill-opacity="0.18"/>')
     v.append(pincel([(167, 172), (157, 168), (150, 178), (151, 192), (153, 200), (156, 206), (160, 209)], 1.4, 0.2, 0.4))
     v.append(pincel([(165, 180), (159, 182), (157, 190), (161, 198)], 1.2, 0.3, 0.2))
     v.append('<path d="M170,192 C168,194 168,197 170,199" stroke="#000" stroke-width="1.1" fill="none"/>')
@@ -1207,7 +1166,7 @@ def busto_34(variante):
         # sombra del ala en la frente, barbuquejo por la mejilla cercana y bajo el mentón, sombrero
         borde = ala_frente()
         franja = polilinea(borde) + ' ' + ' '.join(f'L{f(x)},{f(y + 6 + 9 * min(max((x - 168) / 100, 0), 1))}' for x, y in reversed(borde)) + ' Z'
-        v.append(f'<g clip-path="url(#r34-cara)"><path d="{franja}" fill="{PIEL_SOMBRA}"/><path d="{franja}" fill="url(#trama-fina)"/></g>')
+        v.append(f'<g clip-path="url(#r34-cara)"><path d="{franja}" fill="{PIEL_SOMBRA}"/></g>')
         barb = [(170, 128), (173, 150), (174, 174), (174, 198), (176, 220), (182, 238), (194, 250), (210, 259), (224, 264)]
         d = ruta(suave(barb))
         puntas = 'M223,266 C221,270 220,274 221,278 M226,266 C228,269 230,272 232,274'
@@ -1237,7 +1196,7 @@ def ojo_34(clave, cx, cy, ancho, arriba, abajo, iris, mira, lado, peso=1.0, tens
            f'<ellipse cx="{f(ix)}" cy="{f(iy)}" rx="{f(rx * 0.62)}" ry="{f(ry * 0.62)}" fill="none" stroke="#fff" stroke-width="0.5" stroke-opacity="0.55"/>'
            f'<circle cx="{f(ix - rx * 0.35)}" cy="{f(iy - ry * 0.38)}" r="{f(min(rx, ry) * 0.3)}" fill="#fff"/>'
            f'<circle cx="{f(ix + rx * 0.38)}" cy="{f(iy + ry * 0.36)}" r="{f(min(rx, ry) * 0.13)}" fill="#fff"/>'
-           f'<path d="M{f(O[0])},{f(O[1])} C{f(sup[1][0])},{f(sup[1][1])} {f(sup[2][0])},{f(sup[2][1])} {f(I[0])},{f(I[1])}" stroke="url(#trama-media)" stroke-width="5" fill="none"/>'
+           f'<path d="M{f(O[0])},{f(O[1])} C{f(sup[1][0])},{f(sup[1][1])} {f(sup[2][0])},{f(sup[2][1])} {f(I[0])},{f(I[1])}" stroke="#000" stroke-opacity="0.26" stroke-width="5" fill="none"/>'
            '</g>']
     # párpado de arriba: grueso hacia afuera, con el remate de las pestañas
     out.append(pincel([(O[0] - s * 1.5, O[1] + 0.6), sup[1], sup[2], I], 3.4 * peso, 0.9, 0.25))

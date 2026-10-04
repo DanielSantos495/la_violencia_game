@@ -25,8 +25,14 @@ envejecer con la historia: empieza como muchacha de mercado y termina en el mont
   ancha y casi al tobillo, alpargatas blancas abajo. Se reconoce incluso pequeña y en paralaje.
 - **Valores y color:** tinta plena en pelo, pañolón y siluetas; lavados apagados de la paleta
   (`../paleta.md` v1.0, aprobada el 02-oct-2026; tokens por pieza en su §9): piel, blanco de tela,
-  paja, negro de añil en la falda, lana parda en la ruana. Las sombras van en trama sobre el
-  lavado (`piel-sombra` bajo el ala y la mandíbula). Cara y manos claras para que se lean primero.
+  paja, negro de añil en la falda, lana parda en la ruana. Cara y manos claras para que se lean
+  primero.
+- **Detalle limpio** (doc 03 §1 «Relleno», 04-oct-2026): sin trama de textura. Las sombras son
+  aguada plana de tinta en cuatro niveles (0,1 / 0,18 / 0,26 / 0,4) o `piel-sombra` en la cara;
+  Rosalba no tiene sombras grandes de primer plano, así que no lleva rayado. Las texturas son
+  pocas marcas dibujadas: dos o tres vueltas en el sombrero, dos listas de lana cruda en la ruana,
+  zigzag y rombos abiertos en las cintas del ruedo, flecos espaciados. Pliegues, sombras y cintas
+  de la falda y listas de la ruana van recortados a su silueta.
 - **Único color entero:** la **cinta roja** al final de la trenza, en `rojo-liberal` (`#ca2d23`,
   doc 03 §1). Es un rasgo documentado del traje (abajo) y a la vez la marca partidista discreta del
   personaje; en la historia pasa de adorno a señal peligrosa (aprobado por Daniel el 02-oct-2026;
@@ -85,7 +91,8 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
   nariz; puente de la nariz que tapa el lagrimal lejano; luz de arriba a la izquierda (sombra en
   el lado lejano, bajo la nariz, bajo el ala y bajo la mandíbula). Trazo de grosor variable en
   párpados, cejas, labios y contorno. Sombrero proyectado en 3D: copa redonda, ala caída y
-  trencilla cosida en espiral, con cinta negra y moño al costado de atrás; barbuquejo pegado al
+  unas vueltas de trencilla (dos en el ala, tres en la copa), con cinta negra y moño al costado
+  de atrás; barbuquejo pegado al
   borde de la cara y anudado bajo el mentón. Pelo recogido hacia la nuca, de donde sale la
   trenza de tres cabos. Pechera bordada con columna central simétrica, guarda de flores en el
   escote y abalorios en dos vueltas; pañolón con guarda bordada en los bordes delanteros. En el
