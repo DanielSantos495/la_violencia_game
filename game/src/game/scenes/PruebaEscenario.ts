@@ -9,10 +9,12 @@ import { Escenario, precargarEscenario } from '../escenarios/Escenario.ts';
 import { Personaje } from '../Personaje.ts';
 import {
   APOYO_ROSALBA,
+  atlasRosalba,
   CAMINATA_ROSALBA,
   ESCALA_ROSALBA,
   PIEZA_CINTA,
   ROSALBA_MERCADO,
+  rosalbaMonte,
 } from '../personajes/rosalba.ts';
 
 /**
@@ -65,7 +67,7 @@ export class PruebaEscenario extends Scene {
   }
 
   preload(): void {
-    cargarAtlas(this, 'personajes');
+    cargarAtlas(this, atlasRosalba(this.def.acto ?? 'prologo'));
     precargarEscenario(this, this.def);
   }
 
@@ -75,15 +77,21 @@ export class PruebaEscenario extends Scene {
     const escenario = new Escenario(this, this.def);
     this.escenario = escenario;
 
+    // Rosalba del acto del escenario: en el Prólogo, de mercado y con la cinta; desde la M2, de
+    // monte y sin la cinta (P32).
+    const acto = this.def.acto ?? 'prologo';
     const rosalba = new Personaje(
       this,
       300,
       Y_SUELO,
-      'personajes',
+      atlasRosalba(acto),
       APOYO_ROSALBA,
-      ROSALBA_MERCADO,
+      acto === 'prologo' ? ROSALBA_MERCADO : rosalbaMonte(acto),
       'de-pie',
-      { caminata: CAMINATA_ROSALBA },
+      {
+        caminata: CAMINATA_ROSALBA,
+        ocultas: acto === 'prologo' ? [] : [PIEZA_CINTA],
+      },
     );
     rosalba.raiz.setScale(ESCALA_ROSALBA);
     const tinte = TINTE_NOCHE[this.nombre];

@@ -42,6 +42,11 @@ export interface DefinicionEscenario {
   anchoNivel: number;
   /** Color de la paleta (id) del fondo de cámara: el cielo de las escenas de noche. Por defecto 'papel'. */
   fondo?: string;
+  /**
+   * Acto del guion de color (paleta.md §5; ids de `guion` en paleta.json) con el que se generó:
+   * los personajes que entren deben ser de ese acto. Por defecto 'prologo'.
+   */
+  acto?: 'prologo' | 'acto1' | 'acto2' | 'acto3' | 'epilogo';
   capas: Partial<Record<IdCapa, CapaEscenario>>;
 }
 

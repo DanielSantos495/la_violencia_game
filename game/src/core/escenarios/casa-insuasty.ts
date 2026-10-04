@@ -21,6 +21,7 @@ export function casaInsuastyInterior(acto: ActoCasa): DefinicionEscenario {
   return {
     atlas: `fondos/casa-insuasty/interior-${acto}`,
     anchoNivel: 3220,
+    acto,
     capas: {
       juego: {
         colocaciones: [
@@ -45,6 +46,7 @@ export function casaInsuastyExterior(acto: ActoCasa): DefinicionEscenario {
   return {
     atlas: `fondos/casa-insuasty/exterior-${acto}`,
     anchoNivel: 4600,
+    acto,
     fondo: 'sepia-oscuro',
     capas: {
       cielo: { colocaciones: [arriba('cielo-noche', 0)] },

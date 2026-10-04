@@ -94,14 +94,16 @@ dramáticos, que va en la escena del juego.
   cambia `ESCENA`, `GENERADOR`, `OUTDIR` y el acto (`usar_acto`). `fachada_con_corredor` acepta
   `esquinas`, para que una fachada partida en módulos no lleve esquina en los empalmes.
 - `casa-insuasty.ts` define `casaInsuastyInterior(acto)` y `casaInsuastyExterior(acto)`.
-  `catalogo.ts` reúne los escenarios por nombre. `DefinicionEscenario.fondo` da el fondo de cámara.
+  `catalogo.ts` reúne los escenarios por nombre. `DefinicionEscenario.fondo` da el fondo de cámara
+  y `DefinicionEscenario.acto` el acto del guion de color, para que entren personajes de ese acto.
 - `tests/escenarios.test.ts` revisa:
   - En todo el catálogo: módulos de 2048 px como máximo y dentro de su capa, fondo de la paleta y
     un frente que no tapa al personaje.
   - En la casa: viñetas y muros sin huecos, un plano de juego que cubre el nivel, lo lejano y lo
     medio cubriendo lo que se ve por los extremos, y los mismos módulos en los dos actos.
-- `PruebaEscenario` acepta `?escenario=` y tiñe a Rosalba de noche con un tinte de prueba parejo
-  (sin tocar la cinta, que es roja de partido).
+- `PruebaEscenario` acepta `?escenario=` y usa la Rosalba del acto: en el Prólogo, de mercado y
+  con la cinta; en el Acto I, de monte y sin la cinta (P32). De noche la tiñe con un tinte de
+  prueba parejo que no toca la cinta, porque es roja de partido.
 
 ## 6. Pendientes
 
