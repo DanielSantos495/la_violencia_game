@@ -50,7 +50,7 @@ su **rama**; la carpeta principal queda para la integración y los chats sin ár
 | Área | Carpeta | Rama | Territorio |
 |---|---|---|---|
 | Integración y otros chats | `la_violencia_game` | `setup/tomo1-base` | Lo que no sea de un área |
-| Rosalba | `la_violencia_game--rosalba` | `arte/rosalba` | `game/art/src/personajes/`, `game/art/gen/rosalba.py`, `game/src/game/personajes/`, `Personaje.ts`, `Caminata.ts`, `game/src/core/animacion/`, `game/src/game/scenes/Prueba.ts` (escena de prueba de Rosalba), `planeacion/arte/tomo1/personajes/` |
+| Rosalba | `la_violencia_game--rosalba` | `arte/rosalba` | `game/art/src/personajes/`, `game/art/gen/rosalba.py`, `game/src/game/personajes/`, `Personaje.ts`, `Caminata.ts`, `Carrera.ts`, `game/src/core/animacion/`, `game/tools/art-walk.ts` (hojas y guardas de caminata y carrera), `game/src/game/scenes/Prueba.ts` (escena de prueba de Rosalba), `planeacion/arte/tomo1/personajes/` |
 | Fondos y escenarios | `la_violencia_game--fondos` | `arte/fondos` | Fondos y escenarios, `game/tools/art-build.ts` (un atlas por carpeta), escala del personaje en escena y su propia escena de prueba |
 
 - **Integración:** `setup/tomo1-base` es la rama de integración. Cuando un bloque de un área
