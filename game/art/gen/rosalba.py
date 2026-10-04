@@ -5,15 +5,70 @@ manos, alpargatas, falda) sean idénticas en todas las poses y variantes.
   python3 art/gen/rosalba.py            (desde game/; sin dependencias)
 Si editas un SVG a mano, porta el cambio aquí o se perderá al regenerar.
 Hoja de personaje y fuentes: planeacion/arte/tomo1/personajes/rosalba.md.
-"""
-import json, math, os, re, sys
 
-OUTDIR = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'src', 'personajes')
+Variantes por acto (guion de color, paleta.md §5): sin argumentos genera todos los actos, cada uno
+en su proceso; con --acto=<id> solo ese. El Prólogo (croma ×1) va en art/src/personajes/; los demás
+actos, en art/src/personajes/<acto>/ (un atlas por carpeta), solo con los dibujos que usan.
+"""
+import json, math, os, re, subprocess, sys
+
+_AQUI = os.path.dirname(os.path.abspath(__file__))
+_DATOS = json.load(open(os.path.join(_AQUI, '..', 'paleta.json'), encoding='utf-8'))
+_MONTE = ('rosalba-monte', 'rosalba-agachada', 'rosalba-corriendo', 'rosalba-cabezas', 'rosalba-agachada-cabezas', 'rosalba-retrato')
+# Qué dibujos necesita cada acto (doc 02). Mercado: Prólogo y Acto I antes del ataque; la cinta
+# suelta es del Prólogo b2; monte: desde la M2 (Acto I). Las variantes del Llano y de los actos
+# siguientes están pendientes de diseño (hoja de personaje §2): mientras, el monte con el color del acto.
+ACTOS_ROSALBA = {
+    'prologo': ('rosalba', 'rosalba-cabezas', 'rosalba-retrato', 'cinta-roja'),
+    'acto1': ('rosalba',) + _MONTE,
+    'acto2': _MONTE,
+    'acto3': _MONTE,
+    'epilogo': _MONTE,
+}
+_GENERADOS = {n for nombres in ACTOS_ROSALBA.values() for n in nombres}
+_args = [a for a in sys.argv[1:] if not a.startswith('--acto=')]
+_RAIZ = _args[0] if _args else os.path.join(_AQUI, '..', 'src', 'personajes')
+ACTO = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--acto=')), None)
+if ACTO is None:
+    # Cada acto en su proceso: los colores son constantes del módulo y dependen del acto.
+    for acto, nombres in ACTOS_ROSALBA.items():
+        carpeta = _RAIZ if acto == 'prologo' else os.path.join(_RAIZ, acto)
+        # Fuera las copias que este acto ya no lleva (solo archivos que genera este script).
+        if os.path.isdir(carpeta):
+            for archivo in os.listdir(carpeta):
+                if archivo.endswith('.svg') and archivo[:-4] in _GENERADOS and archivo[:-4] not in nombres:
+                    os.remove(os.path.join(carpeta, archivo))
+        subprocess.run([sys.executable, os.path.abspath(__file__), f'--acto={acto}', *_args], check=True)
+    sys.exit(0)
+GUION = next(a for a in _DATOS['guion'] if a['id'] == ACTO)
+OUTDIR = _RAIZ if ACTO == 'prologo' else os.path.join(_RAIZ, ACTO)
+os.makedirs(OUTDIR, exist_ok=True)
+
+def _oklch_a_hex(L, C, h):
+    """OKLCH → hex sRGB (como oklch_a_hex de la skill paleta-tematica, sin buscar gama: bajar el
+    croma de un color que ya está en sRGB no lo saca de la gama)."""
+    a, b = C * math.cos(math.radians(h)), C * math.sin(math.radians(h))
+    l_ = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3
+    m_ = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3
+    s_ = (L - 0.0894841775 * a - 1.2914855480 * b) ** 3
+    lin = (4.0767416621 * l_ - 3.3077115913 * m_ + 0.2309699292 * s_,
+           -1.2684380046 * l_ + 2.6097574011 * m_ - 0.3413193965 * s_,
+           -0.0041960863 * l_ - 0.7034186147 * m_ + 1.7076147010 * s_)
+    srgb = (12.92 * c if c <= 0.0031308 else 1.055 * c ** (1 / 2.4) - 0.055 for c in (max(0.0, min(1.0, v)) for v in lin))
+    return '#' + ''.join(f'{round(c * 255):02x}' for c in srgb)
+
+def _en_acto(c):
+    """Color de la paleta en el acto: solo el registro que cambia con el guion (iluminacion) escala su
+    croma. El partido no: la cinta de Rosalba sigue roja también en el epílogo (paleta.md §5)."""
+    if c['registro'] == _DATOS.get('registro_guion', 'iluminacion') and GUION['croma_mundo'] != 1:
+        L, C, h = c['oklch']
+        return _oklch_a_hex(L, C * GUION['croma_mundo'], h)
+    return c['hex']
 
 # Paleta del juego (game/art/paleta.json; reglas y fuentes en planeacion/arte/tomo1/paleta.md).
 # El dibujo se escribe en tinta (#000) y papel (#fff); al guardar, #000 pasa a `tinta` y #fff
 # (brillos y reflejos) a `papel`. Los lavados de color se asignan aquí por material.
-PALETA = {c['id']: c['hex'] for c in json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'paleta.json'), encoding='utf-8'))['colores']}
+PALETA = {c['id']: _en_acto(c) for c in _DATOS['colores']}
 TINTA, PAPEL = PALETA['tinta'], PALETA['papel']
 PIEL, CHAPAS, TELA, PAJA = PALETA['piel'], PALETA['chapas'], PALETA['blanco-tela'], PALETA['paja']
 FALDA, RUANA, LANA, BARRO = PALETA['negro-anil'], PALETA['lana-parda'], PALETA['lana-cruda'], PALETA['barro']
@@ -561,15 +616,18 @@ def encabezado(titulo, extra):
   -->{defs}'''
 
 def escribir(ruta, texto):
-    """Guarda el SVG pasando la tinta (#000) y los brillos (#fff) a la paleta."""
+    """Guarda el SVG pasando la tinta (#000) y los brillos (#fff) a la paleta; solo si el acto lo lleva."""
+    if os.path.basename(ruta)[:-4] not in ACTOS_ROSALBA[ACTO]:
+        return False
     texto = re.sub(r'"#000"', f'"{TINTA}"', texto)
     texto = re.sub(r'"#fff"', f'"{PAPEL}"', texto)
     open(ruta, 'w', encoding='utf-8').write(texto)
+    print('ok', ACTO, os.path.basename(ruta))
+    return True
 
 def guardar(nombre, cuerpo):
     ruta = os.path.join(OUTDIR, nombre)
     escribir(ruta, cuerpo + '\n</svg>\n')
-    print('ok', nombre, len(cuerpo))
 
 # ======================= 1. de pie, mercado =======================
 guardar('rosalba.svg', encabezado('Rosalba Insuasty — de pie, traje de mercado (prólogo y Acto I).',
@@ -720,7 +778,6 @@ def hoja_cabezas(nombre, titulo, rotacion, ancho, alto, dx0, dy):
     cuerpo = encabezado(titulo, 'Expresiones: ' + ', '.join(EXPRESIONES) + '. Rostro simplificado: ojos, cejas, boca y postura (doc 03 §2).')
     cuerpo = cuerpo.replace('width="300" height="500" viewBox="0 0 300 500"', f'width="{ancho_total}" height="{alto}" viewBox="0 0 {ancho_total} {alto}"')
     escribir(ruta, cuerpo + ''.join(piezas) + '\n</svg>\n')
-    print('ok', nombre, len(ranuras), 'piezas')
 
 hoja_cabezas('rosalba-cabezas.svg', 'Rosalba Insuasty — cabezas por expresión (de pie).', 0, 90, 104, -110, -40)
 hoja_cabezas('rosalba-agachada-cabezas.svg', 'Rosalba Insuasty — cabezas por expresión (agachada, inclinada).', CAB_R, 100, 116, -104, -30)
@@ -1388,7 +1445,6 @@ def hoja_retrato():
                         'Base por variante + rasgos por expresión + parpadeo; todas las piezas con el pivote al pie del busto.')
     cuerpo = cuerpo.replace('width="300" height="500" viewBox="0 0 300 500"', f'width="{ancho}" height="{RET_H}" viewBox="0 0 {ancho} {RET_H}"')
     escribir(os.path.join(OUTDIR, 'rosalba-retrato.svg'), cuerpo + ''.join(piezas) + '\n</svg>\n')
-    print('ok rosalba-retrato.svg', len(ranuras), 'piezas')
 
 hoja_retrato()
 
@@ -1443,7 +1499,6 @@ def hoja_cinta():
                         'Doc 02 Prólogo b2 y doc 10 P31–P32: Aurelio se queda con la cinta y Heliodoro se la devuelve.')
     cuerpo = cuerpo.replace('width="300" height="500" viewBox="0 0 300 500"', 'width="256" height="200" viewBox="0 0 256 200"')
     escribir(os.path.join(OUTDIR, 'cinta-roja.svg'), cuerpo + ''.join(piezas) + '\n</svg>\n')
-    print('ok cinta-roja.svg', len(piezas), 'piezas')
 
 hoja_cinta()
 

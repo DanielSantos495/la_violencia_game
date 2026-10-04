@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="116" viewBox="0 0 1000 116">
+  <!--
+    Rosalba Insuasty — cabezas por expresión (agachada, inclinada).
+    Personaje ficticio (doc 01); hoja de personaje: planeacion/arte/tomo1/personajes/rosalba.md.
+    Vestuario: doc 03 §3.1 [V] y J. Ocampo López, "El pueblo boyacense y su folclor", cap. 4 (BanRep).
+    Expresiones: neutral, alerta, miedo, rabia, duelo. Rostro simplificado: ojos, cejas, boca y postura (doc 03 §2).
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md); acento: rojo liberal de la cinta.
+    Lado visible = lado DERECHO del personaje: piezas "-der" delante, "-izq" detrás.
+    GENERADO por game/art/gen/rosalba.py: edita el script, no este archivo.
+  -->
+  <!-- Cabeza: neutral -->
+  <g id="neutral" data-pieza="" data-pivote="46 100">
+    <g transform="translate(-104 -30) rotate(14 150 130)">    <!-- cuello -->
+    <path d="M140,108 L161,118 C161,125 161,131 163,137 L137,137 C138,128 139,118 140,108 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.4"/>
+    <path d="M141,114 C142,124 141,131 140,136 L147,136 C146,129 146,121 148,116 Z" fill="#1d1713" fill-opacity="0.1"/>
+    <path d="M149,118 C153,124 157,130 159,136" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <!-- rostro de perfil: frente, entrecejo, nariz recta con punta redonda, labios definidos, mentón firme -->
+    <path d="M166,58 C169,62 171,68 172,74 C173,77 172,79 171,81 C174,86 178,90 180,93 C181.5,95.5 180,98 177,98.5 C175.5,98.8 174.5,99.5 174,100.5 C175,102 176.2,103.5 176,105 C175.6,106.2 174,106.6 173.2,107 C174.5,107.8 175.4,109 175,110.2 C174.6,111.2 173,111.5 172.4,112 C173.6,113.4 174.4,115.4 173.4,117.4 C172,119.6 168.5,120.6 164,120.8 C158,121 152,119 147,115 C138,108 128,96 126,80 C125,62 136,47 152,46 C159,46 164,50 166,58 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.8" stroke-linejoin="round"/>
+    <!-- sombra bajo la mandíbula -->
+    <path d="M150,116 C156,119 162,120.5 168,120.5 C163,123 155,122 150,119 Z" fill="#1d1713" fill-opacity="0.18"/>
+<ellipse cx="160.2" cy="97.6" rx="6.4" ry="3.8" fill="#bba59f"/><path d="M158,95 L156.5,99 M160.5,95.5 L159,99.5 M163,96 L161.5,100" stroke="#1d1713" stroke-width="0.8" stroke-linecap="round"/><path d="M155,90 C157,93 159,95 162,96" stroke="#1d1713" stroke-width="0.7" fill="none"/><clipPath id="neutral-ojo-neutral"><path d="M157.5,80.5 C160.5,78.2 164.5,78 168,79.6 C165.5,82.4 161.5,83.4 157.5,80.5 Z"/></clipPath><path d="M157.5,80.5 C160.5,78.2 164.5,78 168,79.6 C165.5,82.4 161.5,83.4 157.5,80.5 Z" fill="#f0eee9" stroke="#1d1713" stroke-width="0.9"/><g clip-path="url(#neutral-ojo-neutral)"><ellipse cx="164.4" cy="80.7" rx="2" ry="2.5" fill="#1d1713"/><circle cx="165.2" cy="79.8" r="0.65" fill="#eee6d2"/></g><path d="M156.2,80.6 C159.5,77.3 164.5,77 168.6,79.2 C169.4,78.6 170,77.8 170.3,77" stroke="#1d1713" stroke-width="2.1" fill="none" stroke-linecap="round"/><path d="M168.6,79.2 L171,78.6 M167.4,78.5 L169.4,77" stroke="#1d1713" stroke-width="0.9" stroke-linecap="round"/><path d="M158.4,76.6 C161.5,75.4 165,75.4 167.6,76.6" stroke="#1d1713" stroke-width="0.8" fill="none"/><path d="M159.5,82.8 C162,83.8 165,83.6 167.2,82.2" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M171.2,72.6 C166,69.4 159.5,69.6 154,72.8 C159.5,71.6 165,71.8 170.6,74.4 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/>    <!-- nariz: ala y fosa -->
+    <path d="M173.2,94.6 C175,92.4 178.2,92.8 178.6,95.6" stroke="#1d1713" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="176.2" cy="97.2" rx="1.3" ry="0.6" fill="#1d1713"/>
+    <path d="M171,88 C172.4,90.5 173.2,92 173.2,94.6" stroke="#1d1713" stroke-width="0.6" fill="none"/>
+<path d="M173.3,107 L169,107.4" stroke="#1d1713" stroke-width="1.5" stroke-linecap="round"/><path d="M171.5,110.2 C172.6,110.8 173.8,110.6 174.4,110" stroke="#1d1713" stroke-width="0.8" fill="none"/><path d="M169,107.4 C168.2,106.6 168.4,105.8 169.2,105.4" stroke="#1d1713" stroke-width="0.8" fill="none"/>    <!-- pelo: raya al medio, peinado hacia atrás, recogido en trenzas -->
+    <path d="M166,57 C160,48 146,44 134,50 C122,57 118,74 121,92 C123,103 129,110 137,113 L142,109 C138,105 136,100 137.5,96 C137,90 136,84 140,80.5 C143,78 147,77 150,75 C155,71 160,64 166,62 Z" fill="#1d1713"/>
+    <path d="M162,58 C152,58 142,64 136,74 M157,55 C146,59 135,70 130,86 M151,53 C140,59 129,74 127,94 M146,62 C140,70 136,80 134,92" stroke="#eee6d2" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+    <path d="M150,75 C148,77 146.5,79 146.8,82" stroke="#1d1713" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <!-- oreja: hélix, antihélix, trago, concha y lóbulo -->
+    <path id="oreja-der" d="M146,83 C141,79.5 136.5,82.5 136.5,89 C136.5,95.5 139.5,100.8 144,100.8 C146.5,100.8 147.6,98.8 147,96.6 L147.6,92.4 C148.6,89.2 148.6,85.6 146,83 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M144.6,84.6 C140.6,83.8 139.2,87.6 139.6,91.6 C139.9,94.2 141,96.4 142.6,97.4" stroke="#1d1713" stroke-width="0.9" fill="none"/>
+    <path d="M143.4,86.4 C141.8,88.6 142,91.6 143.6,94.2 M142.4,88.2 L144.4,87.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M144.5,90 C146,90.2 146.6,91.4 146.4,92.8 C145.2,93.6 144,92.8 144.2,91.4 Z" fill="#1d1713"/>
+    <path d="M147.6,92.4 C146.8,93 146.6,94.4 147.2,95.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M141.4,97.6 C142.4,99.2 143.6,99.8 145,99.6" stroke="#1d1713" stroke-width="0.7" fill="none"/></g>
+  </g>
+  <!-- Cabeza: alerta -->
+  <g id="alerta" data-pieza="" data-pivote="146 100">
+    <g transform="translate(-4 -30) rotate(14 150 130)">    <!-- cuello -->
+    <path d="M140,108 L161,118 C161,125 161,131 163,137 L137,137 C138,128 139,118 140,108 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.4"/>
+    <path d="M141,114 C142,124 141,131 140,136 L147,136 C146,129 146,121 148,116 Z" fill="#1d1713" fill-opacity="0.1"/>
+    <path d="M149,118 C153,124 157,130 159,136" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <!-- rostro de perfil: frente, entrecejo, nariz recta con punta redonda, labios definidos, mentón firme -->
+    <path d="M166,58 C169,62 171,68 172,74 C173,77 172,79 171,81 C174,86 178,90 180,93 C181.5,95.5 180,98 177,98.5 C175.5,98.8 174.5,99.5 174,100.5 C175,102 176.2,103.5 176,105 C175.6,106.2 174,106.6 173.2,107 C174.5,107.8 175.4,109 175,110.2 C174.6,111.2 173,111.5 172.4,112 C173.6,113.4 174.4,115.4 173.4,117.4 C172,119.6 168.5,120.6 164,120.8 C158,121 152,119 147,115 C138,108 128,96 126,80 C125,62 136,47 152,46 C159,46 164,50 166,58 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.8" stroke-linejoin="round"/>
+    <!-- sombra bajo la mandíbula -->
+    <path d="M150,116 C156,119 162,120.5 168,120.5 C163,123 155,122 150,119 Z" fill="#1d1713" fill-opacity="0.18"/>
+<ellipse cx="160.2" cy="97.6" rx="6.4" ry="3.8" fill="#bba59f"/><path d="M158,95 L156.5,99 M160.5,95.5 L159,99.5 M163,96 L161.5,100" stroke="#1d1713" stroke-width="0.8" stroke-linecap="round"/><path d="M155,90 C157,93 159,95 162,96" stroke="#1d1713" stroke-width="0.7" fill="none"/><clipPath id="alerta-ojo-alerta"><path d="M157.5,80.5 C160.5,78.2 164.5,78 168,79.6 C165.5,82.4 161.5,83.4 157.5,80.5 Z"/></clipPath><path d="M157.5,80.5 C160.5,78.2 164.5,78 168,79.6 C165.5,82.4 161.5,83.4 157.5,80.5 Z" fill="#f0eee9" stroke="#1d1713" stroke-width="0.9"/><g clip-path="url(#alerta-ojo-alerta)"><ellipse cx="164.4" cy="80.7" rx="2" ry="2.5" fill="#1d1713"/><circle cx="165.2" cy="79.8" r="0.65" fill="#eee6d2"/></g><path d="M156.2,80.4 C159.5,76.7 164.5,76.4 168.6,78.8 C169.4,78.2 170,77.4 170.3,76.6" stroke="#1d1713" stroke-width="2.1" fill="none" stroke-linecap="round"/><path d="M168.6,79.2 L171,78.6 M167.4,78.5 L169.4,77" stroke="#1d1713" stroke-width="0.9" stroke-linecap="round"/><path d="M158.4,75.8 C161.5,74.6 165,74.6 167.6,75.8" stroke="#1d1713" stroke-width="0.8" fill="none"/><path d="M159.5,82.8 C162,83.8 165,83.6 167.2,82.2" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M171.4,70.8 C166.4,67 159.6,68.2 154,72.2 C159.6,70.4 165.4,69.8 170.8,72.6 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/><path d="M165,65.4 C167,65 169,65.4 170.4,66.4" stroke="#1d1713" stroke-width="0.7" fill="none"/>    <!-- nariz: ala y fosa -->
+    <path d="M173.2,94.6 C175,92.4 178.2,92.8 178.6,95.6" stroke="#1d1713" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="176.2" cy="97.2" rx="1.3" ry="0.6" fill="#1d1713"/>
+    <path d="M171,88 C172.4,90.5 173.2,92 173.2,94.6" stroke="#1d1713" stroke-width="0.6" fill="none"/>
+<path d="M173.3,107 L169,107.4" stroke="#1d1713" stroke-width="1.5" stroke-linecap="round"/><path d="M171.5,110.2 C172.6,110.8 173.8,110.6 174.4,110" stroke="#1d1713" stroke-width="0.8" fill="none"/><path d="M169,107.4 C168.2,106.6 168.4,105.8 169.2,105.4" stroke="#1d1713" stroke-width="0.8" fill="none"/>    <!-- pelo: raya al medio, peinado hacia atrás, recogido en trenzas -->
+    <path d="M166,57 C160,48 146,44 134,50 C122,57 118,74 121,92 C123,103 129,110 137,113 L142,109 C138,105 136,100 137.5,96 C137,90 136,84 140,80.5 C143,78 147,77 150,75 C155,71 160,64 166,62 Z" fill="#1d1713"/>
+    <path d="M162,58 C152,58 142,64 136,74 M157,55 C146,59 135,70 130,86 M151,53 C140,59 129,74 127,94 M146,62 C140,70 136,80 134,92" stroke="#eee6d2" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+    <path d="M150,75 C148,77 146.5,79 146.8,82" stroke="#1d1713" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <!-- oreja: hélix, antihélix, trago, concha y lóbulo -->
+    <path id="oreja-der" d="M146,83 C141,79.5 136.5,82.5 136.5,89 C136.5,95.5 139.5,100.8 144,100.8 C146.5,100.8 147.6,98.8 147,96.6 L147.6,92.4 C148.6,89.2 148.6,85.6 146,83 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M144.6,84.6 C140.6,83.8 139.2,87.6 139.6,91.6 C139.9,94.2 141,96.4 142.6,97.4" stroke="#1d1713" stroke-width="0.9" fill="none"/>
+    <path d="M143.4,86.4 C141.8,88.6 142,91.6 143.6,94.2 M142.4,88.2 L144.4,87.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M144.5,90 C146,90.2 146.6,91.4 146.4,92.8 C145.2,93.6 144,92.8 144.2,91.4 Z" fill="#1d1713"/>
+    <path d="M147.6,92.4 C146.8,93 146.6,94.4 147.2,95.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M141.4,97.6 C142.4,99.2 143.6,99.8 145,99.6" stroke="#1d1713" stroke-width="0.7" fill="none"/></g>
+  </g>
+  <!-- Cabeza: miedo -->
+  <g id="miedo" data-pieza="" data-pivote="246 100">
+    <g transform="translate(96 -30) rotate(14 150 130)">    <!-- cuello -->
+    <path d="M140,108 L161,118 C161,125 161,131 163,137 L137,137 C138,128 139,118 140,108 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.4"/>
+    <path d="M141,114 C142,124 141,131 140,136 L147,136 C146,129 146,121 148,116 Z" fill="#1d1713" fill-opacity="0.1"/>
+    <path d="M149,118 C153,124 157,130 159,136" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <!-- rostro de perfil: frente, entrecejo, nariz recta con punta redonda, labios definidos, mentón firme -->
+    <path d="M166,58 C169,62 171,68 172,74 C173,77 172,79 171,81 C174,86 178,90 180,93 C181.5,95.5 180,98 177,98.5 C175.5,98.8 174.5,99.5 174,100.5 C175,102 176.2,103.5 176,105 C175.6,106.2 174,106.6 173.2,107 C174.5,107.8 175.4,109 175,110.2 C174.6,111.2 173,111.5 172.4,112 C173.6,113.4 174.4,115.4 173.4,117.4 C172,119.6 168.5,120.6 164,120.8 C158,121 152,119 147,115 C138,108 128,96 126,80 C125,62 136,47 152,46 C159,46 164,50 166,58 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.8" stroke-linejoin="round"/>
+    <!-- sombra bajo la mandíbula -->
+    <path d="M150,116 C156,119 162,120.5 168,120.5 C163,123 155,122 150,119 Z" fill="#1d1713" fill-opacity="0.18"/>
+<path d="M155,90 C157,93 159,95 162,96" stroke="#1d1713" stroke-width="0.7" fill="none"/><clipPath id="miedo-ojo-miedo"><path d="M157,80.6 C160.2,76.6 164.8,76.2 168.4,78.8 C166,83.6 161.4,84.8 157,80.6 Z"/></clipPath><path d="M157,80.6 C160.2,76.6 164.8,76.2 168.4,78.8 C166,83.6 161.4,84.8 157,80.6 Z" fill="#f0eee9" stroke="#1d1713" stroke-width="0.9"/><g clip-path="url(#miedo-ojo-miedo)"><ellipse cx="163.8" cy="80.6" rx="1.6" ry="1.9" fill="#1d1713"/><circle cx="164.4" cy="79.8" r="0.55" fill="#eee6d2"/></g><path d="M155.8,80.4 C159.4,75.6 164.8,75.2 168.8,78.4 C169.6,77.6 170.2,76.8 170.6,76" stroke="#1d1713" stroke-width="2.1" fill="none" stroke-linecap="round"/><path d="M168.8,78.4 L171.2,77.6 M167.6,77.4 L169.6,75.8" stroke="#1d1713" stroke-width="0.9" stroke-linecap="round"/><path d="M158.2,73.8 C161.4,72.6 165.2,72.6 167.8,73.8" stroke="#1d1713" stroke-width="0.8" fill="none"/><path d="M159,84 C161.8,85.4 165,85.2 167.6,83.4" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M171.6,69.6 C166.6,64.8 159.8,66.2 154,70.8 C159.8,68.8 165.8,67.8 171,71.4 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/><path d="M164.2,62.6 C166.4,62 168.6,62.4 170.2,63.4 M163.4,65.2 C165.6,64.8 167.8,65.2 169.4,66" stroke="#1d1713" stroke-width="0.6" fill="none"/><path d="M154.6,84.6 C153.2,87.4 152.6,89.2 153.4,90.6 C154.2,91.8 156,91.6 156.4,90.2 C156.8,88.8 155.8,87 154.6,84.6 Z" fill="#eee6d2" stroke="#1d1713" stroke-width="0.8"/><path d="M154.2,88.4 L154,89.6" stroke="#1d1713" stroke-width="0.5"/>    <!-- nariz: ala y fosa -->
+    <path d="M173.2,94.6 C175,92.4 178.2,92.8 178.6,95.6" stroke="#1d1713" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="176.2" cy="97.2" rx="1.3" ry="0.6" fill="#1d1713"/>
+    <path d="M171,88 C172.4,90.5 173.2,92 173.2,94.6" stroke="#1d1713" stroke-width="0.6" fill="none"/>
+<path d="M173.4,106.6 C171.8,106.8 170.4,107 169,107.2" stroke="#1d1713" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M173.6,107.2 L169.2,107.6 C169.6,108.4 171.2,108.8 173.8,108.6 Z" fill="#1d1713"/><path d="M171.4,111 C172.6,111.6 173.8,111.4 174.6,110.6" stroke="#1d1713" stroke-width="0.8" fill="none"/>    <!-- pelo: raya al medio, peinado hacia atrás, recogido en trenzas -->
+    <path d="M166,57 C160,48 146,44 134,50 C122,57 118,74 121,92 C123,103 129,110 137,113 L142,109 C138,105 136,100 137.5,96 C137,90 136,84 140,80.5 C143,78 147,77 150,75 C155,71 160,64 166,62 Z" fill="#1d1713"/>
+    <path d="M162,58 C152,58 142,64 136,74 M157,55 C146,59 135,70 130,86 M151,53 C140,59 129,74 127,94 M146,62 C140,70 136,80 134,92" stroke="#eee6d2" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+    <path d="M150,75 C148,77 146.5,79 146.8,82" stroke="#1d1713" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <!-- oreja: hélix, antihélix, trago, concha y lóbulo -->
+    <path id="oreja-der" d="M146,83 C141,79.5 136.5,82.5 136.5,89 C136.5,95.5 139.5,100.8 144,100.8 C146.5,100.8 147.6,98.8 147,96.6 L147.6,92.4 C148.6,89.2 148.6,85.6 146,83 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M144.6,84.6 C140.6,83.8 139.2,87.6 139.6,91.6 C139.9,94.2 141,96.4 142.6,97.4" stroke="#1d1713" stroke-width="0.9" fill="none"/>
+    <path d="M143.4,86.4 C141.8,88.6 142,91.6 143.6,94.2 M142.4,88.2 L144.4,87.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M144.5,90 C146,90.2 146.6,91.4 146.4,92.8 C145.2,93.6 144,92.8 144.2,91.4 Z" fill="#1d1713"/>
+    <path d="M147.6,92.4 C146.8,93 146.6,94.4 147.2,95.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M141.4,97.6 C142.4,99.2 143.6,99.8 145,99.6" stroke="#1d1713" stroke-width="0.7" fill="none"/></g>
+  </g>
+  <!-- Cabeza: rabia -->
+  <g id="rabia" data-pieza="" data-pivote="346 100">
+    <g transform="translate(196 -30) rotate(14 150 130)">    <!-- cuello -->
+    <path d="M140,108 L161,118 C161,125 161,131 163,137 L137,137 C138,128 139,118 140,108 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.4"/>
+    <path d="M141,114 C142,124 141,131 140,136 L147,136 C146,129 146,121 148,116 Z" fill="#1d1713" fill-opacity="0.1"/>
+    <path d="M149,118 C153,124 157,130 159,136" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <!-- rostro de perfil: frente, entrecejo, nariz recta con punta redonda, labios definidos, mentón firme -->
+    <path d="M166,58 C169,62 171,68 172,74 C173,77 172,79 171,81 C174,86 178,90 180,93 C181.5,95.5 180,98 177,98.5 C175.5,98.8 174.5,99.5 174,100.5 C175,102 176.2,103.5 176,105 C175.6,106.2 174,106.6 173.2,107 C174.5,107.8 175.4,109 175,110.2 C174.6,111.2 173,111.5 172.4,112 C173.6,113.4 174.4,115.4 173.4,117.4 C172,119.6 168.5,120.6 164,120.8 C158,121 152,119 147,115 C138,108 128,96 126,80 C125,62 136,47 152,46 C159,46 164,50 166,58 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.8" stroke-linejoin="round"/>
+    <!-- sombra bajo la mandíbula -->
+    <path d="M150,116 C156,119 162,120.5 168,120.5 C163,123 155,122 150,119 Z" fill="#1d1713" fill-opacity="0.18"/>
+<ellipse cx="160.6" cy="97.6" rx="7.6" ry="4.4" fill="#bba59f"/><path d="M157.6,94.6 L156,99 M160,95 L158.4,99.4 M162.4,95.4 L160.8,99.8 M164.8,96 L163.4,100" stroke="#1d1713" stroke-width="0.95" stroke-linecap="round"/><path d="M155,90 C157,93 159,95 162,96" stroke="#1d1713" stroke-width="0.7" fill="none"/><clipPath id="rabia-ojo-rabia"><path d="M157.8,81 C160.8,79.6 164.8,79.4 168,80.6 C165.4,82.8 161.6,83.4 157.8,81 Z"/></clipPath><path d="M157.8,81 C160.8,79.6 164.8,79.4 168,80.6 C165.4,82.8 161.6,83.4 157.8,81 Z" fill="#f0eee9" stroke="#1d1713" stroke-width="0.9"/><g clip-path="url(#rabia-ojo-rabia)"><ellipse cx="164.2" cy="81.6" rx="2" ry="2.5" fill="#1d1713"/><circle cx="164.9" cy="80.9" r="0.5" fill="#eee6d2"/></g><path d="M156.4,80.6 C159.8,79.4 164.6,79.2 169.2,80.8" stroke="#1d1713" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M169.2,80.8 L171.2,80.6" stroke="#1d1713" stroke-width="0.9" stroke-linecap="round"/><path d="M158.6,77.8 C161.6,77.2 165,77.2 167.6,78" stroke="#1d1713" stroke-width="0.8" fill="none"/><path d="M159.2,82.6 C162,83.2 165,83 167.8,82" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M160,85 C162.6,85.6 165.2,85.4 167,84.6" stroke="#1d1713" stroke-width="0.6" fill="none"/><path d="M171.8,75.6 C166.4,71.6 160,70.6 154,72 C159.8,72.4 165.6,73.6 170.4,77.4 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/><path d="M170.2,70.6 C170.8,72 170.8,73.2 170.4,74.4" stroke="#1d1713" stroke-width="0.7" fill="none"/>    <!-- nariz: ala y fosa -->
+    <path d="M173.2,94.6 C175,92.4 178.2,92.8 178.6,95.6" stroke="#1d1713" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="176.2" cy="97.2" rx="1.3" ry="0.6" fill="#1d1713"/>
+    <path d="M171,88 C172.4,90.5 173.2,92 173.2,94.6" stroke="#1d1713" stroke-width="0.6" fill="none"/>
+<path d="M172.8,94.4 C174.8,91.8 178.4,92.4 178.8,95.6" stroke="#1d1713" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M173.4,107.2 C171.8,107.5 170.2,107.9 168.6,108.6 C168.2,109.2 168.1,109.9 168.3,110.6" stroke="#1d1713" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M171.6,110.4 C172.6,110.8 173.6,110.6 174.2,110.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>    <!-- pelo: raya al medio, peinado hacia atrás, recogido en trenzas -->
+    <path d="M166,57 C160,48 146,44 134,50 C122,57 118,74 121,92 C123,103 129,110 137,113 L142,109 C138,105 136,100 137.5,96 C137,90 136,84 140,80.5 C143,78 147,77 150,75 C155,71 160,64 166,62 Z" fill="#1d1713"/>
+    <path d="M162,58 C152,58 142,64 136,74 M157,55 C146,59 135,70 130,86 M151,53 C140,59 129,74 127,94 M146,62 C140,70 136,80 134,92" stroke="#eee6d2" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+    <path d="M150,75 C148,77 146.5,79 146.8,82" stroke="#1d1713" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <!-- oreja: hélix, antihélix, trago, concha y lóbulo -->
+    <path id="oreja-der" d="M146,83 C141,79.5 136.5,82.5 136.5,89 C136.5,95.5 139.5,100.8 144,100.8 C146.5,100.8 147.6,98.8 147,96.6 L147.6,92.4 C148.6,89.2 148.6,85.6 146,83 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M144.6,84.6 C140.6,83.8 139.2,87.6 139.6,91.6 C139.9,94.2 141,96.4 142.6,97.4" stroke="#1d1713" stroke-width="0.9" fill="none"/>
+    <path d="M143.4,86.4 C141.8,88.6 142,91.6 143.6,94.2 M142.4,88.2 L144.4,87.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M144.5,90 C146,90.2 146.6,91.4 146.4,92.8 C145.2,93.6 144,92.8 144.2,91.4 Z" fill="#1d1713"/>
+    <path d="M147.6,92.4 C146.8,93 146.6,94.4 147.2,95.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M141.4,97.6 C142.4,99.2 143.6,99.8 145,99.6" stroke="#1d1713" stroke-width="0.7" fill="none"/></g>
+  </g>
+  <!-- Cabeza: duelo -->
+  <g id="duelo" data-pieza="" data-pivote="446 100">
+    <g transform="translate(296 -30) rotate(14 150 130)">    <!-- cuello -->
+    <path d="M140,108 L161,118 C161,125 161,131 163,137 L137,137 C138,128 139,118 140,108 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.4"/>
+    <path d="M141,114 C142,124 141,131 140,136 L147,136 C146,129 146,121 148,116 Z" fill="#1d1713" fill-opacity="0.1"/>
+    <path d="M149,118 C153,124 157,130 159,136" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <!-- rostro de perfil: frente, entrecejo, nariz recta con punta redonda, labios definidos, mentón firme -->
+    <path d="M166,58 C169,62 171,68 172,74 C173,77 172,79 171,81 C174,86 178,90 180,93 C181.5,95.5 180,98 177,98.5 C175.5,98.8 174.5,99.5 174,100.5 C175,102 176.2,103.5 176,105 C175.6,106.2 174,106.6 173.2,107 C174.5,107.8 175.4,109 175,110.2 C174.6,111.2 173,111.5 172.4,112 C173.6,113.4 174.4,115.4 173.4,117.4 C172,119.6 168.5,120.6 164,120.8 C158,121 152,119 147,115 C138,108 128,96 126,80 C125,62 136,47 152,46 C159,46 164,50 166,58 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="2.8" stroke-linejoin="round"/>
+    <!-- sombra bajo la mandíbula -->
+    <path d="M150,116 C156,119 162,120.5 168,120.5 C163,123 155,122 150,119 Z" fill="#1d1713" fill-opacity="0.18"/>
+<path d="M155,90 C157,93 159,95 162,96" stroke="#1d1713" stroke-width="0.7" fill="none"/><clipPath id="duelo-ojo-duelo"><path d="M157.6,81.4 C160.6,80.4 164.8,80.2 168,81 C165.6,83.6 161.4,84.2 157.6,81.4 Z"/></clipPath><path d="M157.6,81.4 C160.6,80.4 164.8,80.2 168,81 C165.6,83.6 161.4,84.2 157.6,81.4 Z" fill="#f0eee9" stroke="#1d1713" stroke-width="0.9"/><g clip-path="url(#duelo-ojo-duelo)"><ellipse cx="163.6" cy="82.6" rx="1.9" ry="2.3" fill="#1d1713"/><circle cx="164.2" cy="82.2" r="0.5" fill="#eee6d2"/></g><path d="M156.4,81.2 C159.6,79.6 164.6,79.2 168.4,80.8 C169.2,80.6 169.8,80.4 170.2,80" stroke="#1d1713" stroke-width="2.1" fill="none" stroke-linecap="round"/><path d="M168.4,80.8 L170.4,81.4" stroke="#1d1713" stroke-width="0.9" stroke-linecap="round"/><path d="M157.8,78.4 C161,76.8 165,76.8 167.8,78.2" stroke="#1d1713" stroke-width="0.8" fill="none"/><path d="M159.6,84.8 C162.4,85.8 165.4,85.4 167.4,84" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M160.4,86.8 C162.8,87.6 165.4,87.4 167,86.2" stroke="#1d1713" stroke-width="0.5" fill="none"/><path d="M171.4,70 C166.8,68 160.8,69.6 155,74.6 C160.8,71.4 166.2,70.6 170.8,72 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/><path d="M166.6,85.4 C166.2,89.2 165.2,93 164.8,96.2" stroke="#1d1713" stroke-width="0.6" fill="none"/><path d="M165.2,96.2 C163.8,98.6 163.2,100.4 164,101.6 C164.8,102.8 166.6,102.6 167,101.2 C167.4,99.8 166.6,98.2 165.2,96.2 Z" fill="#eee6d2" stroke="#1d1713" stroke-width="0.8"/><path d="M164.6,99.4 L164.4,100.6" stroke="#1d1713" stroke-width="0.5"/>    <!-- nariz: ala y fosa -->
+    <path d="M173.2,94.6 C175,92.4 178.2,92.8 178.6,95.6" stroke="#1d1713" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="176.2" cy="97.2" rx="1.3" ry="0.6" fill="#1d1713"/>
+    <path d="M171,88 C172.4,90.5 173.2,92 173.2,94.6" stroke="#1d1713" stroke-width="0.6" fill="none"/>
+<path d="M173.2,107.4 C171.8,107.8 170.4,108.6 169,109.8" stroke="#1d1713" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M171.6,110.8 C172.6,111.2 173.6,111 174.2,110.4" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M170.8,114.4 C171.6,114.8 172.4,114.8 173,114.4" stroke="#1d1713" stroke-width="0.6" fill="none"/>    <!-- pelo: raya al medio, peinado hacia atrás, recogido en trenzas -->
+    <path d="M166,57 C160,48 146,44 134,50 C122,57 118,74 121,92 C123,103 129,110 137,113 L142,109 C138,105 136,100 137.5,96 C137,90 136,84 140,80.5 C143,78 147,77 150,75 C155,71 160,64 166,62 Z" fill="#1d1713"/>
+    <path d="M162,58 C152,58 142,64 136,74 M157,55 C146,59 135,70 130,86 M151,53 C140,59 129,74 127,94 M146,62 C140,70 136,80 134,92" stroke="#eee6d2" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+    <path d="M150,75 C148,77 146.5,79 146.8,82" stroke="#1d1713" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <!-- oreja: hélix, antihélix, trago, concha y lóbulo -->
+    <path id="oreja-der" d="M146,83 C141,79.5 136.5,82.5 136.5,89 C136.5,95.5 139.5,100.8 144,100.8 C146.5,100.8 147.6,98.8 147,96.6 L147.6,92.4 C148.6,89.2 148.6,85.6 146,83 Z" fill="#bdae9f" stroke="#1d1713" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M144.6,84.6 C140.6,83.8 139.2,87.6 139.6,91.6 C139.9,94.2 141,96.4 142.6,97.4" stroke="#1d1713" stroke-width="0.9" fill="none"/>
+    <path d="M143.4,86.4 C141.8,88.6 142,91.6 143.6,94.2 M142.4,88.2 L144.4,87.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M144.5,90 C146,90.2 146.6,91.4 146.4,92.8 C145.2,93.6 144,92.8 144.2,91.4 Z" fill="#1d1713"/>
+    <path d="M147.6,92.4 C146.8,93 146.6,94.4 147.2,95.2" stroke="#1d1713" stroke-width="0.8" fill="none"/>
+    <path d="M141.4,97.6 C142.4,99.2 143.6,99.8 145,99.6" stroke="#1d1713" stroke-width="0.7" fill="none"/></g>
+  </g>
+  <!-- Parpadeo sobre la cabeza neutral -->
+  <g id="parpado-neutral" data-pieza="" data-pivote="546 100">
+    <g transform="translate(396 -30) rotate(14 150 130)"><path d="M155.2,80.8 C158.2,75.2 165.2,74.6 170.4,77.6 L170.2,85 C165.8,87 159.8,87 155.2,82.8 Z" fill="#bdae9f"/><path d="M156.4,81 C159.8,83.2 164.6,83.4 168.8,81.2" stroke="#1d1713" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M161,82.8 L160.6,84.4 M164.4,83 L164.4,84.8 M167.4,82.2 L168,83.8" stroke="#1d1713" stroke-width="0.8" stroke-linecap="round"/><path d="M158.2,78.6 C161.6,77.4 165.2,77.4 167.8,78.6" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M171.2,72.6 C166,69.4 159.5,69.6 154,72.8 C159.5,71.6 165,71.8 170.6,74.4 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/></g>
+  </g>
+  <!-- Parpadeo sobre la cabeza alerta -->
+  <g id="parpado-alerta" data-pieza="" data-pivote="646 100">
+    <g transform="translate(496 -30) rotate(14 150 130)"><path d="M155.2,80.8 C158.2,75.2 165.2,74.6 170.4,77.6 L170.2,85 C165.8,87 159.8,87 155.2,82.8 Z" fill="#bdae9f"/><path d="M156.4,81 C159.8,83.2 164.6,83.4 168.8,81.2" stroke="#1d1713" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M161,82.8 L160.6,84.4 M164.4,83 L164.4,84.8 M167.4,82.2 L168,83.8" stroke="#1d1713" stroke-width="0.8" stroke-linecap="round"/><path d="M158.2,78.6 C161.6,77.4 165.2,77.4 167.8,78.6" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M171.4,70.8 C166.4,67 159.6,68.2 154,72.2 C159.6,70.4 165.4,69.8 170.8,72.6 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/></g>
+  </g>
+  <!-- Parpadeo sobre la cabeza miedo -->
+  <g id="parpado-miedo" data-pieza="" data-pivote="746 100">
+    <g transform="translate(596 -30) rotate(14 150 130)"><path d="M155.2,80.8 C158.2,75.2 165.2,74.6 170.4,77.6 L170.2,85 C165.8,87 159.8,87 155.2,82.8 Z" fill="#bdae9f"/><path d="M156.4,81 C159.8,83.2 164.6,83.4 168.8,81.2" stroke="#1d1713" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M161,82.8 L160.6,84.4 M164.4,83 L164.4,84.8 M167.4,82.2 L168,83.8" stroke="#1d1713" stroke-width="0.8" stroke-linecap="round"/><path d="M158.2,78.6 C161.6,77.4 165.2,77.4 167.8,78.6" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M171.6,69.6 C166.6,64.8 159.8,66.2 154,70.8 C159.8,68.8 165.8,67.8 171,71.4 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/></g>
+  </g>
+  <!-- Parpadeo sobre la cabeza rabia -->
+  <g id="parpado-rabia" data-pieza="" data-pivote="846 100">
+    <g transform="translate(696 -30) rotate(14 150 130)"><path d="M155.2,80.8 C158.2,75.2 165.2,74.6 170.4,77.6 L170.2,85 C165.8,87 159.8,87 155.2,82.8 Z" fill="#bdae9f"/><path d="M156.4,81 C159.8,83.2 164.6,83.4 168.8,81.2" stroke="#1d1713" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M161,82.8 L160.6,84.4 M164.4,83 L164.4,84.8 M167.4,82.2 L168,83.8" stroke="#1d1713" stroke-width="0.8" stroke-linecap="round"/><path d="M158.2,78.6 C161.6,77.4 165.2,77.4 167.8,78.6" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M171.8,75.6 C166.4,71.6 160,70.6 154,72 C159.8,72.4 165.6,73.6 170.4,77.4 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/></g>
+  </g>
+  <!-- Parpadeo sobre la cabeza duelo -->
+  <g id="parpado-duelo" data-pieza="" data-pivote="946 100">
+    <g transform="translate(796 -30) rotate(14 150 130)"><path d="M155.2,80.8 C158.2,75.2 165.2,74.6 170.4,77.6 L170.2,85 C165.8,87 159.8,87 155.2,82.8 Z" fill="#bdae9f"/><path d="M156.4,81 C159.8,83.2 164.6,83.4 168.8,81.2" stroke="#1d1713" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M161,82.8 L160.6,84.4 M164.4,83 L164.4,84.8 M167.4,82.2 L168,83.8" stroke="#1d1713" stroke-width="0.8" stroke-linecap="round"/><path d="M158.2,78.6 C161.6,77.4 165.2,77.4 167.8,78.6" stroke="#1d1713" stroke-width="0.7" fill="none"/><path d="M171.4,70 C166.8,68 160.8,69.6 155,74.6 C160.8,71.4 166.2,70.6 170.8,72 Z" fill="#1d1713" stroke="#1d1713" stroke-width="0.8" stroke-linejoin="round"/></g>
+  </g>
+</svg>

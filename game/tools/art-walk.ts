@@ -1,7 +1,7 @@
 // Ciclo de caminata de un personaje cut-out con la misma pose que usa el juego
 // (src/core/animacion/caminata.ts) y la jerarquía data-padre del SVG.
 //   node tools/art-walk.ts art/src/personajes/rosalba.svg [fases=8] [--falda-larga]
-//   node tools/art-walk.ts art/src/personajes/rosalba-corriendo.svg [fases=8] --carrera
+//   node tools/art-walk.ts art/src/personajes/acto1/rosalba-corriendo.svg [fases=8] --carrera
 // - Hoja de revisión: art/build/revision/<nombre>-caminata.png o -carrera.png (línea
 //   punteada = suelo).
 // - Con --falda-larga además verifica, fase a fase, que ninguna pierna salga de la falda

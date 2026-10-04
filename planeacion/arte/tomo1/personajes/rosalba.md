@@ -33,6 +33,16 @@ envejecer con la historia: empieza como muchacha de mercado y termina en el mont
   pocas marcas dibujadas: dos o tres vueltas en el sombrero, dos listas de lana cruda en la ruana,
   zigzag y rombos abiertos en las cintas del ruedo, flecos espaciados. Pliegues, sombras y cintas
   de la falda y listas de la ruana van recortados a su silueta.
+- **Variantes por acto** (guion de color, `../paleta.md` §5): el generador hace una variante por
+  acto con el croma del mundo de ese acto (×1 / 0,65 / 0,5 / 0,25 / 0,2, en OKLCH, solo los
+  lavados del registro `iluminacion`). Tinta, papel y la cinta roja no cambian; la cinta sigue
+  roja también en el Epílogo. El Prólogo va en `art/src/personajes/` (mercado, cabezas,
+  retrato y cinta suelta); cada acto siguiente, en `art/src/personajes/<acto>/` (un atlas por
+  carpeta) solo con lo que usa: el Acto I lleva el mercado (antes del ataque) y el monte; los
+  actos II, III y el Epílogo, el monte. En el juego: `atlasRosalba(acto)`,
+  `rosalbaMercado(acto)`, `rosalbaMonte(acto)` y `retratoRosalba(acto)`
+  (`game/src/game/personajes/rosalba.ts`). Si una escena necesita apagar el color en vivo (el
+  filtro de §5), la cinta ya es pieza propia y puede quedar fuera del contenedor filtrado.
 - **Único color entero:** la **cinta roja** al final de la trenza, en `rojo-liberal` (`#ca2d23`,
   doc 03 §1). Es un rasgo documentado del traje (abajo) y a la vez la marca partidista discreta del
   personaje; en la historia pasa de adorno a señal peligrosa (aprobado por Daniel el 02-oct-2026;
@@ -120,7 +130,7 @@ Mira a la derecha: el lado visible es su lado derecho (`-der` delante, `-izq` de
   apoya el 38 % del ciclo y hay dos fases de vuelo; el pie de apoyo no patina ni se despega del
   suelo (el cuerpo se hunde a mitad del apoyo y la rodilla sube lo mismo); el talón sube atrás
   y la rodilla se alza para que el pie libre el suelo. Ciclo de 0,62 s: unos 2 m/s en escena.
-  Revisión con `pnpm art:walk art/src/personajes/rosalba-corriendo.svg --carrera`.
+  Revisión con `pnpm art:walk art/src/personajes/acto1/rosalba-corriendo.svg --carrera`.
 - Expresiones (`game/src/core/animacion/expresiones.ts`): el dibujo cambia de golpe, como en una
   viñeta; la postura de la cabeza se interpola y se suma a la caminata y al acecho.
 
@@ -140,9 +150,8 @@ Agachada, la postura solo mueve la cabeza: la mano de apoyo sigue en el suelo.
 
 ## 5. Pendientes [P]
 
-- Color por acto (`../paleta.md` §11): sigue abierta la forma de apagarlo. Si se genera cada
-  escena con el croma de su acto, Rosalba necesitará variantes por acto; si se usa un filtro en
-  vivo, la cinta roja tendrá que salir de la pieza `trenza` a una pieza propia para no apagarse.
+- Vestuario de los actos II (Llano, doc 03 §3.3), III y Epílogo: hasta diseñarlo, esos actos
+  usan la variante monte con el color de su acto.
 - Fotografías de campesinas boyacenses de los años 40 que confirmen el traje.
 - Vista de frente de cuerpo entero (hoja completa del doc 03 §6.2).
 - Hombros y torso por expresión (hoy la postura mueve cabeza, brazos y trenza; el torso no es
