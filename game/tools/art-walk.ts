@@ -1,9 +1,13 @@
 // Ciclo de caminata de un personaje cut-out con la misma pose que usa el juego
 // (src/core/animacion/caminata.ts) y la jerarquía data-padre del SVG.
 //   node tools/art-walk.ts art/src/personajes/rosalba.svg [fases=8] [--falda-larga]
-// - Hoja de revisión: art/build/revision/<nombre>-caminata.png (línea punteada = suelo).
+//   node tools/art-walk.ts art/src/personajes/rosalba-corriendo.svg [fases=8] --carrera
+// - Hoja de revisión: art/build/revision/<nombre>-caminata.png o -carrera.png (línea
+//   punteada = suelo).
 // - Con --falda-larga además verifica, fase a fase, que ninguna pierna salga de la falda
 //   (canilla cortada a la vista o pie por detrás del ruedo); termina con error si sale.
+// - Con --carrera (src/core/animacion/carrera.ts) verifica que la rodilla, donde se corta la
+//   canilla, nunca asome bajo la falda o la enagua.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
@@ -13,6 +17,10 @@ import {
   type PoseCaminata,
   poseCaminata,
 } from '../src/core/animacion/caminata.ts';
+import {
+  type OpcionesCarrera,
+  poseCarrera,
+} from '../src/core/animacion/carrera.ts';
 import { configSvgo, framesDeSvg } from './art-build.ts';
 
 const FONDO = '#ece4d0';
@@ -117,10 +125,33 @@ export function hojaCaminata(
   fases = 8,
   opciones: OpcionesCaminata = {},
 ): string {
+  return hojaCiclo(fuente, nombre, fases, (fase) =>
+    poseCaminata(fase, opciones),
+  );
+}
+
+/** Hoja de fases de la carrera (pose de correr, canillas con pivote en la rodilla). */
+export function hojaCarrera(
+  fuente: string,
+  nombre: string,
+  fases = 8,
+  opciones: OpcionesCarrera = {},
+): string {
+  return hojaCiclo(fuente, nombre, fases, (fase) =>
+    poseCarrera(fase, opciones),
+  );
+}
+
+function hojaCiclo(
+  fuente: string,
+  nombre: string,
+  fases: number,
+  poseEn: (fase: number) => PoseCaminata,
+): string {
   const p = prepararPersonaje(fuente, nombre);
   const celdas: string[] = [];
   for (let i = 0; i < fases; i++) {
-    const pose = poseCaminata((i / fases) * Math.PI * 2, opciones);
+    const pose = poseEn((i / fases) * Math.PI * 2);
     const interior = svgEnPose(p, pose)
       .replace(/^[\s\S]*?<svg[^>]*>/, '')
       .replace(/<\/svg>\s*$/, '');
@@ -197,12 +228,70 @@ export function revisarPiernasBajoFalda(
   return resultado;
 }
 
+export interface FugaRodilla {
+  fase: number;
+  /** Píxeles de pierna a la vista cerca de la rodilla (el corte de la canilla). */
+  rodilla: number;
+}
+
+/**
+ * Cuenta, fase a fase, los píxeles de canilla que quedan a la vista a menos de `radio` px de
+ * la rodilla (pivote de la pierna, movido con la pose): ahí la canilla está cortada y debe
+ * quedar siempre bajo la falda o la enagua.
+ */
+export function revisarRodillas(
+  fuente: string,
+  nombre: string,
+  opciones: OpcionesCarrera = {},
+  fases = 32,
+  radio = 16,
+): FugaRodilla[] {
+  const p = prepararPersonaje(fuente, nombre);
+  const pixeles = (svg: string) =>
+    new Resvg(svg, { font: { loadSystemFonts: false } }).render();
+  const resultado: FugaRodilla[] = [];
+  for (let i = 0; i < fases; i++) {
+    const pose = poseCarrera((i / fases) * Math.PI * 2, opciones);
+    const imgPiernas = pixeles(
+      svgEnPose(p, pose, (id) => id.startsWith('pierna-')),
+    );
+    const imgCubre = pixeles(
+      svgEnPose(p, pose, (id) => id === 'falda' || id === 'enagua'),
+    );
+    const { width: w, height: h } = imgPiernas;
+    const piernas = imgPiernas.pixels;
+    const cubre = imgCubre.pixels;
+    const a = (img: Buffer, x: number, y: number) =>
+      img[(y * w + x) * 4 + 3] ?? 0;
+    const rodillas = ['pierna-der', 'pierna-izq'].flatMap((id) => {
+      const m = p.meta.get(id);
+      if (!m) return [];
+      return [
+        {
+          x: m.pivote.x + (pose.avance[id] ?? 0),
+          y: m.pivote.y - (pose.levante[id] ?? 0),
+        },
+      ];
+    });
+    let rodilla = 0;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (a(piernas, x, y) <= OPACO || a(cubre, x, y) > OPACO) continue;
+        if (rodillas.some((k) => Math.hypot(x - k.x, y - k.y) < radio))
+          rodilla++;
+      }
+    }
+    resultado.push({ fase: i / fases, rodilla });
+  }
+  return resultado;
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const ruta = args.find((a) => !a.startsWith('--') && !/^\d+$/.test(a));
   if (!ruta) {
     console.error(
-      'Uso: node tools/art-walk.ts <personaje.svg> [fases] [--falda-larga]',
+      'Uso: node tools/art-walk.ts <personaje.svg> [fases] [--falda-larga | --carrera]',
     );
     process.exit(1);
   }
@@ -213,13 +302,16 @@ if (import.meta.main) {
   const nombre = basename(ruta, '.svg');
   const fuente = readFileSync(resolve(ruta), 'utf8');
 
+  const carrera = args.includes('--carrera');
   const salida = join(
     resolve(import.meta.dirname, '..'),
     'art/build/revision',
-    `${nombre}-caminata.png`,
+    `${nombre}-${carrera ? 'carrera' : 'caminata'}.png`,
   );
   mkdirSync(dirname(salida), { recursive: true });
-  const svg = hojaCaminata(fuente, nombre, fases, opciones);
+  const svg = carrera
+    ? hojaCarrera(fuente, nombre, fases)
+    : hojaCaminata(fuente, nombre, fases, opciones);
   writeFileSync(
     salida,
     new Resvg(svg, { font: { loadSystemFonts: false } }).render().asPng(),
@@ -239,5 +331,18 @@ if (import.meta.main) {
       process.exit(1);
     }
     console.log('✓ piernas siempre bajo la falda (32 fases)');
+  }
+
+  if (carrera) {
+    const fugas = revisarRodillas(fuente, nombre).filter((f) => f.rodilla > 0);
+    if (fugas.length > 0) {
+      for (const f of fugas) {
+        console.error(
+          `✗ fase ${f.fase.toFixed(3)}: rodilla a la vista ${f.rodilla} px`,
+        );
+      }
+      process.exit(1);
+    }
+    console.log('✓ rodillas siempre bajo la falda o la enagua (32 fases)');
   }
 }

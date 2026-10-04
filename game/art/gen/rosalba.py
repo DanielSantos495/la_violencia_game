@@ -1446,3 +1446,181 @@ def hoja_cinta():
     print('ok cinta-roja.svg', len(piezas), 'piezas')
 
 hoja_cinta()
+
+# ======================= 7. corriendo, monte (huida de la M2) =======================
+# Doc 02, M2 «sigilo y huida», beat 4: huida por los cultivos y la quebrada. Con la falda de
+# frisa casi al tobillo no se corre: la mano derecha la recoge por delante, a la altura del
+# muslo, y el ruedo sube hasta la rodilla (se ven la enagua y las canillas). El torso se
+# inclina adelante y el cuerpo baja; la cabeza va derecha, así le sirven las cabezas por
+# expresión de pie. Las canillas giran en la rodilla, oculta bajo la falda
+# (core/animacion/carrera.ts); misma base de apoyo (150, 474) que las demás poses.
+INCL, AGACHE = 14, 10
+TRANS_TORSO = f'translate(0 {AGACHE}) rotate({INCL} 146 240)'
+
+def T(x, y):
+    px, py = rot_punto(x, y, INCL, 146, 240)
+    return (px, py + AGACHE)
+
+CUELLO_C = T(150, 130)
+DXC, DYC = CUELLO_C[0] - 150, CUELLO_C[1] - 130
+TRANS_CABEZA = f'translate({f(DXC)} {f(DYC)})'
+GIRO_TRENZA = 22
+TRANS_TRENZA = f'{TRANS_CABEZA} rotate({GIRO_TRENZA} 134 110)'
+RODILLA_DER, RODILLA_IZQ = (157, 346), (133, 346)
+
+def pierna_carrera(dx, lejana=False):
+    """Canilla entera (de la rodilla al tobillo) con su alpargata; pivote en la rodilla."""
+    def P(x, y): return f"{f(x + dx)},{f(y)}"
+    sw = 2.2 if lejana else 2.6
+    d = (f'M{P(151,338)} L{P(163,338)} C{P(164,370)} {P(163,410)} {P(163,430)} L{P(164,452)} L{P(152,452)} '
+         f'C{P(151,436)} {P(152,424)} {P(150,410)} C{P(146,392)} {P(146,370)} {P(151,338)} Z')
+    s = f'<path d="{d}" fill="{PIEL}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
+    s += f'<path d="M{P(150,372)} C{P(149,392)} {P(150,410)} {P(152,426)} L{P(155,426)} C{P(153,410)} {P(152,392)} {P(153,372)} Z" {SOMBRA_SUAVE}/>'
+    if lejana:
+        s += f'<path d="{d}" {SOMBRA}/>'
+    # la canilla corta de la alpargata (la de pie) sobra: aquí la pierna entera ya está dibujada
+    pie = re.sub(r'<path d="M' + re.escape(f'{f(151 + dx)},430') + r' [^"]*" [^>]*/>', '', alpargata(dx, lejana))
+    return s + pie
+
+# ruedo recogido: de la esquina delantera (bajo el puño) a la de atrás, que vuela hacia atrás
+RUEDO_C = cadena(suave([(187, 366), (172, 375), (156, 385), (138, 398), (118, 411), (99, 419), (84, 418)]), 12)
+
+def ruedo_y(x, sube=0.0):
+    pts = sorted(RUEDO_C)
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        if x0 <= x <= x1:
+            return y0 + (y1 - y0) * (x - x0) / ((x1 - x0) or 1) - sube
+    return (pts[0][1] if x < pts[0][0] else pts[-1][1]) - sube
+
+FALDA_C = ('M124,236 L170,244 C174,250 178,262 184,274 C190,286 194,300 193,316 C192,332 190,350 187,366 '
+           + ' '.join(f'L{f(x)},{f(y)}' for x, y in RUEDO_C[1:]) +
+           ' C86,396 92,350 101,310 C108,280 116,254 124,236 Z')
+
+def banda_c(o1, o2, color):
+    xs = [84 + i * 2 for i in range(53)]
+    arriba = [(x, ruedo_y(x, o2)) for x in xs]
+    abajo = [(x, ruedo_y(x, o1)) for x in reversed(xs)]
+    return f'<path d="{polilinea(arriba + abajo, True)}" fill="{color}" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/>'
+
+def zigzag_c(o1, o2):
+    pts, x, arriba = [], 86, True
+    while x < 188:
+        pts.append((x, ruedo_y(x, (o2 - 1.5) if arriba else (o1 + 1.5))))
+        x += 8; arriba = not arriba
+    return f'<path d="{polilinea(pts)}" stroke="#000" stroke-width="1.3" fill="none"/>'
+
+def rombos_c(o1, o2):
+    out, x = [], 90
+    while x < 184:
+        cy = ruedo_y(x, (o1 + o2) / 2)
+        out.append(f'<path d="M{f(x)},{f(cy - 3.5)} L{f(x + 3)},{f(cy)} L{f(x)},{f(cy + 3.5)} L{f(x - 3)},{f(cy)} Z" fill="#000"/>')
+        x += 13
+    return ''.join(out)
+
+PUNO_C = (185, 279)
+falda_c = (
+    f'<path d="{FALDA_C}" fill="{FALDA}" stroke="#000" stroke-width="3.2" stroke-linejoin="round"/>'
+    + recortar('falda-c-marcas', FALDA_C,
+        f'<path d="M124,236 C114,262 104,300 96,340 C90,370 86,396 84,418 L104,418 C104,380 110,320 128,250 Z" {SOMBRA_HONDA}/>'
+        f'<path d="M{PUNO_C[0]},{PUNO_C[1]} L176,372 L150,390 Z" {SOMBRA_SUAVE}/>'
+        # la tela recogida tira desde el puño: pliegues que abren hacia el ruedo
+        + ''.join(pincel(suave([PUNO_C, mezcla(PUNO_C, h, 0.45), h]), w, 0.7, 0.1)
+                  for h, w in [((178, 372), 1.6), ((160, 384), 1.5), ((138, 400), 1.4), ((116, 413), 1.2)])
+        + ''.join(pincel(suave([(PUNO_C[0] - 3, PUNO_C[1] + 6), mezcla(PUNO_C, h, 0.5), h]), 1.3, 0.2, 0.1, '#fff', extra=' fill-opacity="0.5"')
+                  for h in [(168, 378), (148, 392), (127, 406)])
+        + pincel(suave([(132, 252), (124, 300), (112, 360), (100, 412)]), 1.4, 0.1, 0.1, '#fff', extra=' fill-opacity="0.5"')
+        + banda_c(4, 16, CINTAS[2]) + rombos_c(4, 16)
+        + banda_c(20, 26, CINTAS[1])
+        + banda_c(30, 38, CINTAS[0]) + zigzag_c(30, 38)
+        + barro([(100, 414), (124, 406), (146, 394), (170, 380)], 4))
+    + f'<path d="{FALDA_C}" fill="none" stroke="#000" stroke-width="3.2" stroke-linejoin="round"/>'
+    + '<path d="M124,236 L170,244 L169.4,252 L123,244 Z" fill="#000"/>'
+)
+
+# enagua: asoma bajo el ruedo recogido, con su festón y barro
+ENAGUA_C = ('M188,' + f(ruedo_y(188, 30)) + ' ' + ' '.join(f'L{f(x)},{f(ruedo_y(x, 30))}' for x in range(184, 86, -6))
+            + f' L86,{f(ruedo_y(86, 30))} L86,{f(ruedo_y(86, -9))} '
+            + ' '.join(f'Q{f(x - 3)},{f(ruedo_y(x - 3, -13))} {f(x)},{f(ruedo_y(x, -9))}' for x in range(92, 190, 6))
+            + ' Z')
+enagua_c = (f'<path d="{ENAGUA_C}" fill="{TELA}" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/>'
+            + recortar('enagua-c-sombra', ENAGUA_C, f'<path d="M80,{f(ruedo_y(80, 40))} L190,{f(ruedo_y(190, 40))} L190,{f(ruedo_y(190, -3))} L80,{f(ruedo_y(80, -3))} Z" {SOMBRA}/>')
+            + barro([(96, 425), (122, 416), (150, 400), (176, 386)], 5))
+
+# brazo derecho recogiendo la falda: hombro → codo → muñeca (IK con el codo atrás) y puño
+def ik(s, w, l1, l2):
+    d = math.dist(s, w)
+    a = math.acos(max(-1.0, min(1.0, (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d))))
+    base = math.atan2(w[1] - s[1], w[0] - s[0])
+    ang = base + a  # codo hacia atrás (a la izquierda de la línea hombro → muñeca)
+    return (s[0] + l1 * math.cos(ang), s[1] + l1 * math.sin(ang))
+
+HOMBRO_C = T(153, 140)
+MUNECA_C = (180, 262)
+CODO_C = ik(HOMBRO_C, MUNECA_C, 60, 54)
+_u = ((MUNECA_C[0] - CODO_C[0]) / math.dist(CODO_C, MUNECA_C), (MUNECA_C[1] - CODO_C[1]) / math.dist(CODO_C, MUNECA_C))
+
+def puno_c(muneca=None, u=None, tela=True, escala=1.0):
+    """Puño cerrado: nudillos adelante, pulgar encima del índice; con tela, la falda asoma."""
+    muneca = muneca or MUNECA_C
+    u = u or _u
+    cx, cy = muneca[0] + u[0] * 14 * escala, muneca[1] + u[1] * 14 * escala
+    ang = math.degrees(math.atan2(u[1], u[0])) - 90
+    g = f'<g transform="translate({f(cx)} {f(cy)}) rotate({f(ang)}) scale({f(escala)})">'
+    if tela:
+        # tela recogida que sale por arriba y por abajo del puño
+        g += f'<path d="M-6,-9 C-9,-14 -4,-17 0,-13 C3,-17 8,-14 6,-9 Z" fill="{FALDA}" stroke="#000" stroke-width="1.4"/>'
+        g += f'<path d="M-5,8 C-9,14 -6,19 -1,15 C2,20 8,17 5,9 Z" fill="{FALDA}" stroke="#000" stroke-width="1.4"/>'
+    g += (f'<path d="M-8,-8 C-9,-2 -9,4 -7,9 C-3,11 3,11 7,9 C10,4 10,-2 8,-8 C4,-11 -4,-11 -8,-8 Z" fill="{PIEL}" stroke="#000" stroke-width="2" stroke-linejoin="round"/>')
+    # nudillos y pliegues de los dedos, y el pulgar cruzado
+    g += '<path d="M8,-6 C10,-4 10,-1 8.6,0.6 M8.8,1.6 C10.4,3.4 10,6 8,7.4" stroke="#000" stroke-width="1.1" fill="none"/>'
+    g += '<path d="M2,-7 L2.4,7 M-2.6,-7.4 L-2.4,7.6" stroke="#000" stroke-width="0.8" fill="none"/>'
+    g += f'<path d="M-8,-2 C-4,-4 2,-4 6,-1 C5,1 1,1.6 -3,1 C-6,0.6 -8,0 -8,-2 Z" fill="{PIEL}" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/>'
+    return g + '</g>'
+
+brazo_c = (f'<path d="{tubo(HOMBRO_C, CODO_C, 10.5, 8)}" fill="{TELA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>'
+           + ''.join(f'<path d="M{f(a[0])},{f(a[1])} L{f(b[0])},{f(b[1])}" stroke="#000" stroke-width="0.9"/>'
+                     for a, b in [(punto_en(HOMBRO_C, CODO_C, 0.06, o), punto_en(HOMBRO_C, CODO_C, 0.24, o * 0.9)) for o in (-5, 0, 5)])
+           + f'<path d="{tubo(punto_en(HOMBRO_C, CODO_C, 0.25, -5), punto_en(HOMBRO_C, CODO_C, 0.92, -4), 2.6, 2)}" {SOMBRA_SUAVE}/>')
+_pu1, _pu2 = punto_en(CODO_C, MUNECA_C, 0.8), punto_en(CODO_C, MUNECA_C, 1.02)
+antebrazo_c = (f'<path d="{tubo(CODO_C, MUNECA_C, 7.8, 6.4)}" fill="{TELA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>'
+               + f'<path d="{tubo(punto_en(CODO_C, MUNECA_C, 0.1, -4.5), punto_en(CODO_C, MUNECA_C, 0.76, -3.6), 2, 1.6)}" {SOMBRA_SUAVE}/>'
+               + puno_c()
+               + f'<path d="{tubo(_pu1, _pu2, 7.4, 7.2)}" fill="{TELA}" stroke="#000" stroke-width="2"/>'
+               + ''.join(f'<circle cx="{f(punto_en(_pu1, _pu2, 0.5, o)[0])}" cy="{f(punto_en(_pu1, _pu2, 0.5, o)[1])}" r="0.9" fill="#000"/>' for o in (-4, 0, 4)))
+
+# brazo izquierdo (lejano) de la carrera: cuelga en reposo; la animación lo dobla y bracea
+HOMBRO_IZQ_C = T(141, 144)
+CODO_IZQ_C = (HOMBRO_IZQ_C[0] + 2, HOMBRO_IZQ_C[1] + 57)
+MUNECA_IZQ_C = (CODO_IZQ_C[0] + 2, CODO_IZQ_C[1] + 50)
+_ui = (2 / math.hypot(2, 50), 50 / math.hypot(2, 50))
+brazo_izq_c = (f'<path d="{tubo(HOMBRO_IZQ_C, CODO_IZQ_C, 9.5, 7.6)}" fill="{TELA}" stroke="#000" stroke-width="2.2" stroke-linejoin="round"/>'
+               f'<path d="{tubo(HOMBRO_IZQ_C, CODO_IZQ_C, 9.5, 7.6)}" {SOMBRA}/>')
+_pi1, _pi2 = punto_en(CODO_IZQ_C, MUNECA_IZQ_C, 0.8), punto_en(CODO_IZQ_C, MUNECA_IZQ_C, 1.02)
+antebrazo_izq_c = (f'<path d="{tubo(CODO_IZQ_C, MUNECA_IZQ_C, 7.2, 6)}" fill="{TELA}" stroke="#000" stroke-width="2.2" stroke-linejoin="round"/>'
+                   + puno_c(MUNECA_IZQ_C, _ui, tela=False, escala=0.92)
+                   + f'<path d="{tubo(_pi1, _pi2, 7, 6.8)}" fill="{TELA}" stroke="#000" stroke-width="1.8"/>'
+                   + f'<path d="{tubo(CODO_IZQ_C, MUNECA_IZQ_C, 7.2, 6)} {tubo(_pi1, _pi2, 7, 6.8)}" {SOMBRA}/>')
+
+def en_trenza(x, y):
+    px, py = rot_punto(x, y, GIRO_TRENZA, 134, 110)
+    return (px + DXC, py + DYC)
+
+_cinta_c = en_trenza(124.5, 217)
+guardar('rosalba-corriendo.svg', encabezado('Rosalba Insuasty — corriendo, variante monte (huida de la M2).',
+        'La mano derecha recoge la falda; canillas con pivote en la rodilla, oculta bajo el ruedo (core/animacion/carrera.ts).') + f'''
+{piece('brazo-izq', '{} {}'.format(*map(f, HOMBRO_IZQ_C)), brazo_izq_c, 'Brazo izquierdo (lejano), bracea')}
+{piece('antebrazo-izq', '{} {}'.format(*map(f, CODO_IZQ_C)), antebrazo_izq_c, 'Antebrazo y puño izquierdos; hijo de brazo-izq', extra=' data-padre="brazo-izq"')}
+{piece('pierna-izq', '{} {}'.format(*RODILLA_IZQ), pierna_carrera(-24, lejana=True), 'Canilla izquierda (lejana); pivote en la rodilla')}
+{piece('pierna-der', '{} {}'.format(*RODILLA_DER), pierna_carrera(0), 'Canilla derecha; pivote en la rodilla')}
+{piece('enagua', '146 248', enagua_c, 'Enagua que asoma bajo el ruedo recogido')}
+{piece('falda', '146 248', falda_c, 'Falda recogida por delante; pliegues desde el puño, cintas del ruedo y barro')}
+{piece('torso', '{} {}'.format(*map(f, T(146, 232))), f'<g transform="{TRANS_TORSO}">{torso_monte}</g>', 'Torso inclinado adelante')}
+{piece('cabeza', f'{f(150 + DXC)} {f(130 + DYC)}', f'<g transform="{TRANS_CABEZA}">{cabeza_monte}</g>', 'Cabeza derecha (sirven las cabezas por expresión de pie)')}
+{piece('zarcillo', f'{f(143.6 + DXC)} {f(100.8 + DYC)}', f'<g transform="{TRANS_CABEZA}">{zarcillo}</g>', 'Zarcillo; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('mechones', f'{f(150 + DXC)} {f(130 + DYC)}', f'<g transform="{TRANS_CABEZA}">{MECHONES}</g>', 'Mechones; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('ruana', '{} {}'.format(*map(f, T(145, 128))), f'<g transform="{TRANS_TORSO}">{ruana_pie}</g>', 'Ruana inclinada con el torso')}
+{piece('trenza', f'{f(134 + DXC)} {f(110 + DYC)}', f'<g transform="{TRANS_TRENZA}">{trenza()}</g>', 'Trenza echada atrás por la carrera')}
+{piece('cinta', f'{f(_cinta_c[0])} {f(_cinta_c[1])}', f'<g transform="{TRANS_TRENZA}">{cinta()}</g>', 'Cinta roja; hija de trenza (en la M2 va oculta)', extra=' data-padre="trenza"')}
+{piece('brazo-der', '{} {}'.format(*map(f, HOMBRO_C)), brazo_c, 'Brazo derecho tendido hacia la falda')}
+{piece('antebrazo-der', '{} {}'.format(*map(f, CODO_C)), antebrazo_c, 'Antebrazo y puño que recoge la falda; hijo de brazo-der', extra=' data-padre="brazo-der"')}
+{piece('ruana-doblez', '{} {}'.format(*map(f, T(145, 128))), f'<g transform="{TRANS_TORSO}">{doblez_pie}</g>', 'Doblez de la ruana sobre el hombro derecho')}''')
