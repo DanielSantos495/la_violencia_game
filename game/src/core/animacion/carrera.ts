@@ -11,6 +11,7 @@
  * - Vuelo de la pierna: el talón sube por detrás (patada) y la canilla vuelve adelante a
  *   tiempo para el siguiente apoyo.
  * - El brazo libre bracea con la pierna contraria; el que recoge la falda casi no se mueve.
+ *   Con `bracea: 'ambos'` (falda corta, nada que recoger) bracean los dos en contrafase.
  *   Trenza, ruana y zarcillo siguen con inercia.
  *
  * Convención de Phaser: ángulo positivo = sentido horario = hacia atrás (mirando a la derecha).
@@ -34,6 +35,8 @@ export interface OpcionesCarrera {
   hundimiento?: number;
   /** Cuánto sube el cuerpo a mitad del vuelo, en px. */
   vuelo?: number;
+  /** Qué brazos bracean: solo el izquierdo (el derecho recoge la falda) o los dos. */
+  bracea?: 'izq' | 'ambos';
 }
 
 export const CARRERA_POR_DEFECTO: Required<OpcionesCarrera> = {
@@ -45,6 +48,7 @@ export const CARRERA_POR_DEFECTO: Required<OpcionesCarrera> = {
   alzaRodilla: 24,
   hundimiento: 6,
   vuelo: 7,
+  bracea: 'izq',
 };
 
 const TAU = Math.PI * 2;
@@ -106,14 +110,17 @@ export function poseCarrera(
   const paso = Math.sin(2 * TAU * u);
   // El brazo izquierdo va adelante cuando la pierna derecha apoya adelante (u = 0).
   const braceo = Math.cos(TAU * u);
+  // Con los dos brazos libres el braceo es más amplio: el que va atrás abre el codo y el que
+  // va adelante lo cierra. El derecho va en contrafase; si recoge la falda, casi quieto.
+  const ambos = o.bracea === 'ambos';
   return {
     angulos: {
       'pierna-der': -der.angulo,
       'pierna-izq': -izq.angulo,
-      'brazo-izq': 14 - 24 * braceo,
-      'antebrazo-izq': -106 + 8 * braceo,
-      'brazo-der': 0.5 * paso,
-      'antebrazo-der': -0.5 * paso,
+      'brazo-izq': ambos ? 10 - 36 * braceo : 14 - 24 * braceo,
+      'antebrazo-izq': ambos ? -95 - 15 * braceo : -106 + 8 * braceo,
+      'brazo-der': ambos ? 10 + 36 * braceo : 0.5 * paso,
+      'antebrazo-der': ambos ? -95 + 15 * braceo : -0.5 * paso,
       cabeza: 3 + 1.5 * Math.sin(2 * TAU * u + 0.6),
       trenza: 6 * Math.sin(2 * TAU * u - 1.3) + 3 * Math.sin(TAU * u - 0.8),
       cinta: 10 * Math.sin(2 * TAU * u - 2),

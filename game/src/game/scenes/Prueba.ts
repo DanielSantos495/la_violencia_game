@@ -10,13 +10,16 @@ import { Retrato } from '../personajes/Retrato.ts';
 import {
   APOYO_ROSALBA,
   atlasRosalba,
+  CAMINATA_LLANO,
   CAMINATA_ROSALBA,
+  CARRERA_LLANO,
   CARRERA_ROSALBA,
   ESCALA_ROSALBA,
   PIEZA_CINTA,
   ROSALBA_MERCADO,
   ROSALBA_MONTE,
   retratoRosalba,
+  rosalbaLlano,
 } from '../personajes/rosalba.ts';
 import { armarRecorte } from '../Recorte.ts';
 
@@ -29,8 +32,15 @@ export class Prueba extends Scene {
   preload(): void {
     this.load.json('ink-prueba', 'generated/ink/prueba.json');
     this.load.json('archivo', 'generated/archivo/indice.json');
-    // Mercado del Prólogo y monte del Acto I (M2): cada acto tiene su atlas (paleta.md §5).
-    cargarAtlas(this, atlasRosalba('prologo'), atlasRosalba('acto1'), 'prueba');
+    // Mercado del Prólogo, monte del Acto I (M2) y Llano del Acto II: cada acto tiene su atlas
+    // (paleta.md §5).
+    cargarAtlas(
+      this,
+      atlasRosalba('prologo'),
+      atlasRosalba('acto1'),
+      atlasRosalba('acto2'),
+      'prueba',
+    );
   }
 
   create(): void {
@@ -91,6 +101,17 @@ export class Prueba extends Scene {
       'mercado',
     );
     retrato.contenedor.setScale(0.7);
+    // Viñeta del Llano (Acto II), a la derecha.
+    vineta.fillRect(1580, 40, 300, 360).strokeRect(1580, 40, 300, 360);
+    const retratoLlano = new Retrato(
+      this,
+      1730,
+      400,
+      atlasRosalba('acto2'),
+      retratoRosalba('acto2'),
+      'llano',
+    );
+    retratoLlano.contenedor.setScale(0.7);
     // La cinta suelta (Prólogo b2), a la escala del personaje y a la de la viñeta.
     this.add
       .image(420, 120, 'personajes', 'personajes/cinta-roja/cinta-suelta')
@@ -114,6 +135,7 @@ export class Prueba extends Scene {
         const expresion = EXPRESIONES[indiceExpresion] ?? 'neutral';
         mercado.expresion(expresion);
         retrato.expresion(expresion);
+        retratoLlano.expresion(expresion);
       },
     });
 
@@ -136,9 +158,40 @@ export class Prueba extends Scene {
     );
     // Escala del contrato (planeacion/arte/tomo1/escenarios/contrato_escala.md).
     monte.raiz.setScale(ESCALA_ROSALBA);
+    // Rosalba del Llano (Acto II), con la cinta ya atada y la faja: camina, acecha y corre.
+    const llano = new Personaje(
+      this,
+      -200,
+      450,
+      atlasRosalba('acto2'),
+      APOYO_ROSALBA,
+      rosalbaLlano('acto2'),
+      'de-pie',
+      {
+        caminata: CAMINATA_LLANO,
+        carrera: CARRERA_LLANO,
+        expresion: 'neutral',
+      },
+    );
+    llano.raiz.setScale(ESCALA_ROSALBA);
+    void (async () => {
+      for (;;) {
+        llano.raiz.x = -200;
+        llano.expresion('neutral');
+        await llano.caminarHasta(1180);
+        await llano.cambiarPose('agachada');
+        llano.expresion('alerta');
+        llano.acechar();
+        await this.esperar(2500);
+        await llano.correrHasta(2150);
+        await llano.cambiarPose('de-pie');
+      }
+    })();
     if (import.meta.env.DEV) {
       // Solo en desarrollo: permite inspeccionar la secuencia desde la consola del navegador.
-      Object.assign(globalThis, { __prueba: { monte, mercado, retrato } });
+      Object.assign(globalThis, {
+        __prueba: { monte, mercado, retrato, llano, retratoLlano },
+      });
     }
     void (async () => {
       for (;;) {
