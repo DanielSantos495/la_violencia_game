@@ -87,9 +87,9 @@ luz se dibuja encima: rendijas, charcos y lámparas.
 ## 4. Actos
 
 `interior-prologo` y `exterior-prologo` van con el croma del Prólogo (×1); `interior-acto1` y
-`exterior-acto1`, con el del Acto I (×0,65). Las dos versiones tienen la misma composición. Para la
-noche de la M2, `paleta.md` §5 prevé además el filtro en tiempo real (b) en los momentos
-dramáticos, que va en la escena del juego.
+`exterior-acto1`, con el del Acto I (×0,65). Las dos versiones tienen la misma composición. El
+momento en que llama la Seccional o llega la partida va con el filtro en tiempo real (b) de
+`paleta.md` §5: la noche de tinta (§7).
 
 ## 5. Implementación
 
@@ -106,7 +106,11 @@ dramáticos, que va en la escena del juego.
     medio cubriendo lo que se ve por los extremos, y los mismos módulos en los dos actos.
 - `PruebaEscenario` acepta `?escenario=` y usa la Rosalba del acto: en el Prólogo, de mercado y
   con la cinta; en el Acto I, de monte y sin la cinta (P32). De noche la tiñe con un tinte de
-  prueba parejo que no toca la cinta, porque es roja de partido.
+  prueba parejo que no toca la cinta, porque es roja de partido. En la casa, la tecla T pasa a la
+  noche de tinta y vuelve.
+- Noche de tinta en vivo: `NocheDeTinta` (`src/game/escenarios/`) pone sobre la cámara la matriz de
+  `src/core/escenarios/noche.ts` y la funde con `fundir(1)` o `fundir(0)`. Revisión sin
+  navegador: `pnpm art:escena casa-exterior-acto1 --tinta`.
 
 ## 6. Pendientes
 
@@ -117,7 +121,8 @@ dramáticos, que va en la escena del juego.
 - Variantes de la M2: la lámpara apagada cuando llega la partida y la puerta abierta.
 - La quema de la casa vista a distancia (M2 b4) y los fondos de la huida: cultivos, quebrada y
   monte al amanecer.
-- Elegir el estilo de noche (§7).
+- En la escena del juego, lo partidista que deba quedar exacto durante la noche de tinta (la cinta
+  antes de que la madre la quite, P32) va en otra cámara sin el filtro (`paleta.md` §5).
 
 ## 7. Muestras de noche (decisión de Daniel)
 
@@ -126,11 +131,27 @@ la paleta: la noche no es azul, la luz es ocre y amarilla, y el rojo y el azul n
 
 | Estilo | Cómo es | A favor | En contra |
 |---|---|---|---|
-| **A. Escalonada** (la de ahora) | Aguada de tinta al 84 %; tres escalones de luz alrededor de la lámpara | Se lee bien todo | La más gris: la noche dice poco |
+| **A. Escalonada** | Aguada de tinta al 84 %; tres escalones de luz alrededor de la lámpara | Se lee bien todo | La más gris: la noche dice poco |
 | **B. Tinta** | Casi negro (95 %); solo existe lo que toca la luz | La más dramática y de novela gráfica: la lámpara es refugio y la oscuridad amenaza | Afuera, en el sigilo y la huida de la M2, se pierden la senda y los postes |
 | **C. Sepia** | La noche quita el color: el mundo queda en sepia y solo la luz conserva su ocre | Encaja con el guion de color («el color se va»). Distingue la noche del día. Lo único que queda en color es la lámpara y la cinta roja, hasta que la madre se la quita (P32) | Más plana que B |
 | **D. Luna** | Luna de papel con halo; el tejado y el patio a la luz, el corredor en sombra | La más legible y bella | Menos amenazante. La fase de la luna en las fechas del guion es [P] |
 
-**Recomendación:** C como noche base de las dos noches (Prólogo b4 y M2), y B para el momento en que
-llama la Seccional o llega la partida. Ese momento va con el filtro en tiempo real (b) que
-`paleta.md` §5 prevé para la noche de la M2.
+**Decisión de Daniel (05-oct-2026):** C como noche base de las dos noches (Prólogo b4 y M2), y B
+para el momento en que llama la Seccional o llega la partida, con el filtro en tiempo real (b) de
+`paleta.md` §5. Los fondos de la casa y de la huida se generan con C (`NOCHE` en
+`casa_insuasty.py`).
+
+**La noche de tinta en vivo** es una sola matriz de color sobre la cámara que aleja cada color del
+papel (`src/core/escenarios/noche.ts`). Su fuerza sale de la paleta: el encalado bajo la noche sepia
+de afuera cae justo en tinta. Con eso:
+
+- el papel no cambia, así que los canales entre viñetas siguen siendo papel;
+- la luz de la lámpara, el fogón y la puerta apenas cambia;
+- adentro, la penumbra y la media luz caen a menos de 0,03 de donde las pinta B dibujada;
+- el rojo y el azul guardan el tono (se mueve menos de 5°) y salen algo más hondos;
+- lo más oscuro llega a negro, un punto por debajo de `tinta-plena`. Dejarlo en `tinta-plena`
+  costaría otra pasada y enrojecería el cielo y el azul;
+- el cielo, que es `sepia-oscuro`, queda en un marrón casi negro unos grados más cálido.
+
+Se comprobó en el navegador leyendo los píxeles con el filtro y sin él, y coincide con
+`art:escena --tinta`. La transición dura 0,7 s por defecto.

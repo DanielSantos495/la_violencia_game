@@ -6,6 +6,7 @@ import type { DefinicionEscenario } from '../../core/escenarios/escenario.ts';
 import { PUENTE_ALTO } from '../../core/escenarios/puente-alto.ts';
 import { cargarAtlas } from '../arte.ts';
 import { Escenario, precargarEscenario } from '../escenarios/Escenario.ts';
+import { NocheDeTinta } from '../escenarios/NocheDeTinta.ts';
 import { Personaje } from '../Personaje.ts';
 import {
   APOYO_ROSALBA,
@@ -32,6 +33,14 @@ const TINTE_NOCHE: Readonly<Record<string, number>> = {
   'huida-monte': 0xe2ddd2,
 };
 
+/** Donde llaman la Seccional o la partida: la tecla T pasa a la noche de tinta y vuelve. */
+const CON_NOCHE_DE_TINTA = new Set([
+  'casa-interior',
+  'casa-interior-acto1',
+  'casa-exterior',
+  'casa-exterior-acto1',
+]);
+
 /** Tiñe todas las piezas menos la cinta: el rojo de partido va entero (paleta.md §6). */
 function aplicarTinte(objeto: GameObjects.GameObject, tinte: number): void {
   if (objeto instanceof GameObjects.Container) {
@@ -55,6 +64,7 @@ export class PruebaEscenario extends Scene {
   private def: DefinicionEscenario = PUENTE_ALTO;
   private escenario?: Escenario;
   private camaraX?: GameObjects.Text;
+  private ayuda = '';
 
   constructor() {
     super('PruebaEscenario');
@@ -109,6 +119,14 @@ export class PruebaEscenario extends Scene {
     camara.setFollowOffset(-VIEWPORT.ancho / 6, 0);
     camara.setDeadzone(160, VIEWPORT.alto);
 
+    if (CON_NOCHE_DE_TINTA.has(this.nombre)) {
+      const noche = new NocheDeTinta(this, camara);
+      this.input.keyboard?.on('keydown-T', () => {
+        void noche.fundir(noche.intensidad > 0.5 ? 0 : 1);
+      });
+      this.ayuda = ' · T: noche de tinta';
+    }
+
     // Posición de la cámara, para compararla con las vistas de art:escena.
     this.camaraX = this.add
       .text(24, 20, '', {
@@ -129,7 +147,7 @@ export class PruebaEscenario extends Scene {
   update(_tiempo: number, delta: number): void {
     this.escenario?.actualizar(delta);
     this.camaraX?.setText(
-      `${this.nombre} · cámara x=${Math.round(this.cameras.main.scrollX)}`,
+      `${this.nombre} · cámara x=${Math.round(this.cameras.main.scrollX)}${this.ayuda}`,
     );
   }
 }
