@@ -19,6 +19,7 @@ Edita este script, no los SVG generados.
 import math
 import os
 import random
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -688,35 +689,45 @@ EXT = {'solar': (0, 900), 'casa-cocina': (900, 1900), 'casa-sala': (1900, 3100),
 Y_CORREDOR = 900 - 0.25 * M  # piso del corredor (fachada_con_corredor)
 
 
-def matriz_noche(a, sepia):
-    """Matriz de color de la noche: mezcla con la tinta en la proporción a; con sepia, antes deja
-    cada color en su luz sobre el papel (la noche quita el color)."""
-    tinta = [int(pa.TINTA[i:i + 2], 16) / 255 for i in (1, 3, 5)]
-    papel = [int(pa.PAPEL[i:i + 2], 16) / 255 for i in (1, 3, 5)]
-    k = 1 - a
-    filas = []
-    for i, t in enumerate(tinta):
-        if sepia:
-            p = papel[i]
-            filas.append(f'{k * p * 0.2126:.4f} {k * p * 0.7152:.4f} {k * p * 0.0722:.4f} 0 {t * a:.3f}')
-        else:
-            fila = ['0', '0', '0']
-            fila[i] = f'{k:.3f}'
-            filas.append(f'{" ".join(fila)} 0 {t * a:.3f}')
-    return ' '.join(filas) + ' 0 0 0 1 0'
+def _rgb(hexa):
+    h = hexa.lstrip('#')
+    if len(h) == 3:
+        h = ''.join(c * 2 for c in h)
+    return [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
 
 
-def filtro_noche(W, Hh, a=None, id_='noche'):
+def _hexa(rgb):
+    return '#' + ''.join(f'{round(max(0.0, min(1.0, v)) * 255):02x}' for v in rgb)
+
+
+def mezclar_colores(dibujo, transformar, capa='juego'):
+    """Cambia cada color de relleno y de trazo del dibujo. "#000" (la línea) y "#fff" (el papel)
+    se resuelven antes, como hará archivo() al guardar. Si la transformación es afín (mezclar con
+    un color, pasar a sepia), da lo mismo que aplicarla a la imagen ya compuesta: la composición
+    con transparencias es una mezcla lineal. Así no hace falta un filtro SVG, que con el recorte
+    del atlas hace caer a resvg."""
+    linea = pa.LINEA[capa]
+
+    def cambiar(mo):
+        valor = mo.group(2)
+        base = linea if valor == '#000' else (pa.PAPEL if valor == '#fff' else valor)
+        return f'{mo.group(1)}="{_hexa(transformar(_rgb(base)))}"'
+    return re.sub(r'(fill|stroke)="(#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3})"', cambiar, dibujo)
+
+
+def de_noche(W, Hh, dibujo, a=None, id_='noche', capa='juego'):
     """Aguada de tinta plana sobre lo dibujado, no sobre lo transparente: mezcla cada color con la
-    tinta en la proporción a (por defecto, la del estilo de noche). Así el cielo de los módulos
-    sigue transparente."""
+    tinta en la proporción a (por defecto, la del estilo de noche); con sepia, antes deja cada
+    color en su luz sobre el papel (la noche quita el color). W, Hh e id_ quedan por compatibilidad."""
     a = NOCHE['afuera'] if a is None else a
-    return (f'<filter id="{id_}" filterUnits="userSpaceOnUse" x="0" y="0" width="{f(W)}" height="{f(Hh)}" color-interpolation-filters="sRGB">'
-            f'<feColorMatrix type="matrix" values="{matriz_noche(a, NOCHE["sepia"])}"/></filter>')
+    tinta, papel = _rgb(pa.TINTA), _rgb(pa.PAPEL)
 
-
-def de_noche(W, Hh, dibujo, a=None, id_='noche'):
-    return f'{filtro_noche(W, Hh, a, id_)}<g filter="url(#{id_})">{dibujo}</g>'
+    def noche_(c):
+        if NOCHE['sepia']:
+            luz = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+            return [(1 - a) * luz * p + a * t for p, t in zip(papel, tinta)]
+        return [(1 - a) * v + a * t for v, t in zip(c, tinta)]
+    return mezclar_colores(dibujo, noche_, capa)
 
 
 def rendija(x0, y0, x1, y1, ancho=3):
@@ -1024,21 +1035,22 @@ def lomas(nombre, x_capa0, W, semilla, casas):
         out.append(f'<path d="M{f(cx - 14)},{f(cy)} L{f(cx - 14)},{f(cy - 10)} L{f(cx)},{f(cy - 17)} L{f(cx + 14)},{f(cy - 10)} L{f(cx + 14)},{f(cy)} Z" fill="{lav("cal", m)}" stroke="#000" stroke-width="{f(sw * 0.7)}"/>')
         luces.append(f'<circle cx="{f(cx + 5)}" cy="{f(cy - 5)}" r="7" fill="{col("lampara")}" fill-opacity="0.25"/>'
                      f'<rect x="{f(cx + 3)}" y="{f(cy - 7)}" width="4" height="4" fill="{col("lampara")}"/>')
-    cuerpo = de_noche(W, Hh, '\n'.join(out), a=NOCHE['lejos']) + ''.join(luces)
+    cuerpo = de_noche(W, Hh, '\n'.join(out), a=NOCHE['lejos'], capa='lejos') + ''.join(luces)
     archivo(nombre, W, Hh, 'lejos', 'lomas de la vereda de noche, con alguna lámpara', cuerpo,
             notas=f'Se coloca arriba en y={y0} (cubre el suelo lejano, y=628) y en x={x_capa0}.')
 
 
-def campo(nombre, x_capa0, W, semilla, vecina=None):
-    """Cultivos de la vereda en la capa media (90 px/m): papa en surcos, una cerca y árboles; en el
-    lado del camino, la casa de los vecinos con su lámpara (la que Heliodoro no deja quemar, M2 b3)."""
+def campo(nombre, x_capa0, W, semilla, vecina=None, arboles=None, alto_arbol=6.5, ancho_arbol=4.2):
+    """Cultivos de la vereda en la capa media (90 px/m): papa en surcos, una cerca y árboles (por
+    defecto dos al azar; `arboles` da sus x); en el lado del camino, la casa de los vecinos con su
+    lámpara (la que Heliodoro no deja quemar, M2 b3)."""
     rnd = random.Random(semilla)
     m, sw = ppm('medio'), TRAZO['medio']
     Hh, y0 = 800, 120           # se coloca arriba en y=120: cubre de 120 a 920 (caben los árboles)
     suelo = 724 - y0
     out = []
-    for cx in (rnd.uniform(80, W * 0.4), rnd.uniform(W * 0.55, W - 80)):
-        out.append(arbol(cx, suelo + 10, 6.5 * m, 4.2 * m, rnd, m, sw))
+    for cx in arboles if arboles is not None else (rnd.uniform(80, W * 0.4), rnd.uniform(W * 0.55, W - 80)):
+        out.append(arbol(cx, suelo + 10, alto_arbol * m, ancho_arbol * m, rnd, m, sw))
     luz = ''
     if vecina is not None:
         vx, vw = vecina, 4.6 * m
