@@ -44,6 +44,20 @@ export const CAMINATA_ROSALBA: OpcionesCaminar = {
 export const CARRERA_ROSALBA: OpcionesCorrer = { largo: 128, ciclo: 620 };
 
 /**
+ * Cómo camina en el Llano (Acto II en adelante): con la falda a media canilla se ven las
+ * canillas, que giran en la rodilla oculta bajo la falda (modo canilla de caminata.ts), con
+ * pasos más largos que en Boyacá: ~0,74 m/s en escena. Guarda en tests/rosalba-arte.test.ts.
+ */
+export const CAMINATA_LLANO: OpcionesCaminar = { canilla: true, ciclo: 820 };
+
+/** Cómo corre en el Llano: nada que recoger, así que bracean los dos brazos. */
+export const CARRERA_LLANO: OpcionesCorrer = {
+  largo: 128,
+  ciclo: 620,
+  bracea: 'ambos',
+};
+
+/**
  * Actos del guion de color (planeacion/arte/tomo1/paleta.md §5; ids de `guion` en
  * game/art/paleta.json). Rosalba cruza todos: art/gen/rosalba.py la genera una vez por acto con
  * el croma del mundo de ese acto. La cinta roja (partido) no cambia en ningún acto.
@@ -53,6 +67,8 @@ export type ActoRosalba = 'prologo' | 'acto1' | 'acto2' | 'acto3' | 'epilogo';
 export type ActoMercado = Extract<ActoRosalba, 'prologo' | 'acto1'>;
 /** Actos con la variante monte: desde la M2 (Acto I). */
 export type ActoMonte = Exclude<ActoRosalba, 'prologo'>;
+/** Actos con la variante Llano: Acto II en adelante (gastada en el Acto III y el Epílogo). */
+export type ActoLlano = Extract<ActoRosalba, 'acto2' | 'acto3' | 'epilogo'>;
 
 /**
  * Atlas de Rosalba en un acto (clave de textura y carpeta de art/src): el Prólogo, con la paleta
@@ -78,6 +94,12 @@ export const APOYO_ROSALBA = { x: 150, y: 474 };
  * en un amarre oscuro: `new Personaje(..., { ocultas: [PIEZA_CINTA] })` o `mostrarPieza`.
  */
 export const PIEZA_CINTA = 'cinta';
+
+/**
+ * Faja de cuero con el cuchillo (variante Llano), pieza propia: si se desmoviliza (doc 02,
+ * M7) va sin ella: `ocultas: [PIEZA_FAJA]` o `mostrarPieza(PIEZA_FAJA, false)`.
+ */
+export const PIEZA_FAJA = 'faja';
 
 /**
  * Traje de mercado, de pie. Las cabezas por expresión (core/animacion/expresiones.ts) tienen
@@ -180,6 +202,69 @@ export function rosalbaMonte(
         'brazo-der',
         'antebrazo-der',
         'ruana-doblez',
+      ],
+    },
+  };
+}
+
+/**
+ * Variante Llano (doc 03 §3.3; hoja de personaje §2): camisa caqui remangada, falda de dril a
+ * media canilla, cotizas, faja con cuchillo y sombrero de cogollo. De pie y corriendo las
+ * piernas son canillas con pivote en la rodilla: camina con CAMINATA_LLANO y corre con
+ * CARRERA_LLANO. El rollo de cada manga (`manga-*`) cuelga del brazo y tapa el codo; el
+ * cuello abierto de la camisa va por delante del hombro.
+ */
+export function rosalbaLlano(
+  acto: ActoLlano = 'acto2',
+): Record<string, DefinicionPose> {
+  const atlas = atlasRosalba(acto);
+  const piezas = [
+    'brazo-izq',
+    'antebrazo-izq',
+    'manga-izq',
+    'pierna-izq',
+    'pierna-der',
+    'falda',
+    'torso',
+    'faja',
+    'cabeza',
+    'zarcillo',
+    'sombrero',
+    'trenza',
+    'cinta',
+    'brazo-der',
+    'antebrazo-der',
+    'manga-der',
+    'cuello',
+  ];
+  return {
+    'de-pie': {
+      base: `${atlas}/rosalba-llano`,
+      cabezas: `${atlas}/rosalba-cabezas`,
+      piezas,
+    },
+    corriendo: {
+      base: `${atlas}/rosalba-llano-corriendo`,
+      cabezas: `${atlas}/rosalba-cabezas`,
+      postura: 'cabeza',
+      piezas,
+    },
+    agachada: {
+      base: `${atlas}/rosalba-llano-agachada`,
+      cabezas: `${atlas}/rosalba-agachada-cabezas`,
+      // La mano de apoyo sigue en el suelo: la expresión solo mueve la cabeza.
+      postura: 'cabeza',
+      piezas: [
+        'cuerpo',
+        'faja',
+        'cabeza',
+        'zarcillo',
+        'sombrero',
+        'trenza',
+        'cinta',
+        'brazo-der',
+        'antebrazo-der',
+        'manga-der',
       ],
     },
   };

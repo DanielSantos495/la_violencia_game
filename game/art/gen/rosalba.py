@@ -15,15 +15,17 @@ import json, math, os, re, subprocess, sys
 _AQUI = os.path.dirname(os.path.abspath(__file__))
 _DATOS = json.load(open(os.path.join(_AQUI, '..', 'paleta.json'), encoding='utf-8'))
 _MONTE = ('rosalba-monte', 'rosalba-agachada', 'rosalba-corriendo', 'rosalba-cabezas', 'rosalba-agachada-cabezas', 'rosalba-retrato')
+_LLANO = ('rosalba-llano', 'rosalba-llano-agachada', 'rosalba-llano-corriendo')
 # Qué dibujos necesita cada acto (doc 02). Mercado: Prólogo y Acto I antes del ataque; la cinta
-# suelta es del Prólogo b2; monte: desde la M2 (Acto I). Las variantes del Llano y de los actos
-# siguientes están pendientes de diseño (hoja de personaje §2): mientras, el monte con el color del acto.
+# suelta es del Prólogo b2; monte: desde la M2 (Acto I); Llano: Acto II en adelante (gastado en el
+# Acto III y el Epílogo). El monte sigue en los actos II, III y el Epílogo: llega al Llano con la
+# ruana (M4) y puede volver al altiplano (M7, final 1).
 ACTOS_ROSALBA = {
     'prologo': ('rosalba', 'rosalba-cabezas', 'rosalba-retrato', 'cinta-roja'),
     'acto1': ('rosalba',) + _MONTE,
-    'acto2': _MONTE,
-    'acto3': _MONTE,
-    'epilogo': _MONTE,
+    'acto2': _MONTE + _LLANO,
+    'acto3': _MONTE + _LLANO,
+    'epilogo': _MONTE + _LLANO,
 }
 _GENERADOS = {n for nombres in ACTOS_ROSALBA.values() for n in nombres}
 _args = [a for a in sys.argv[1:] if not a.startswith('--acto=')]
@@ -75,6 +77,10 @@ FALDA, RUANA, LANA, BARRO = PALETA['negro-anil'], PALETA['lana-parda'], PALETA['
 CINTAS = (PALETA['cinta-amarilla'], PALETA['cinta-verde'], PALETA['cinta-rosa'])  # cintas y abalorios
 DORADO = PALETA['cinta-amarilla']  # zarcillos
 R = PALETA['rojo-liberal']  # cinta de la trenza (Ocampo: «van las cintas rojas generalmente»)
+# Llano (sección 8): camisa caqui, falda de dril oscuro, cuero de faja, cotizas y barbuquejo.
+CAQUI, DRIL = PALETA['caqui'], PALETA['pano-oscuro']
+CUERO, CUERO_CRUDO = PALETA['madera'], PALETA['tierra-llanera']  # la paleta no tiene token de cuero
+GASTADO = ACTO in ('acto3', 'epilogo')  # el traje del Llano, remendado en el Acto III y el Epílogo
 
 def f(x): return f"{x:.1f}".rstrip('0').rstrip('.')
 
@@ -240,6 +246,25 @@ def alpargata(dx, lejana=False):
         s.append(f'<path d="M{P(151,430)} L{P(163,430)} C{P(163,440)} {P(163,447)} {P(164,452)} L{P(152,452)} C{P(152,446)} {P(151,438)} {P(151,430)} Z" fill="#000" fill-opacity="0.1"/>')
     return ''.join(s)
 
+# ---------- mano (dorso hacia el espectador) ----------
+def mano(dx, sw):
+    """Mano colgando del antebrazo (muñeca en y≈258), con el pulgar adelante."""
+    def P(x, y): return f"{f(x+dx)},{f(y)}"
+    return (
+        # mano: dorso hacia el espectador, pulgar adelante separado del índice
+        f'<path d="M{P(158,260)} C{P(156.5,266)} {P(156.6,272)} {P(157.4,277)} C{P(158,284)} {P(159.5,290)} {P(162,294.5)} C{P(163.6,297)} {P(166.4,297.2)} {P(167.6,295)} C{P(168.4,296.8)} {P(171,297)} {P(172,294.8)} C{P(173.4,292)} {P(172.6,287)} {P(171.2,283)} C{P(170.6,280.6)} {P(170.6,278.6)} {P(171.6,277.2)} C{P(173.4,277.6)} {P(176.4,277.8)} {P(178.6,276.4)} C{P(180.6,275)} {P(180.4,272.4)} {P(178.4,271)} C{P(176.4,269.6)} {P(174.4,268.2)} {P(172.6,264.6)} L{P(172,258)} Z" fill="{PIEL}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
+        # borde interno del pulgar: deja ver el hueco entre pulgar e índice
+        f'<path d="M{P(171.6,277.2)} C{P(171,275.4)} {P(171.4,273)} {P(172.6,271)}" stroke="#000" stroke-width="1.1" fill="none" stroke-linecap="round"/>'
+        f'<path d="M{P(178.3,272.3)} Q{P(179.6,273.4)} {P(179.4,275.2)}" stroke="#000" stroke-width="0.8" fill="none"/>'
+        # dedos escalonados y línea de nudillos
+        f'<path d="M{P(161,279)} C{P(161.6,286)} {P(163,291)} {P(165,295)} M{P(165.5,279)} C{P(166,286)} {P(167.4,291)} {P(168.8,295)}" stroke="#000" stroke-width="1" fill="none" stroke-linecap="round"/>'
+        f'<path d="M{P(158,276.4)} C{P(162,274.8)} {P(166,275.2)} {P(170,277)}" stroke="#000" stroke-width="0.6" fill="none"/>'
+        f'<path d="M{P(164.6,295.4)} Q{P(165.8,296.4)} {P(166.8,295.6)} M{P(169.4,295.6)} Q{P(170.6,296.6)} {P(171.6,295.4)}" stroke="#000" stroke-width="0.7" fill="none"/>'
+        # tendones y sombra del canto
+        f'<path d="M{P(161,263)} C{P(161.4,267)} {P(161.8,271)} {P(161.8,274)} M{P(165,262.5)} C{P(165.4,267)} {P(165.8,271)} {P(165.8,274)}" stroke="#000" stroke-width="0.55" fill="none"/>'
+        f'<path d="M{P(157.4,266)} C{P(156.8,274)} {P(157.6,283)} {P(160,290)} L{P(161.4,289)} C{P(159.6,282)} {P(159,274)} {P(159.8,266)} Z" fill="#000" fill-opacity="0.1"/>'
+    )
+
 # ---------- brazo + antebrazo ----------
 def brazo(dx, lejano=False):
     def P(x, y): return f"{f(x+dx)},{f(y)}"
@@ -257,19 +282,8 @@ def brazo(dx, lejano=False):
         # puño bordado con abalorios
         f'<path d="M{P(155.5,249)} L{P(172,246.5)} L{P(173.5,257)} L{P(157,260)} Z" fill="{TELA}" stroke="#000" stroke-width="{sw*0.85}" stroke-linejoin="round"/>'
         f'<path d="M{P(157,254)} L{P(160,251.5)} L{P(163,254)} L{P(166,251)} L{P(169,253.5)} L{P(172,250.5)}" stroke="#000" stroke-width="0.8" fill="none"/>'
-        + ''.join(f'<circle cx="{f(x+dx)}" cy="{f(y)}" r="0.8" fill="#000"/>' for x, y in [(158.5, 257.5), (162, 257), (165.5, 256.4), (169, 255.8), (172, 255.2)]) +
-        # mano: dorso hacia el espectador, pulgar adelante separado del índice
-        f'<path d="M{P(158,260)} C{P(156.5,266)} {P(156.6,272)} {P(157.4,277)} C{P(158,284)} {P(159.5,290)} {P(162,294.5)} C{P(163.6,297)} {P(166.4,297.2)} {P(167.6,295)} C{P(168.4,296.8)} {P(171,297)} {P(172,294.8)} C{P(173.4,292)} {P(172.6,287)} {P(171.2,283)} C{P(170.6,280.6)} {P(170.6,278.6)} {P(171.6,277.2)} C{P(173.4,277.6)} {P(176.4,277.8)} {P(178.6,276.4)} C{P(180.6,275)} {P(180.4,272.4)} {P(178.4,271)} C{P(176.4,269.6)} {P(174.4,268.2)} {P(172.6,264.6)} L{P(172,258)} Z" fill="{PIEL}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
-        # borde interno del pulgar: deja ver el hueco entre pulgar e índice
-        f'<path d="M{P(171.6,277.2)} C{P(171,275.4)} {P(171.4,273)} {P(172.6,271)}" stroke="#000" stroke-width="1.1" fill="none" stroke-linecap="round"/>'
-        f'<path d="M{P(178.3,272.3)} Q{P(179.6,273.4)} {P(179.4,275.2)}" stroke="#000" stroke-width="0.8" fill="none"/>'
-        # dedos escalonados y línea de nudillos
-        f'<path d="M{P(161,279)} C{P(161.6,286)} {P(163,291)} {P(165,295)} M{P(165.5,279)} C{P(166,286)} {P(167.4,291)} {P(168.8,295)}" stroke="#000" stroke-width="1" fill="none" stroke-linecap="round"/>'
-        f'<path d="M{P(158,276.4)} C{P(162,274.8)} {P(166,275.2)} {P(170,277)}" stroke="#000" stroke-width="0.6" fill="none"/>'
-        f'<path d="M{P(164.6,295.4)} Q{P(165.8,296.4)} {P(166.8,295.6)} M{P(169.4,295.6)} Q{P(170.6,296.6)} {P(171.6,295.4)}" stroke="#000" stroke-width="0.7" fill="none"/>'
-        # tendones y sombra del canto
-        f'<path d="M{P(161,263)} C{P(161.4,267)} {P(161.8,271)} {P(161.8,274)} M{P(165,262.5)} C{P(165.4,267)} {P(165.8,271)} {P(165.8,274)}" stroke="#000" stroke-width="0.55" fill="none"/>'
-        f'<path d="M{P(157.4,266)} C{P(156.8,274)} {P(157.6,283)} {P(160,290)} L{P(161.4,289)} C{P(159.6,282)} {P(159,274)} {P(159.8,266)} Z" fill="#000" fill-opacity="0.1"/>'
+        + ''.join(f'<circle cx="{f(x+dx)}" cy="{f(y)}" r="0.8" fill="#000"/>' for x, y in [(158.5, 257.5), (162, 257), (165.5, 256.4), (169, 255.8), (172, 255.2)])
+        + mano(dx, sw)
     )
     if lejano:
         fore += (f'<path d="M{P(148,196)} L{P(166,195)} C{P(168,218)} {P(170,236)} {P(171.5,250)} L{P(156.5,253)} C{P(155,238)} {P(151,218)} {P(148,196)} Z" fill="#000" fill-opacity="0.18"/>'
@@ -442,6 +456,28 @@ def barro(puntos, semilla=3):
         r = 0.8 + ((i * 7 + semilla) % 5) * 0.35
         out.append(f'<ellipse cx="{f(x)}" cy="{f(y)}" rx="{f(r*1.4)}" ry="{f(r)}" transform="rotate({(i*37)%180} {f(x)} {f(y)})" fill="{BARRO}" stroke="#000" stroke-width="0.4"/>')
     return ''.join(out)
+
+def remiendo(puntos, tela, cid):
+    """Parche cosido a mano: retazo de otra tela con puntadas sueltas alrededor."""
+    d = polilinea(puntos, True)
+    cx = sum(x for x, _ in puntos) / len(puntos)
+    cy = sum(y for _, y in puntos) / len(puntos)
+    adentro = [mezcla(p, (cx, cy), 0.22) for p in puntos]
+    puntadas = []
+    for a, b in zip(adentro, adentro[1:] + adentro[:1]):
+        for t in (0.15, 0.5, 0.85):
+            px, py = mezcla(a, b, t)
+            ux, uy = b[0] - a[0], b[1] - a[1]
+            l = math.hypot(ux, uy) or 1.0
+            nx, ny = -uy / l * 2.6, ux / l * 2.6
+            puntadas.append(f'M{f(px - nx)},{f(py - ny)} L{f(px + nx)},{f(py + ny)}')
+    return (f'<path d="{d}" fill="{tela}" stroke="#000" stroke-width="1.3" stroke-linejoin="round"/>'
+            f'<path d="{" ".join(puntadas)}" stroke="#000" stroke-width="0.9" fill="none" stroke-linecap="round"/>')
+
+def hilachas(puntos):
+    """Ruedo deshilachado: pocas hebras sueltas que cuelgan del borde."""
+    return ''.join(f'<path d="M{f(x)},{f(y)} C{f(x - 0.6)},{f(y + l * 0.5)} {f(x + 0.8)},{f(y + l * 0.7)} {f(x + 0.2)},{f(y + l)}" '
+                   'stroke="#000" stroke-width="0.9" fill="none" stroke-linecap="round"/>' for x, y, l in puntos)
 
 # ======================= cabeza y expresiones =======================
 # La cabeza = partes fijas (cuello, contorno, nariz, pelo, oreja) + rasgos por expresión
@@ -847,6 +883,19 @@ SOMB_C = (198.0, 93.0)            # centro de la base de la copa en la imagen
 SOMB_R0, SOMB_R, SOMB_H = 64.0, 118.0, 50.0
 SOMB_CAIDA = math.tan(math.radians(9))
 SOMB_ANG = (math.radians(-3), math.radians(-2), math.radians(15))  # giro en el plano, echado atrás, cámara arriba
+SOMB_EXP = 2.4                    # forma de la copa: 2,4 redonda (caña); más alto, más plana arriba
+# Sombrero de cogollo del Llano: ala más ancha y casi plana, copa más baja y plana con hendidura.
+SOMB_LLANERO = dict(SOMB_R=138.0, SOMB_H=40.0, SOMB_CAIDA=math.tan(math.radians(4)), SOMB_EXP=4.0)
+
+def con_sombrero(params, fn):
+    """Llama a fn con otra forma de sombrero (las funciones 3D leen estas constantes del módulo)."""
+    g = globals()
+    antes = {k: g[k] for k in params}
+    g.update(params)
+    try:
+        return fn()
+    finally:
+        g.update(antes)
 LUZ = (-0.55, 0.65, 0.52)
 
 def unit(v):
@@ -877,7 +926,7 @@ def ala_visible(th, r):
 
 def copa_r(h):
     u = min(max(h / SOMB_H, 0.0), 1.0)
-    return (SOMB_R0 - 1) * (1 - 0.1 * u) * (1 - u ** 2.4) ** (1 / 2.4)
+    return (SOMB_R0 - 1) * (1 - 0.1 * u) * (1 - u ** SOMB_EXP) ** (1 / SOMB_EXP)
 
 def copa_p(th, h):
     r = copa_r(h)
@@ -916,7 +965,7 @@ def envolvente(pts):
         alto.append(p)
     return bajo[:-1] + alto[:-1]
 
-def sombrero_34():
+def sombrero_34(llanero=False):
     v = []
     # --- ala: silueta, cara de abajo a la vista (en sombra) y trencilla cosida en espiral
     borde = [s_px(ala_p(2 * math.pi * i / 160, SOMB_R)) for i in range(160)]
@@ -938,7 +987,7 @@ def sombrero_34():
             sombra_ala.append(polilinea([s_px(ala_p(t0, SOMB_R0)), s_px(ala_p(t1, SOMB_R0)), s_px(ala_p(t1, SOMB_R0 + largo)), s_px(ala_p(t0, SOMB_R0 + largo))], True))
     v.append(f'<path d="{" ".join(sombra_ala)}" fill="#000" fill-opacity="0.1"/>')
     # pocas marcas: dos vueltas de la trenza de paja en el ala (doc 03 §1 «Relleno»)
-    for r in (SOMB_R0 + 17, SOMB_R0 + 35):
+    for r in ((SOMB_R0 + 34,) if llanero else (SOMB_R0 + 17, SOMB_R0 + 35)):
         for t in arcos(lambda th, r=r: ala_p(th, r), lambda th, r=r: ala_visible(th, r)):
             if len(t) > 1:
                 v.append(f'<path d="{polilinea(t)}" stroke="#000" stroke-width="1.2" fill="none"/>')
@@ -959,18 +1008,41 @@ def sombrero_34():
                 sombra.append(polilinea([s_px(copa_p(th0, h0)), s_px(copa_p(th1, h0)), s_px(copa_p(th1, h1)), s_px(copa_p(th0, h1))], True))
     v.append(f'<path d="{" ".join(sombra)}" fill="#000" fill-opacity="0.1"/>')
     vis_c = lambda th, h: s_cam(copa_n(th, h))[2] > 0
-    # y tres vueltas en la copa
-    for h in (15, 27, 38):
+    # y tres vueltas en la copa (dos en la de cogollo, que es más baja)
+    for h in ((14, 25) if llanero else (15, 27, 38)):
         for t in arcos(lambda th, h=h: copa_p(th, h), lambda th, h=h: vis_c(th, h)):
             if len(t) > 1:
                 v.append(f'<path d="{polilinea(t)}" stroke="#000" stroke-width="1.2" fill="none"/>')
-    tope = s_px(copa_p(0, SOMB_H))
-    v.append(f'<ellipse cx="{f(tope[0])}" cy="{f(tope[1] + 3)}" rx="3.2" ry="1.4" fill="none" stroke="#000" stroke-width="0.8"/>')
+    if llanero:
+        # hendidura de adelante atrás en la copa plana: línea hundida y su sombra
+        frente = math.radians(40)
+        rc = copa_r(SOMB_H * 0.78)
+        pts = []
+        for i in range(25):
+            t = -1 + 2 * i / 24
+            r = abs(t) * rc
+            h = SOMB_H * (0.78 + 0.22 * (1 - abs(t) ** 2)) - 6 * (1 - t * t)
+            th = frente if t >= 0 else frente + math.pi
+            pts.append(s_px((r * math.cos(th), h, r * math.sin(th))))
+        v.append(pincel(suave(pts[::4] + [pts[-1]]), 2.2, 0.2, 0.2))
+        v.append(pincel(suave([(x, y + 3) for x, y in pts[::4]] + [(pts[-1][0], pts[-1][1] + 3)]), 3, 0.1, 0.1, '#000', extra=' fill-opacity="0.18"'))
+    else:
+        tope = s_px(copa_p(0, SOMB_H))
+        v.append(f'<ellipse cx="{f(tope[0])}" cy="{f(tope[1] + 3)}" rx="3.2" ry="1.4" fill="none" stroke="#000" stroke-width="0.8"/>')
     # --- cinta negra con puntada y moño al costado de atrás
     def franja(h0, h1):
         ths = [-math.pi / 2 + 2 * math.pi * i / 180 for i in range(181)]
         ths = [th for th in ths if vis_c(th, (h0 + h1) / 2)]
         return [s_px(copa_p(th, h0)) for th in ths] + [s_px(copa_p(th, h1)) for th in reversed(ths)]
+    if llanero:
+        # cinta de cuero delgada con un nudo de puntas sueltas atrás
+        v.append(f'<path d="{polilinea(franja(0, 6), True)}" fill="{CUERO}" stroke="#000" stroke-width="1.2"/>')
+        mx, my = s_px(copa_p(math.radians(165), 3))
+        v.append(f'<g transform="translate({f(mx)} {f(my)})">'
+                 f'<ellipse cx="0" cy="0" rx="3.4" ry="3" fill="{CUERO}" stroke="#000" stroke-width="1"/>'
+                 '<path d="M-1,2 C-3,8 -4,13 -7,18 M1,2 C1,8 2,12 1,17" stroke="#000" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
+                 f'<path d="M-1,2 C-3,8 -4,13 -7,18 M1,2 C1,8 2,12 1,17" stroke="{CUERO}" stroke-width="1.2" fill="none" stroke-linecap="round"/></g>')
+        return ''.join(v)
     v.append(f'<path d="{polilinea(franja(0, 9.5), True)}" fill="#000"/>')
     mx, my = s_px(copa_p(math.radians(170), 5))
     v.append(f'<g transform="translate({f(mx)} {f(my)})">'
@@ -1152,6 +1224,35 @@ def busto_34(variante):
                        ([(102, 334), (90, 370), (84, 404), (82, 430)], 1.5), ([(118, 400), (112, 430), (110, 470)], 1.1),
                        ([(282, 314), (292, 342), (298, 376)], 1.2), ([(306, 328), (318, 360), (322, 392)], 1.0)]:
             v.append(pincel(suave(pts), w, 0.1, 0.1, '#fff'))
+    elif variante == 'llano':
+        # camisa caqui de hombre: hombro caído, dos bolsillos con tapa (el lejano más estrecho por la
+        # perspectiva), tapeta con botones; cuello abierto en V (se dibuja después del cuello)
+        cuerpo = ('M172,296 C150,304 112,316 86,332 C70,346 62,390 58,480 L346,480 C342,400 338,356 326,336 '
+                  'C308,320 276,308 240,304 Z')
+        v.append(f'<path d="{cuerpo}" fill="{CAQUI}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>')
+        v.append(recortar('r34-camisa', cuerpo,
+            # lado lejano y bajo el brazo cercano en sombra
+            f'<path d="M290,300 C310,330 322,380 330,480 L360,480 L360,300 Z" {SOMBRA_SUAVE}/>'
+            f'<path d="M60,400 C74,420 88,450 96,480 L50,480 Z" {SOMBRA_SUAVE}/>'
+            # costuras de las mangas (hombro caído) y pliegues que bajan del hombro
+            + pincel(suave([(110, 318), (96, 356), (92, 404), (96, 452), (100, 480)]), 1.6, 0.3, 0.3)
+            + pincel(suave([(308, 318), (320, 356), (326, 404), (330, 452)]), 1.3, 0.3, 0.3)
+            + ''.join(pincel(suave(pts), w, 0.1, 0.1) for pts, w in [([(140, 330), (134, 356), (132, 380)], 1.1),
+                                                                    ([(286, 330), (292, 352), (294, 372)], 1.0),
+                                                                    ([(176, 440), (182, 460), (184, 480)], 1.0)])
+            # bolsillos de pecho con tapa y botón
+            + f'<path d="M116,382 L170,376 L172,436 L120,442 Z" fill="none" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
+            + f'<path d="M114,380 L172,373 L172,392 L144,400 L116,396 Z" fill="{CAQUI}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
+            + '<circle cx="144" cy="394" r="2.4" fill="#fff" stroke="#000" stroke-width="1"/>'
+            + f'<path d="M260,374 L298,378 L298,432 L262,428 Z" fill="none" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/>'
+            + f'<path d="M259,372 L299,376 L299,392 L280,397 L260,390 Z" fill="{CAQUI}" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/>'
+            + '<circle cx="280" cy="392" r="2" fill="#fff" stroke="#000" stroke-width="0.9"/>'
+            # tapeta con botones bajo la V del cuello
+            + pincel(suave([(222, 352), (224, 400), (226, 440), (228, 480)]), 1.3, 0.4, 0.4)
+            + ''.join(f'<circle cx="{f(x)}" cy="{y}" r="2.6" fill="#fff" stroke="#000" stroke-width="1"/>' for x, y in [(219.6, 380), (221.2, 420), (222.8, 460)])
+            + (remiendo([(88, 346), (126, 336), (132, 370), (94, 380)], LANA, 'r34-remiendo') if GASTADO else '')))
+        # banda del cuello por detrás de la nuca
+        v.append(f'<path d="M160,298 C170,284 196,278 222,282 C238,286 246,296 248,306 L240,310 C226,300 200,296 174,304 Z" fill="{CAQUI}" stroke="#000" stroke-width="2" stroke-linejoin="round"/>')
     else:
         # blusa: manga abullonada del brazo cercano, libre porque la ruana va terciada sobre ese hombro
         v.append('<path d="M156,300 C124,310 92,324 74,342 C60,360 56,420 54,480 L136,480 C134,430 132,382 138,344 Z" '
@@ -1181,12 +1282,23 @@ def busto_34(variante):
              '<path d="M176,250 C184,270 186,290 182,312 L170,312 L170,250 Z" fill="#000" fill-opacity="0.1"/></g>')
     v.append(pincel([(200, 276), (208, 288), (216, 298), (222, 305)], 1.0, 0.05, 0.5))
     v.append('<path d="M222,306 C226,310 230,310 234,306" stroke="#000" stroke-width="1" fill="none"/>')
-    escote = cadena([(172, 304), (196, 316), (222, 318), (240, 310)], 40)
-    feston = []
-    for i in range(0, len(escote) - 3, 3):
-        (x0, y0), (x1, y1) = escote[i], escote[i + 3]
-        feston.append(f'M{f(x0)},{f(y0 + 1)} Q{f((x0 + x1) / 2)},{f((y0 + y1) / 2 + 5.5)} {f(x1)},{f(y1 + 1)}')
-    v.append(f'<path d="{" ".join(feston)}" stroke="#000" stroke-width="1" fill="none"/>')
+    if variante == 'llano':
+        # cuello abierto: la piel del pecho en V y las dos puntas del cuello camisero
+        # (sin trazo arriba: tapa el borde del cuello, que aquí no termina en la blusa)
+        v.append(f'<path d="M172,298 C192,314 206,334 218,356 C226,336 234,320 245,302 C226,310 198,310 172,298 Z" fill="{PIEL}"/>')
+        v.append(pincel(suave([(220, 312), (225, 318), (231, 316)]), 1.2, 0.2, 0.2))
+        v.append(f'<path d="M190,316 C200,328 210,342 217,354 C222,342 228,330 236,318 C220,322 204,322 190,316 Z" fill="{PIEL_SOMBRA}"/>')
+        v.append(f'<path d="M168,292 C178,308 192,330 208,356 C190,350 168,336 146,318 C152,306 160,298 168,292 Z" fill="{CAQUI}" stroke="#000" stroke-width="2.2" stroke-linejoin="round"/>')
+        v.append(pincel(suave([(170, 300), (182, 318), (196, 336)]), 1.0, 0.2, 0.2))
+        v.append(f'<path d="M244,300 C240,318 234,334 226,350 C238,344 254,332 266,318 C260,310 252,304 244,300 Z" fill="{CAQUI}" stroke="#000" stroke-width="2" stroke-linejoin="round"/>')
+        v.append(f'<path d="M244,300 C240,318 234,334 226,350 C236,342 246,330 252,318 Z" {SOMBRA_SUAVE}/>')
+    else:
+        escote = cadena([(172, 304), (196, 316), (222, 318), (240, 310)], 40)
+        feston = []
+        for i in range(0, len(escote) - 3, 3):
+            (x0, y0), (x1, y1) = escote[i], escote[i + 3]
+            feston.append(f'M{f(x0)},{f(y0 + 1)} Q{f((x0 + x1) / 2)},{f((y0 + y1) / 2 + 5.5)} {f(x1)},{f(y1 + 1)}')
+        v.append(f'<path d="{" ".join(feston)}" stroke="#000" stroke-width="1" fill="none"/>')
     if variante == 'mercado':
         # gargantilla de abalorios en dos vueltas, en perspectiva (más chicas del lado lejano)
         for (amp, r, paso, oscura) in [(10, 2.6, 0, True), (20, 2.2, 0.5, False)]:
@@ -1241,16 +1353,18 @@ def busto_34(variante):
         v.append('<path d="M156,90 C150,84 144,84 140,88 M188,74 C184,66 176,64 170,66 M246,82 C252,74 260,74 264,78 M126,150 C118,146 114,150 112,156" stroke="#000" stroke-width="1.3" fill="none" stroke-linecap="round"/>')
     else:
         # sombra del ala en la frente, barbuquejo por la mejilla cercana y bajo el mentón, sombrero
-        borde = ala_frente()
+        llanero = variante == 'llano'
+        borde = con_sombrero(SOMB_LLANERO, ala_frente) if llanero else ala_frente()
         franja = polilinea(borde) + ' ' + ' '.join(f'L{f(x)},{f(y + 6 + 9 * min(max((x - 168) / 100, 0), 1))}' for x, y in reversed(borde)) + ' Z'
         v.append(f'<g clip-path="url(#r34-cara)"><path d="{franja}" fill="{PIEL_SOMBRA}"/></g>')
         barb = [(170, 128), (173, 150), (174, 174), (174, 198), (176, 220), (182, 238), (194, 250), (210, 259), (224, 264)]
         d = ruta(suave(barb))
         puntas = 'M223,266 C221,270 220,274 221,278 M226,266 C228,269 230,272 232,274'
         v.append(f'<path d="{d} {puntas}" stroke="#000" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>')
-        v.append(f'<path d="{d} {puntas}" stroke="{CINTAS[1]}" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>')
-        v.append(f'<circle cx="224" cy="264.5" r="2.6" fill="{CINTAS[1]}" stroke="#000" stroke-width="1"/>')
-        v.append(sombrero_34())
+        barb_color = CUERO if llanero else CINTAS[1]  # barbuquejo de cuero en el Llano
+        v.append(f'<path d="{d} {puntas}" stroke="{barb_color}" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>')
+        v.append(f'<circle cx="224" cy="264.5" r="2.6" fill="{barb_color}" stroke="#000" stroke-width="1"/>')
+        v.append(con_sombrero(SOMB_LLANERO, lambda: sombrero_34(True)) if llanero else sombrero_34())
     return ''.join(v)
 
 # ---------- rasgos por expresión ----------
@@ -1432,6 +1546,9 @@ def parpado_34(expr):
 def hoja_retrato():
     ranuras = [('base-mercado', busto_34('mercado'), 'Base del retrato, traje de mercado (rostro sin rasgos)'),
                ('base-monte', busto_34('monte'), 'Base del retrato, variante monte (rostro sin rasgos)')]
+    if 'rosalba-llano' in ACTOS_ROSALBA[ACTO]:
+        ranuras.append(('base-llano', busto_34('llano'), 'Base del retrato, variante Llano (rostro sin rasgos)'
+                        + (', traje gastado' if GASTADO else '')))
     ranuras += [('cinta', cinta_34(), 'Cinta roja de la trenza, sobre la base (se quita y se pone)')]
     ranuras += [(f'rasgos-{e}', rasgos_34(e), f'Rasgos del retrato: {e}') for e in EXPRESIONES]
     ranuras += [(f'parpado-{e}', parpado_34(e), f'Parpadeo del retrato: {e}') for e in EXPRESIONES]
@@ -1679,3 +1796,361 @@ guardar('rosalba-corriendo.svg', encabezado('Rosalba Insuasty — corriendo, var
 {piece('brazo-der', '{} {}'.format(*map(f, HOMBRO_C)), brazo_c, 'Brazo derecho tendido hacia la falda')}
 {piece('antebrazo-der', '{} {}'.format(*map(f, CODO_C)), antebrazo_c, 'Antebrazo y puño que recoge la falda; hijo de brazo-der', extra=' data-padre="brazo-der"')}
 {piece('ruana-doblez', '{} {}'.format(*map(f, T(145, 128))), f'<g transform="{TRANS_TORSO}">{doblez_pie}</g>', 'Doblez de la ruana sobre el hombro derecho')}''')
+
+# ======================= 8. Llano (Acto II en adelante) =======================
+# Doc 02 M4: Rosalba llega al Llano con desplazados boyacenses (con la ruana del monte) y entra
+# a la columna del Gaván. Traje del Llano (hoja de personaje §2):
+# - Doc 03 §3.3 [V]: camisa blanca o caqui, cotizas, sombrero de ala ancha (cogollo para faena),
+#   faja ancha de cuero con cuchillo.
+# - M. A. Hoyos Vega (1943), citado por O. Pabón: en el campo, ropa de dril oscuro; alpargatas de
+#   cuero con tejidos de hilo de colores.
+# - O. Villanueva Martínez (2012): mujeres en los comandos; dotación de sombrero de paja y quimbas.
+# Decisión de diseño (no dato): camisa caqui de hombre, remangada y metida en una falda de dril
+# oscuro a media canilla, sin enagua ni cintas (el calor y la guerra); cotizas de suela de cuero
+# con capellada tejida; sombrero de cogollo de ala ancha con barbuquejo de cuero. Faja y cuchillo
+# son pieza propia (`faja`): se quitan si se desmoviliza (M7). Acto III y Epílogo: el mismo traje
+# gastado (remiendos, ruedo deshilachado, ala rota): «apenas cambió de ropa» (doc 02 M7).
+# Con la falda a media canilla se ven las canillas: pivote en la rodilla, oculta bajo la falda,
+# también al caminar (core/animacion/caminata.ts, modo canilla).
+RODILLA_LL_DER, RODILLA_LL_IZQ = (157, 346), (137, 346)  # la lejana, 20 px atrás
+
+def canilla_llano(dx, lejana=False):
+    """Canilla desde la rodilla (oculta bajo la falda) hasta el tobillo."""
+    def P(x, y): return f"{f(x + dx)},{f(y)}"
+    sw = 2.0 if lejana else 2.4
+    d = (f'M{P(151,334)} L{P(164,334)} C{P(165.5,350)} {P(164.5,366)} {P(163.5,382)} C{P(162.5,404)} {P(162.5,428)} {P(164,452)} '
+         f'L{P(153,453)} C{P(152.5,442)} {P(151.5,432)} {P(149.5,420)} C{P(143,404)} {P(141.4,388)} {P(143.4,372)} C{P(145.4,356)} {P(149,344)} {P(151,334)} Z')
+    s = f'<path d="{d}" fill="{PIEL}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
+    # pantorrilla en sombra, arista de la tibia y tobillo
+    s += f'<path d="M{P(145.4,376)} C{P(144.8,396)} {P(147.4,412)} {P(151.5,428)} L{P(154.5,427)} C{P(151.4,412)} {P(149.4,396)} {P(149.6,376)} Z" {SOMBRA_SUAVE}/>'
+    s += f'<path d="M{P(161.6,390)} C{P(160.9,406)} {P(160.9,422)} {P(161.6,438)}" stroke="#000" stroke-width="0.6" fill="none"/>'
+    s += f'<path d="M{P(155.6,446)} C{P(157.2,444.4)} {P(159.4,444.4)} {P(160.6,446.4)}" stroke="#000" stroke-width="0.7" fill="none"/>'
+    if lejana:
+        s += f'<path d="{d}" {SOMBRA}/>'
+    return s
+
+def cotiza(dx, lejana=False):
+    """Pie descalzo en su cotiza: suela de cuero crudo de dos capas, capellada tejida en hilo con una
+    lista de color sobre el empeine y talonera de cuero (doc 03 §3.3; Hoyos Vega 1943)."""
+    def P(x, y): return f"{f(x + dx)},{f(y)}"
+    sw = 2.0 if lejana else 2.4
+    pie = (f'M{P(153,450)} L{P(164,450)} C{P(167,455)} {P(172,458)} {P(178,460)} C{P(183,461.5)} {P(187.5,463)} {P(189.5,466.5)} '
+           f'L{P(146,467.5)} C{P(145,462)} {P(147.5,455)} {P(153,450)} Z')
+    s = [f'<path d="{pie}" fill="{PIEL}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>']
+    # puntas de los dedos delante de la capellada
+    s.append(f'<path d="M{P(183.6,462.2)} C{P(185,463.6)} {P(185.6,465)} {P(185.6,466.6)} M{P(186.8,463.4)} C{P(188,464.6)} {P(188.6,465.6)} {P(188.6,466.6)}" stroke="#000" stroke-width="0.7" fill="none"/>')
+    suela = (f'M{P(144,466)} L{P(190,465.4)} C{P(192.4,467)} {P(192.4,471.4)} {P(189.6,473.4)} C{P(175,475.8)} {P(156,475.6)} {P(146,474.6)} '
+             f'C{P(142.8,472.8)} {P(142.6,468)} {P(144,466)} Z')
+    s.append(f'<path d="{suela}" fill="{CUERO_CRUDO}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>')
+    s.append(f'<path d="M{P(145,470.2)} C{P(160,471)} {P(176,470.8)} {P(191,469.6)}" stroke="#000" stroke-width="0.8" fill="none"/>')
+    cap = (f'M{P(158,453)} C{P(163,452.6)} {P(169,456.4)} {P(175,459.4)} C{P(179,461.4)} {P(182,463.4)} {P(183,466.2)} '
+           f'L{P(157,466.6)} C{P(156,461.4)} {P(156.4,456.4)} {P(158,453)} Z')
+    s.append(f'<path d="{cap}" fill="{TELA}" stroke="#000" stroke-width="{f(sw * 0.85)}" stroke-linejoin="round"/>')
+    s.append(f'<path d="M{P(160,457.4)} L{P(163,460.4)} L{P(166,458)} L{P(169,461.4)} L{P(172,459.6)} L{P(175,462.8)} L{P(178,461.8)}" stroke="#000" stroke-width="0.9" fill="none"/>')
+    s.append(f'<path d="M{P(157.6,464)} C{P(166,463.8)} {P(174,464.2)} {P(181.6,465.2)}" stroke="{CINTAS[1]}" stroke-width="1.8" fill="none"/>')
+    # talonera de cuero
+    talon = f'M{P(157.6,457)} C{P(153,456)} {P(149,457.6)} {P(146.6,461.6)}'
+    s.append(f'<path d="{talon}" stroke="#000" stroke-width="3.8" fill="none" stroke-linecap="round"/>')
+    s.append(f'<path d="{talon}" stroke="{CUERO}" stroke-width="2" fill="none" stroke-linecap="round"/>')
+    if lejana:
+        s.append(f'<path d="{pie}" {SOMBRA_SUAVE}/><path d="{cap}" {SOMBRA_SUAVE}/>')
+    return ''.join(s)
+
+def pierna_llano(dx, lejana=False):
+    return canilla_llano(dx, lejana) + cotiza(dx, lejana)
+
+# ---------- falda de dril a media canilla ----------
+FALDA_LL = 'M126,230 L166,230 C171,270 181,334 189,394 Q144,401.6 99,394 C106,334 119,268 126,230 Z'
+
+falda_ll = (
+    f'<path d="{FALDA_LL}" fill="{DRIL}" stroke="#000" stroke-width="3" stroke-linejoin="round"/>'
+    + recortar('falda-ll-marcas', FALDA_LL,
+        f'<path d="M126,230 C119,268 106,334 99,394 Q107,396.8 115,397.8 C117,334 124,270 132,232 Z" {SOMBRA_HONDA}/>'
+        # pocos pliegues largos del dril, como reflejos de papel
+        '<path d="M139,240 C136,290 131,340 127,390 M151,240 C152,290 154,340 156,394 M161,242 C166,290 172,336 178,390" stroke="#fff" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-opacity="0.45"/>'
+        # dobladillo cosido a mano
+        '<path d="M102,386.6 Q144,393.6 186,386.6" stroke="#fff" stroke-width="0.8" fill="none" stroke-dasharray="4 3" stroke-opacity="0.6"/>'
+        + (remiendo([(149, 300), (166, 298), (168, 318), (151, 321)], CAQUI, 'falda') if GASTADO else ''))
+    + f'<path d="{FALDA_LL}" fill="none" stroke="#000" stroke-width="3" stroke-linejoin="round"/>'
+    + (hilachas([(112, 395.4, 5), (121, 396.6, 4), (136, 397.6, 6), (160, 397.4, 4), (171, 396.6, 5), (182, 395, 4)]) if GASTADO else '')
+    # pretina
+    + f'<path d="M125,227 L167,227 L167.6,236 L124.4,236 Z" fill="{DRIL}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
+)
+
+# ---------- camisa caqui de hombre, metida en la falda ----------
+TORSO_LL = 'M136,130 C150,126 163,128 167,136 C174,150 177,168 175,186 C173,202 171,216 169,232 L125,232 C123,210 122,188 124,164 C125,148 128,138 136,130 Z'
+torso_ll = (
+    f'<path d="{TORSO_LL}" fill="{CAQUI}" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>'
+    + recortar('torso-ll-marcas', TORSO_LL,
+        f'<path d="M124,160 C124,190 125,212 127,232 L135,232 C132,208 131,186 132,158 Z" {SOMBRA_SUAVE}/>'
+        # la camisa ancha se abolsa sobre la pretina
+        f'<path d="M124,220 C140,216 156,216 172,220 L172,232 L124,232 Z" {SOMBRA_SUAVE}/>'
+        '<path d="M135,207 C138,216 140,223 142,230 M150,210 C151,218 151,224 151,230 M163,206 C162,215 161,222 161,230" stroke="#000" stroke-width="0.8" fill="none"/>'
+        # tapeta delantera con botones
+        '<path d="M168.6,148 C171,168 171.4,190 170,214" stroke="#000" stroke-width="0.9" fill="none"/>'
+        + ''.join(f'<circle cx="{f(x)}" cy="{f(y)}" r="1.6" fill="#fff" stroke="#000" stroke-width="0.8"/>' for x, y in [(169.8, 162), (170.6, 180), (170.4, 198)])
+        # bolsillo de pecho con tapa
+        + '<path d="M151.4,156 L163.6,156.6 L163.4,175 L152,174.4 Z" fill="none" stroke="#000" stroke-width="1"/>'
+        + f'<path d="M150.8,155.4 L164,156 L163.4,161.6 L157.6,163.4 L151.4,161 Z" fill="{CAQUI}" stroke="#000" stroke-width="1" stroke-linejoin="round"/>')
+    + f'<path d="{TORSO_LL}" fill="none" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>'
+    # banda del cuello por detrás de la nuca
+    + f'<path d="M135,130.6 C142,126.4 150,126.4 157,129.4 L158,134 C151,131.6 143,131.8 135.4,133.6 Z" fill="{CAQUI}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
+)
+# Cuello abierto de la camisa: la garganta en V y la punta del cuello caen por delante del hombro,
+# así que van en una pieza propia dibujada después del brazo derecho.
+cuello_ll = (
+    f'<path d="M156.6,131 L166.6,134.4 C167,140 166.4,145 165.4,150.6 Z" fill="{PIEL}" stroke="#000" stroke-width="1.3" stroke-linejoin="round"/>'
+    f'<path d="M157.6,132.6 L165.8,135.6 L165.4,141 Z" {SOMBRA}/>'
+    f'<path d="M151.4,129 C155.6,129.4 159,131 161.4,133.4 L167.6,151.4 C163.4,147 158.6,143 154,140.6 C152.4,137 151.6,133 151.4,129 Z" fill="{CAQUI}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
+    '<path d="M154.6,135 C158,138.6 162,143.6 165,148.4" stroke="#000" stroke-width="0.6" fill="none"/>'
+)
+
+# ---------- faja de cuero con cuchillo (pieza propia: se quita al desmovilizarse, M7) ----------
+faja_ll = (
+    # vaina de cuero crudo con costura, metida bajo la faja en la cadera derecha
+    f'<path d="M138,221 L148,221 C147,240 144,262 139,282 C138,286 135,287 134,284 C134,264 136,242 138,221 Z" fill="{CUERO_CRUDO}" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/>'
+    '<path d="M140.6,238 C140.2,254 138.8,268 136.6,280" stroke="#000" stroke-width="0.7" fill="none" stroke-dasharray="2.4 2"/>'
+    f'<path d="M138,236 L147.2,236 C146.6,246 145.2,256 143.6,264 L137.2,262 C137,252 137.4,244 138,236 Z" {SOMBRA_SUAVE}/>'
+    # faja ancha de cuero con pespunte, hebilla de hierro y la punta colgando
+    f'<path d="M123.6,221 C138,218.6 156,218.6 170.4,221 L171,235 C156,232.8 138,232.8 123,235 Z" fill="{CUERO}" stroke="#000" stroke-width="2" stroke-linejoin="round"/>'
+    '<path d="M125.4,224 C140,222 156,222 169.4,224 M124.8,232 C140,230 156,230 169.8,232" stroke="#fff" stroke-width="0.7" fill="none" stroke-dasharray="2.4 2.2" stroke-opacity="0.7"/>'
+    f'<path d="M167.4,234.4 C168,242 167.6,250 166.4,256.4 L171.4,257.2 C172.4,250 172.8,242 172.2,234.4 Z" fill="{CUERO}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
+    '<path d="M166.4,219 L174,219.4 L174.2,236.6 L166.6,236.2 Z" fill="none" stroke="#000" stroke-width="2.2" stroke-linejoin="round"/>'
+    '<path d="M168,221 L168.2,234.6" stroke="#fff" stroke-width="0.7"/>'
+    # cacha de madera con dos remaches y guarnición
+    '<g transform="rotate(-14 143.4 221)">'
+    f'<path d="M139.2,221 L147.6,221 C148.6,213 149,205 148,197.6 C147.6,194.4 143,194 141.8,196.6 C140.2,205 139.4,213 139.2,221 Z" fill="{CUERO}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
+    '<circle cx="143.8" cy="214" r="1.1" fill="#fff"/><circle cx="144.2" cy="204.6" r="1.1" fill="#fff"/>'
+    '<path d="M137,221.4 L150,221.4" stroke="#000" stroke-width="2.8" stroke-linecap="round"/></g>'
+)
+
+# ---------- brazo remangado: manga caqui, rollo sobre el codo y antebrazo descubierto ----------
+def brazo_llano(dx, lejano=False):
+    """(brazo, antebrazo con mano, rollo de la manga). El rollo va aparte, encima del antebrazo,
+    para tapar la articulación del codo cuando el antebrazo se dobla."""
+    def P(x, y): return f"{f(x + dx)},{f(y)}"
+    sw = 2.2 if lejano else 2.7
+    up_d = f'M{P(138,138)} C{P(146,128)} {P(166,130)} {P(168,146)} C{P(169,160)} {P(167.5,178)} {P(167,194)} L{P(147.6,195)} C{P(144.6,178)} {P(141,160)} {P(138,138)} Z'
+    up = (f'<path d="{up_d}" fill="{CAQUI}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
+          # costura del hombro caído (camisa de hombre) y un pliegue
+          f'<path d="M{P(140.6,147)} C{P(147,142)} {P(157,140.6)} {P(166.6,143)}" stroke="#000" stroke-width="0.9" fill="none"/>'
+          f'<path d="M{P(158,158)} C{P(159.5,168)} {P(160,178)} {P(159.6,188)}" stroke="#000" stroke-width="0.7" fill="none"/>'
+          f'<path d="M{P(142,160)} C{P(144,176)} {P(146,188)} {P(148,195)} L{P(152,195)} C{P(150,186)} {P(148,174)} {P(147,158)} Z" {SOMBRA_SUAVE}/>')
+    if GASTADO and not lejano:
+        up += remiendo([(151.4, 154), (161.6, 153.2), (162.6, 165.6), (152.4, 166.6)], LANA, 'manga')
+    fore_d = f'M{P(148.6,196)} L{P(165.6,195)} C{P(168,214)} {P(170.6,236)} {P(172,258.6)} L{P(157.8,260.4)} C{P(155.6,238)} {P(151.6,216)} {P(148.6,196)} Z'
+    fore = (f'<path d="{fore_d}" fill="{PIEL}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
+            f'<path d="M{P(150.6,206)} C{P(152.6,222)} {P(155,238)} {P(158,254)} L{P(161,253)} C{P(158.4,238)} {P(156,222)} {P(154,206)} Z" {SOMBRA_SUAVE}/>'
+            f'<path d="M{P(163.6,204)} C{P(165.6,214)} {P(166.6,224)} {P(166.8,234)}" stroke="#000" stroke-width="0.7" fill="none"/>'
+            + mano(dx, sw))
+    rollo_d = f'M{P(145.6,190)} C{P(152,187.4)} {P(162,187)} {P(168.6,189.6)} L{P(169.6,203)} C{P(162,205.6)} {P(152,206)} {P(146.6,204)} Z'
+    rollo = (f'<path d="{rollo_d}" fill="{CAQUI}" stroke="#000" stroke-width="{f(sw * 0.9)}" stroke-linejoin="round"/>'
+             f'<path d="M{P(146.6,197.6)} C{P(153,196)} {P(162,196)} {P(169.4,198)} L{P(169.6,203)} C{P(162,205.6)} {P(152,206)} {P(146.6,204)} Z" {SOMBRA_SUAVE}/>'
+             f'<path d="M{P(146.2,197)} C{P(153,194.6)} {P(162,194.4)} {P(169,196.4)}" stroke="#000" stroke-width="1" fill="none"/>')
+    if lejano:
+        up += f'<path d="{up_d}" {SOMBRA}/>'
+        fore += (f'<path d="{fore_d}" {SOMBRA}/>'
+                 f'<path d="M{P(158,260)} C{P(156,266)} {P(156,272)} {P(157,277)} C{P(157,283)} {P(158,288)} {P(161,292)} C{P(163,295)} {P(167,295.5)} {P(169,293.5)} C{P(171,291)} {P(171.5,287)} {P(171,284)} C{P(173,282)} {P(175.5,280)} {P(177.5,277.5)} C{P(179.5,275)} {P(179,271.5)} {P(177,270)} C{P(175,268.5)} {P(173,267.5)} {P(172,264)} L{P(172,258)} Z" {SOMBRA_SUAVE}/>')
+        rollo += f'<path d="{rollo_d}" {SOMBRA}/>'
+    return up, fore, rollo
+
+# ---------- sombrero de cogollo de ala ancha, con barbuquejo de cuero ----------
+sombrero_ll = SOMBRA_ALA + f'''
+    <!-- sombra del ala ancha, más larga que la del sombrero de caña -->
+    <path d="M152,66 C160,66 168,67 174,70 C172,73 166,74 160,73 C156,72 153,70 152,66 Z" fill="#000" fill-opacity="0.1"/>
+    <!-- copa de cogollo con la hendidura arriba -->
+    <path d="M129,58 C128,47 130,38 136,34.6 C141,32.4 146,34.6 150,34.8 C154.6,34.8 159,32 164.6,34 C170,36.6 172,46 171.4,58 Z" fill="{PAJA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M130.6,46 C144,43.6 158,43.6 171,46 M132,39.6 C140,37.4 146,38.4 150,38.6 C155,38.6 160,36.6 168,38.4" stroke="#000" stroke-width="0.9" fill="none"/>
+    <path d="M129,58 C128.6,49 130,42 134,37 C132,45 132,51 133,58 Z" fill="#000" fill-opacity="0.18"/>
+    <path d="M146,35.4 C148,36.6 152,36.6 154,35.4" stroke="#000" stroke-width="0.8" fill="none"/>
+    <!-- cinta de cuero delgada con su nudo atrás -->
+    <path d="M129.2,52.4 C142,50.4 158,50.4 171.4,52.4 L171.6,57.6 C158,55.8 142,55.8 129,57.6 Z" fill="{CUERO}" stroke="#000" stroke-width="1"/>
+    <path d="M129.6,53.6 C127,54.4 126.4,56.4 127.4,58 M130,55.6 C128.6,57.6 128.6,60 129.6,61.6" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <!-- ala ancha, casi plana -->
+    <path d="M92,61.6 C112,54.4 188,52.6 210,58.6 C206,64 188,66.6 152,66 C124,66 104,67.6 92,61.6 Z" fill="{PAJA}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M97,61.4 C124,57.6 176,56 205,58.8" stroke="#000" stroke-width="0.8" fill="none"/>
+    <path d="M100,64 C126,66.4 178,65.4 205,60.8 C194,65.8 172,67.6 152,67.2 C128,67 110,67.6 100,64 Z" fill="#000"/>
+    <!-- barbuquejo: cordón de cuero por la mejilla, atado bajo el mentón -->
+    <path d="M148.5,64 C149,74 149.6,84 150.2,94 C151,104 155,113 161,118 C163.5,120 165.5,121 167,121.5" stroke="#000" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M148.5,64 C149,74 149.6,84 150.2,94 C151,104 155,113 161,118 C163.5,120 165.5,121 167,121.5" stroke="{CUERO}" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <path d="M166,121 C163,124 161,128 162,131 M167,122 C168,126 168,129 170,131" stroke="#000" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <circle cx="166.8" cy="121.6" r="1.8" fill="#000"/>''' + (
+    # Acto III y Epílogo: el ala rota atrás, con un pedazo colgando y la paja deshilachada
+    f'''
+    <path d="M100,63.6 L111,65.4 L107,73.6 C104,72 101.6,68 100,63.6 Z" fill="{PAJA}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M103.6,66 L106.4,71" stroke="#000" stroke-width="0.7"/>
+    <path d="M111,65.4 L114,68.6 M110.4,66.4 L112.4,70.6 M100,63.6 L97.4,66.4" stroke="#000" stroke-width="0.8" stroke-linecap="round"/>''' if GASTADO else '')
+
+# ======================= 8a. de pie, Llano =======================
+bil_up, bil_fore, bil_rollo = brazo_llano(-12, lejano=True)
+bdl_up, bdl_fore, bdl_rollo = brazo_llano(0)
+guardar('rosalba-llano.svg', encabezado('Rosalba Insuasty — de pie, variante Llano (Acto II en adelante).',
+        'Camisa caqui de hombre remangada, falda de dril a media canilla, cotizas, faja con cuchillo, sombrero de cogollo (doc 03 §3.3 [V]; combinación: decisión de diseño).'
+        + (' Traje gastado: remiendos, ruedo deshilachado, ala rota.' if GASTADO else '')) + f'''
+{piece('brazo-izq', '141 144', bil_up, 'Brazo izquierdo (lejano): manga caqui')}
+{piece('antebrazo-izq', '145 202', bil_fore, 'Antebrazo descubierto y mano izquierdos; hijo de brazo-izq', extra=' data-padre="brazo-izq"')}
+{piece('manga-izq', '145 198', bil_rollo, 'Rollo de la manga remangada sobre el codo; hijo de brazo-izq', extra=' data-padre="brazo-izq"')}
+{piece('pierna-izq', '{} {}'.format(*RODILLA_LL_IZQ), pierna_llano(-20, lejana=True), 'Canilla izquierda (lejana) con su cotiza; pivote en la rodilla, oculta bajo la falda')}
+{piece('pierna-der', '{} {}'.format(*RODILLA_LL_DER), pierna_llano(0), 'Canilla derecha con su cotiza; pivote en la rodilla')}
+{piece('falda', '146 232', falda_ll, 'Falda de dril oscuro a media canilla')}
+{piece('torso', '146 232', torso_ll, 'Torso: camisa caqui de hombre metida en la falda, cuello abierto')}
+{piece('faja', '146 228', faja_ll, 'Faja ancha de cuero con cuchillo en la cadera derecha (se quita al desmovilizarse)')}
+{piece('cabeza', '150 130', cabeza, 'Cabeza con cuello (las expresiones en rosalba-cabezas.svg)')}
+{piece('zarcillo', '143.6 100.8', zarcillo, 'Zarcillo; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('sombrero', '150 60', sombrero_ll, 'Sombrero de cogollo de ala ancha con barbuquejo de cuero; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('trenza', '134 110', trenza(), 'Trenza atada con hilo oscuro')}
+{piece('cinta', '124.5 217', cinta(), 'Cinta roja; hija de trenza (vuelve a atársela en el Acto II)', extra=' data-padre="trenza"')}
+{piece('brazo-der', '153 140', bdl_up, 'Brazo derecho: manga caqui')}
+{piece('antebrazo-der', '157 200', bdl_fore, 'Antebrazo descubierto y mano derechos; hijo de brazo-der', extra=' data-padre="brazo-der"')}
+{piece('manga-der', '157 198', bdl_rollo, 'Rollo de la manga remangada sobre el codo; hijo de brazo-der', extra=' data-padre="brazo-der"')}
+{piece('cuello', '152 132', cuello_ll, 'Cuello abierto de la camisa: garganta en V y punta del cuello, por delante del hombro')}''')
+
+# ======================= 8b. agachada, Llano =======================
+# Misma cabeza, en el mismo sitio, que la agachada del monte (sirven rosalba-agachada-cabezas). Sin
+# ruana: la camisa curva la espalda; la falda a media canilla hace un domo sobre las rodillas y deja
+# ver las cotizas; la faja ciñe la cintura, más baja adelante, con el cuchillo sobre la cadera.
+CAMISA_AG = ('M172,302 C184,298 198,302 206,314 C212,324 212,336 208,348 L170,420 '
+             'C156,414 140,406 125,400 C121,378 123,356 131,338 C141,320 156,306 172,302 Z')
+FALDA_LLAG = ('M125,398 C138,404 150,410 161,414 C176,394 192,366 206,346 C214,338 222,342 224,352 '
+              'C227,366 226,392 227,414 C227,424 228,432 229,440 Q204,444 180,447 C152,452 124,461 102,470 '
+              'C96,450 98,426 108,410 C112,404 118,400 125,398 Z')
+
+def _canilla_ag(dx, lejana):
+    """Canilla inclinada hacia la rodilla (casi toda bajo el domo) y la cotiza plana en el suelo."""
+    tobillo = (158.5 + dx, 452)
+    return (f'<g transform="rotate(22 {f(tobillo[0])} {f(tobillo[1])})">{canilla_llano(dx, lejana)}</g>'
+            + cotiza(dx, lejana))
+
+cuerpo_llag = (
+    _canilla_ag(2, True) + _canilla_ag(14, False)
+    # camisa sobre la espalda curvada, con la sombra de la espalda y el cuello camisero
+    + f'<path d="{CAMISA_AG}" fill="{CAQUI}" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>'
+    + recortar('camisa-ag-marcas', CAMISA_AG,
+        f'<path d="M131,338 C123,356 121,378 125,400 L136,404 C132,382 134,360 142,342 Z" {SOMBRA_SUAVE}/>'
+        # la tela tira sobre la espalda curvada: pliegues del hombro a la cintura
+        '<path d="M156,312 C148,330 142,352 141,376 M170,308 C164,328 160,350 158,372" stroke="#000" stroke-width="0.8" fill="none"/>')
+    + f'<path d="{CAMISA_AG}" fill="none" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>'
+    + f'<path d="M170,300.6 C180,296 192,297 200,302 L201,307 C193,303 181,302.6 171,305 Z" fill="{CAQUI}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
+    # falda en domo sobre las rodillas; el ruedo sube adelante y deja ver las cotizas
+    + f'<path d="{FALDA_LLAG}" fill="{DRIL}" stroke="#000" stroke-width="3" stroke-linejoin="round"/>'
+    + recortar('falda-llag-marcas', FALDA_LLAG,
+        f'<path d="M108,410 C98,426 96,450 102,470 L118,464 C112,444 114,424 122,408 Z" {SOMBRA_HONDA}/>'
+        '<path d="M214,362 C216,390 218,416 220,438 M196,372 C196,400 194,424 192,444 M176,396 C172,418 166,438 160,452 M146,414 C138,432 130,448 122,462" stroke="#fff" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-opacity="0.45"/>'
+        '<path d="M200,350 C206,344 214,342 220,346" stroke="#fff" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-opacity="0.6"/>'
+        '<path d="M226,432 Q204,436.6 180,439.6 C152,444.6 124,453.6 104,462" stroke="#fff" stroke-width="0.8" fill="none" stroke-dasharray="4 3" stroke-opacity="0.6"/>'
+        + (remiendo([(186, 396), (201, 392), (204, 410), (189, 413)], CAQUI, 'falda-ag') if GASTADO else ''))
+    + f'<path d="{FALDA_LLAG}" fill="none" stroke="#000" stroke-width="3" stroke-linejoin="round"/>'
+    + (hilachas([(222, 440.6, 4), (206, 443, 5), (188, 445.6, 4), (160, 450.6, 5), (134, 458, 4), (114, 465, 5)]) if GASTADO else '')
+)
+
+# faja: la de pie, girada con la cintura (más baja adelante) y llevada a la cadera
+faja_llag = f'<g transform="translate(-3 177) rotate(25 146 228)">{faja_ll}</g>'
+
+HOMBRO_L, CODO_L, MUNECA_L = HOMBRO, CODO, MUNECA
+brazo_llag = (
+    f'<path d="{tubo(HOMBRO_L, punto_en(HOMBRO_L, CODO_L, 0.86), 10, 8.6)}" fill="{CAQUI}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>'
+    + f'<path d="M{f(punto_en(HOMBRO_L, CODO_L, 0.08, -6)[0])},{f(punto_en(HOMBRO_L, CODO_L, 0.08, -6)[1])} C{f(punto_en(HOMBRO_L, CODO_L, 0.04, 0)[0])},{f(punto_en(HOMBRO_L, CODO_L, 0.04, 0)[1])} {f(punto_en(HOMBRO_L, CODO_L, 0.06, 4)[0])},{f(punto_en(HOMBRO_L, CODO_L, 0.06, 4)[1])} {f(punto_en(HOMBRO_L, CODO_L, 0.14, 8)[0])},{f(punto_en(HOMBRO_L, CODO_L, 0.14, 8)[1])}" stroke="#000" stroke-width="0.9" fill="none"/>'
+    + f'<path d="{tubo(punto_en(HOMBRO_L, CODO_L, 0.2, -5), punto_en(HOMBRO_L, CODO_L, 0.82, -4.4), 2.4, 2)}" {SOMBRA_SUAVE}/>'
+    + (remiendo([punto_en(HOMBRO_L, CODO_L, t, o) for t, o in [(0.3, -5), (0.3, 5), (0.55, 5), (0.55, -5)]], LANA, 'manga-ag') if GASTADO else '')
+)
+_r1, _r2 = punto_en(HOMBRO_L, CODO_L, 0.84), punto_en(HOMBRO_L, CODO_L, 1.06)
+manga_llag = (f'<path d="{tubo(_r1, _r2, 10.4, 9.6)}" fill="{CAQUI}" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/>'
+              + f'<path d="M{f(punto_en(_r1, _r2, 0.5, -10)[0])},{f(punto_en(_r1, _r2, 0.5, -10)[1])} L{f(punto_en(_r1, _r2, 0.5, 10)[0])},{f(punto_en(_r1, _r2, 0.5, 10)[1])}" stroke="#000" stroke-width="1"/>'
+              + f'<path d="{tubo(punto_en(_r1, _r2, 0.5), _r2, 9.6, 9.2)}" {SOMBRA_SUAVE}/>')
+antebrazo_llag = (
+    f'<path d="{tubo(CODO_L, punto_en(CODO_L, MUNECA_L, 0.98), 7.4, 5.8)}" fill="{PIEL}" stroke="#000" stroke-width="2.6" stroke-linejoin="round"/>'
+    + f'<path d="{tubo(punto_en(CODO_L, MUNECA_L, 0.12, -3.6), punto_en(CODO_L, MUNECA_L, 0.84, -2.8), 1.8, 1.4)}" {SOMBRA_SUAVE}/>'
+    # mano apoyada en el suelo (la misma de la agachada del monte)
+    + antebrazo_ag[antebrazo_ag.index('<path d="M216,452'):]
+)
+
+_SOMB_AG = f'translate({CAB_T[0]} {CAB_T[1]}) rotate({CAB_R} 150 130)'
+somb = cab_punto(150, 60)
+guardar('rosalba-llano-agachada.svg', encabezado('Rosalba Insuasty — agachada (sigilo), variante Llano. Pose dibujada aparte.',
+        'En cuclillas: camisa sobre la espalda curvada, falda en domo sobre las rodillas, cotizas a la vista, mano apoyada en el suelo.'
+        + (' Traje gastado.' if GASTADO else '')) + f'''
+{piece('cuerpo', '150 440', cuerpo_llag, 'Cuerpo en cuclillas: cotizas, camisa y falda en domo')}
+{piece('faja', '143 405', faja_llag, 'Faja con cuchillo, ceñida a la cintura (se quita al desmovilizarse)')}
+{piece('cabeza', f'{f(cuello[0])} {f(cuello[1])}', cabeza_ag, 'Cabeza (la de pie, inclinada hacia adelante)')}
+{piece('zarcillo', f'{f(z[0])} {f(z[1])}', zarcillo_ag, 'Zarcillo; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('sombrero', f'{f(somb[0])} {f(somb[1])}', f'<g transform="{_SOMB_AG}">{sombrero_ll}</g>', 'Sombrero de cogollo; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('trenza', f'{f(nuca[0])} {f(nuca[1])}', trenza(nuca[0], nuca[1] + 1, nuca[0] - 4, nuca[1] + 96, 12), 'Trenza colgando por gravedad')}
+{piece('cinta', f'{f(nuca[0] - 3.5)} {f(nuca[1] + 99)}', cinta(nuca[0] - 4, nuca[1] + 96), 'Cinta roja; hija de trenza', extra=' data-padre="trenza"')}
+{piece('brazo-der', f'{HOMBRO_L[0]} {HOMBRO_L[1]}', brazo_llag, 'Brazo derecho hacia el suelo: manga caqui')}
+{piece('antebrazo-der', f'{CODO_L[0]} {CODO_L[1]}', antebrazo_llag, 'Antebrazo descubierto y mano apoyada; hijo de brazo-der', extra=' data-padre="brazo-der"')}
+{piece('manga-der', f'{f(_r1[0])} {f(_r1[1])}', manga_llag, 'Rollo de la manga sobre el codo; hijo de brazo-der', extra=' data-padre="brazo-der"')}''')
+
+# ======================= 8c. corriendo, Llano =======================
+# Misma construcción que la huida de la M2 (torso inclinado, cabeza derecha, canillas con pivote en
+# la rodilla), pero la falda a media canilla no hay que recogerla: los dos brazos bracean (carrera
+# con `bracea: 'ambos'`) y la tela liviana vuela hacia atrás, con el ruedo a la altura de la rodilla.
+RUEDO_LC = cadena(suave([(196, 374), (180, 383), (162, 392), (142, 402), (122, 411), (102, 416), (86, 413)]), 12)
+FALDA_LC = ('M124,236 L170,244 C176,262 183,290 189,318 C193,338 196,356 196,374 '
+            + ' '.join(f'L{f(x)},{f(y)}' for x, y in RUEDO_LC[1:]) +
+            ' C84,384 92,340 104,300 C110,276 117,254 124,236 Z')
+
+def ruedo_lc(sube):
+    return [(x, y - sube) for x, y in RUEDO_LC]
+
+falda_lc = (
+    f'<path d="{FALDA_LC}" fill="{DRIL}" stroke="#000" stroke-width="3" stroke-linejoin="round"/>'
+    + recortar('falda-lc-marcas', FALDA_LC,
+        f'<path d="M124,236 C114,262 104,300 96,340 C90,370 86,396 86,413 L104,416 C104,380 110,320 128,250 Z" {SOMBRA_HONDA}/>'
+        # el viento pega la tela al muslo adelante y la abre atrás: pliegues desde la cintura
+        + ''.join(pincel(suave([(a, 246), mezcla((a, 246), h, 0.5), h]), w, 0.2, 0.1, '#fff', extra=' fill-opacity="0.45"')
+                  for a, h, w in [(164, (186, 368), 1.4), (152, (160, 388), 1.4), (140, (132, 404), 1.3), (130, (104, 412), 1.2)])
+        + f'<path d="{polilinea(ruedo_lc(7))}" stroke="#fff" stroke-width="0.8" fill="none" stroke-dasharray="4 3" stroke-opacity="0.6"/>'
+        + (remiendo([(150, 300), (166, 300), (168, 318), (151, 320)], CAQUI, 'falda-lc') if GASTADO else ''))
+    + f'<path d="{FALDA_LC}" fill="none" stroke="#000" stroke-width="3" stroke-linejoin="round"/>'
+    + (hilachas([(190, 377, 4), (172, 388, 5), (150, 398.6, 4), (128, 409, 5), (106, 415.6, 4)]) if GASTADO else '')
+    + f'<path d="M124,236 L170,244 L169.4,252 L123,244 Z" fill="{DRIL}" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'
+)
+
+def brazo_lc(hombro, lejano):
+    """(brazo, antebrazo con puño, rollo) de un brazo que cuelga en reposo; la carrera lo dobla."""
+    codo = (hombro[0] + 2, hombro[1] + 57)
+    muneca = (codo[0] + 2, codo[1] + 50)
+    u = (2 / math.hypot(2, 50), 50 / math.hypot(2, 50))
+    sw = 2.2 if lejano else 2.6
+    sombra = SOMBRA if lejano else SOMBRA_SUAVE
+    sup = tubo(hombro, punto_en(hombro, codo, 0.86), 10.4, 8.6)
+    up = (f'<path d="{sup}" fill="{CAQUI}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
+          + f'<path d="{tubo(punto_en(hombro, codo, 0.2, -5), punto_en(hombro, codo, 0.8, -4.4), 2.4, 2)}" {SOMBRA_SUAVE}/>'
+          + (f'<path d="{sup}" {SOMBRA}/>' if lejano else '')
+          + (remiendo([punto_en(hombro, codo, t, o) for t, o in [(0.22, -5), (0.22, 5), (0.5, 5), (0.5, -5)]], LANA, 'manga-lc') if GASTADO and not lejano else ''))
+    r1, r2 = punto_en(hombro, codo, 0.84), punto_en(hombro, codo, 1.06)
+    rollo_d = tubo(r1, r2, 10.6, 9.8)
+    rollo = (f'<path d="{rollo_d}" fill="{CAQUI}" stroke="#000" stroke-width="{f(sw * 0.92)}" stroke-linejoin="round"/>'
+             + f'<path d="M{f(punto_en(r1, r2, 0.5, -10)[0])},{f(punto_en(r1, r2, 0.5, -10)[1])} L{f(punto_en(r1, r2, 0.5, 10)[0])},{f(punto_en(r1, r2, 0.5, 10)[1])}" stroke="#000" stroke-width="1"/>'
+             + f'<path d="{rollo_d}" {sombra}/>')
+    ante = tubo(codo, punto_en(codo, muneca, 0.98), 7.6, 6.2)
+    fore = (f'<path d="{ante}" fill="{PIEL}" stroke="#000" stroke-width="{sw}" stroke-linejoin="round"/>'
+            + f'<path d="{tubo(punto_en(codo, muneca, 0.12, -3.6), punto_en(codo, muneca, 0.8, -2.8), 1.8, 1.4)}" {SOMBRA_SUAVE}/>'
+            + puno_c(muneca, u, tela=False, escala=0.92 if lejano else 1.0)
+            + (f'<path d="{ante}" {SOMBRA}/>' if lejano else ''))
+    return up, fore, rollo, codo, r1
+
+HOMBRO_DER_LC = T(153, 140)
+bil_c, ail_c, mil_c, codo_il_c, rollo_il_c = brazo_lc(HOMBRO_IZQ_C, True)
+bdl_c, adl_c, mdl_c, codo_dl_c, rollo_dl_c = brazo_lc(HOMBRO_DER_LC, False)
+_somb_c = (150 + DXC, 60 + DYC)
+guardar('rosalba-llano-corriendo.svg', encabezado('Rosalba Insuasty — corriendo, variante Llano.',
+        'Falda a media canilla al viento, los dos brazos bracean; canillas con pivote en la rodilla, oculta bajo el ruedo (core/animacion/carrera.ts, bracea: ambos).'
+        + (' Traje gastado.' if GASTADO else '')) + f'''
+{piece('brazo-izq', '{} {}'.format(*map(f, HOMBRO_IZQ_C)), bil_c, 'Brazo izquierdo (lejano), bracea')}
+{piece('antebrazo-izq', '{} {}'.format(*map(f, codo_il_c)), ail_c, 'Antebrazo descubierto y puño izquierdos; hijo de brazo-izq', extra=' data-padre="brazo-izq"')}
+{piece('manga-izq', '{} {}'.format(*map(f, rollo_il_c)), mil_c, 'Rollo de la manga; hijo de brazo-izq', extra=' data-padre="brazo-izq"')}
+{piece('pierna-izq', '{} {}'.format(*RODILLA_LL_IZQ), pierna_llano(-20, lejana=True), 'Canilla izquierda (lejana) con su cotiza; pivote en la rodilla')}
+{piece('pierna-der', '{} {}'.format(*RODILLA_LL_DER), pierna_llano(0), 'Canilla derecha con su cotiza; pivote en la rodilla')}
+{piece('falda', '146 248', falda_lc, 'Falda de dril al viento, ruedo a la altura de la rodilla')}
+{piece('torso', '{} {}'.format(*map(f, T(146, 232))), f'<g transform="{TRANS_TORSO}">{torso_ll}</g>', 'Torso inclinado adelante: camisa caqui')}
+{piece('faja', '{} {}'.format(*map(f, T(146, 228))), f'<g transform="{TRANS_TORSO}">{faja_ll}</g>', 'Faja con cuchillo, inclinada con el torso')}
+{piece('cabeza', f'{f(150 + DXC)} {f(130 + DYC)}', f'<g transform="{TRANS_CABEZA}">{cabeza_monte}</g>', 'Cabeza derecha (sirven las cabezas por expresión de pie)')}
+{piece('zarcillo', f'{f(143.6 + DXC)} {f(100.8 + DYC)}', f'<g transform="{TRANS_CABEZA}">{zarcillo}</g>', 'Zarcillo; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('sombrero', f'{f(_somb_c[0])} {f(_somb_c[1])}', f'<g transform="{TRANS_CABEZA}">{sombrero_ll}</g>', 'Sombrero de cogollo; hijo de cabeza', extra=' data-padre="cabeza"')}
+{piece('trenza', f'{f(134 + DXC)} {f(110 + DYC)}', f'<g transform="{TRANS_TRENZA}">{trenza()}</g>', 'Trenza echada atrás por la carrera')}
+{piece('cinta', f'{f(_cinta_c[0])} {f(_cinta_c[1])}', f'<g transform="{TRANS_TRENZA}">{cinta()}</g>', 'Cinta roja; hija de trenza', extra=' data-padre="trenza"')}
+{piece('brazo-der', '{} {}'.format(*map(f, HOMBRO_DER_LC)), bdl_c, 'Brazo derecho, bracea')}
+{piece('antebrazo-der', '{} {}'.format(*map(f, codo_dl_c)), adl_c, 'Antebrazo descubierto y puño derechos; hijo de brazo-der', extra=' data-padre="brazo-der"')}
+{piece('manga-der', '{} {}'.format(*map(f, rollo_dl_c)), mdl_c, 'Rollo de la manga; hijo de brazo-der', extra=' data-padre="brazo-der"')}
+{piece('cuello', '{} {}'.format(*map(f, T(152, 132))), f'<g transform="{TRANS_TORSO}">{cuello_ll}</g>', 'Cuello abierto de la camisa, por delante del hombro')}''')

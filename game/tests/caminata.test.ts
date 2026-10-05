@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  CANILLA_POR_DEFECTO,
   poseCaminata,
   velocidadCaminata,
 } from '../src/core/animacion/caminata.ts';
@@ -73,6 +74,70 @@ describe('poseCaminata con pies bajo falda larga', () => {
 
   it('en modo cadera no desliza los pies', () => {
     expect(poseCaminata(1).avance).toEqual({});
+  });
+});
+
+describe('poseCaminata con canillas bajo falda a media pierna', () => {
+  const { largo, apoyo, angulo, rodilla } = CANILLA_POR_DEFECTO;
+  const RAD = Math.PI / 180;
+  const TAU = Math.PI * 2;
+  /** Fase de la pierna derecha (0 = apoya el talón adelante) → fase de la caminata. */
+  const fase = (u: number) => (u + 0.75) * TAU;
+  /** Altura del pie sobre el suelo y posición respecto al cuerpo. */
+  function pie(u: number, id: 'pierna-der' | 'pierna-izq') {
+    const p = poseCaminata(fase(u), { canilla: true });
+    const a = -(p.angulos[id] ?? 0) * RAD; // positivo = adelante
+    return {
+      alto: p.rebote + (p.levante[id] ?? 0) + largo * (1 - Math.cos(a)),
+      x: (p.avance[id] ?? 0) + largo * Math.sin(a),
+    };
+  }
+
+  it('el pie de apoyo no patina ni se despega, y hay doble apoyo (nunca vuela)', () => {
+    for (const [id, inicio] of [
+      ['pierna-der', 0],
+      ['pierna-izq', 0.5],
+    ] as const) {
+      const xs: number[] = [];
+      for (let i = 0; i <= 10; i++) {
+        const p = pie(inicio + (i / 10) * apoyo * 0.999, id);
+        expect(p.alto).toBeCloseTo(0, 6);
+        xs.push(p.x);
+      }
+      const pasos = xs.slice(1).map((x, i) => x - (xs[i] ?? 0));
+      for (const d of pasos) expect(d).toBeCloseTo(pasos[0] ?? 0, 6);
+      expect(pasos[0]).toBeLessThan(0);
+    }
+    for (let i = 0; i < 200; i++) {
+      const der = pie(i / 200, 'pierna-der');
+      const izq = pie(i / 200, 'pierna-izq');
+      expect(der.alto).toBeGreaterThan(-1e-6);
+      expect(izq.alto).toBeGreaterThan(-1e-6);
+      expect(Math.min(der.alto, izq.alto)).toBeCloseTo(0, 6);
+    }
+  });
+
+  it('el talón apoya adelante cuando el brazo derecho va más atrás', () => {
+    const p = poseCaminata(fase(0), { canilla: true });
+    expect(pie(0, 'pierna-der').x).toBeCloseTo(
+      rodilla + largo * Math.sin(angulo * RAD),
+    );
+    expect(p.angulos['brazo-der']).toBeGreaterThan(0);
+  });
+
+  it('es periódica y la velocidad iguala lo que retrocede el pie de apoyo', () => {
+    const a = poseCaminata(0, { canilla: true });
+    const b = poseCaminata(TAU, { canilla: true });
+    for (const id of Object.keys(a.angulos)) {
+      expect(b.angulos[id]).toBeCloseTo(a.angulos[id] ?? 0, 6);
+    }
+    const ciclo = 820;
+    const recorrido =
+      pie(0, 'pierna-der').x - pie(apoyo * 0.999999, 'pierna-der').x;
+    expect(velocidadCaminata(ciclo, { canilla: true })).toBeCloseTo(
+      recorrido / ((apoyo * ciclo) / 1000),
+      0,
+    );
   });
 });
 

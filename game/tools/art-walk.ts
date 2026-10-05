@@ -2,12 +2,16 @@
 // (src/core/animacion/caminata.ts) y la jerarquía data-padre del SVG.
 //   node tools/art-walk.ts art/src/personajes/rosalba.svg [fases=8] [--falda-larga]
 //   node tools/art-walk.ts art/src/personajes/acto1/rosalba-corriendo.svg [fases=8] --carrera
+//   node tools/art-walk.ts art/src/personajes/acto2/rosalba-llano.svg [fases=8] --canilla
+//   node tools/art-walk.ts art/src/personajes/acto2/rosalba-llano-corriendo.svg --carrera --bracea-ambos
 // - Hoja de revisión: art/build/revision/<nombre>-caminata.png o -carrera.png (línea
 //   punteada = suelo).
 // - Con --falda-larga además verifica, fase a fase, que ninguna pierna salga de la falda
 //   (canilla cortada a la vista o pie por detrás del ruedo); termina con error si sale.
 // - Con --carrera (src/core/animacion/carrera.ts) verifica que la rodilla, donde se corta la
-//   canilla, nunca asome bajo la falda o la enagua.
+//   canilla, nunca asome bajo la falda o la enagua. --bracea-ambos: los dos brazos bracean.
+// - Con --canilla (caminata con falda a media pierna, pivote en la rodilla) verifica lo mismo
+//   al caminar.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
@@ -237,21 +241,26 @@ export interface FugaRodilla {
 /**
  * Cuenta, fase a fase, los píxeles de canilla que quedan a la vista a menos de `radio` px de
  * la rodilla (pivote de la pierna, movido con la pose): ahí la canilla está cortada y debe
- * quedar siempre bajo la falda o la enagua.
+ * quedar siempre bajo la falda o la enagua. `opciones` son las de la carrera o, para otra pose
+ * cíclica con canillas (caminata en modo canilla), la función que da la pose en cada fase.
  */
 export function revisarRodillas(
   fuente: string,
   nombre: string,
-  opciones: OpcionesCarrera = {},
+  opciones: OpcionesCarrera | ((fase: number) => PoseCaminata) = {},
   fases = 32,
   radio = 16,
 ): FugaRodilla[] {
+  const poseEn =
+    typeof opciones === 'function'
+      ? opciones
+      : (fase: number) => poseCarrera(fase, opciones);
   const p = prepararPersonaje(fuente, nombre);
   const pixeles = (svg: string) =>
     new Resvg(svg, { font: { loadSystemFonts: false } }).render();
   const resultado: FugaRodilla[] = [];
   for (let i = 0; i < fases; i++) {
-    const pose = poseCarrera((i / fases) * Math.PI * 2, opciones);
+    const pose = poseEn((i / fases) * Math.PI * 2);
     const imgPiernas = pixeles(
       svgEnPose(p, pose, (id) => id.startsWith('pierna-')),
     );
@@ -291,13 +300,18 @@ if (import.meta.main) {
   const ruta = args.find((a) => !a.startsWith('--') && !/^\d+$/.test(a));
   if (!ruta) {
     console.error(
-      'Uso: node tools/art-walk.ts <personaje.svg> [fases] [--falda-larga | --carrera]',
+      'Uso: node tools/art-walk.ts <personaje.svg> [fases] [--falda-larga | --canilla | --carrera [--bracea-ambos]]',
     );
     process.exit(1);
   }
   const fases = Number(args.find((a) => /^\d+$/.test(a)) ?? 8);
   const opciones: OpcionesCaminata = args.includes('--falda-larga')
     ? { faldaLarga: true }
+    : args.includes('--canilla')
+      ? { canilla: true }
+      : {};
+  const opcionesCarrera: OpcionesCarrera = args.includes('--bracea-ambos')
+    ? { bracea: 'ambos' }
     : {};
   const nombre = basename(ruta, '.svg');
   const fuente = readFileSync(resolve(ruta), 'utf8');
@@ -310,7 +324,7 @@ if (import.meta.main) {
   );
   mkdirSync(dirname(salida), { recursive: true });
   const svg = carrera
-    ? hojaCarrera(fuente, nombre, fases)
+    ? hojaCarrera(fuente, nombre, fases, opcionesCarrera)
     : hojaCaminata(fuente, nombre, fases, opciones);
   writeFileSync(
     salida,
@@ -333,8 +347,12 @@ if (import.meta.main) {
     console.log('✓ piernas siempre bajo la falda (32 fases)');
   }
 
-  if (carrera) {
-    const fugas = revisarRodillas(fuente, nombre).filter((f) => f.rodilla > 0);
+  if (carrera || opciones.canilla) {
+    const fugas = revisarRodillas(
+      fuente,
+      nombre,
+      carrera ? opcionesCarrera : (fase) => poseCaminata(fase, opciones),
+    ).filter((f) => f.rodilla > 0);
     if (fugas.length > 0) {
       for (const f of fugas) {
         console.error(

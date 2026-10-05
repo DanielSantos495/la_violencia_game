@@ -1,13 +1,18 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { poseCaminata } from '../src/core/animacion/caminata.ts';
 import { EXPRESIONES } from '../src/core/animacion/expresiones.ts';
 import { color } from '../src/core/arte/paleta.ts';
 import {
   type ActoRosalba,
   ALTURA_DIBUJO_ROSALBA_PX,
   atlasRosalba,
+  CAMINATA_LLANO,
   CAMINATA_ROSALBA,
+  CARRERA_LLANO,
+  PIEZA_FAJA,
   retratoRosalba,
+  rosalbaLlano,
   rosalbaMercado,
   rosalbaMonte,
 } from '../src/game/personajes/rosalba.ts';
@@ -40,6 +45,22 @@ describe('Rosalba camina con las piernas bajo la falda', () => {
   }
 });
 
+// Guarda del Llano: con la falda a media canilla la canilla gira en la rodilla, que no debe
+// asomar bajo el ruedo en ninguna fase de la caminata.
+describe('Rosalba camina en el Llano con las rodillas bajo la falda', () => {
+  for (const nombre of ['acto2/rosalba-llano', 'acto3/rosalba-llano']) {
+    it(`${nombre}: sin rodilla a la vista en ninguna fase`, () => {
+      const fugas = revisarRodillas(
+        leer(nombre),
+        nombre,
+        (fase) => poseCaminata(fase, CAMINATA_LLANO),
+        16,
+      ).filter((f) => f.rodilla > 0);
+      expect(fugas).toEqual([]);
+    }, 60_000);
+  }
+});
+
 // Guarda: cada expresión tiene su cabeza y su capa de parpadeo, de pie y agachada, con
 // pivote (el juego cambia el frame de la cabeza conservando el pivote del cuello).
 describe('Rosalba tiene todas sus expresiones dibujadas', () => {
@@ -58,7 +79,11 @@ describe('Rosalba tiene todas sus expresiones dibujadas', () => {
 
 // Guarda del contrato de escala: la altura declarada coincide con el dibujo (coronilla→suela).
 describe('Rosalba mide en el SVG lo que declara', () => {
-  for (const nombre of ['rosalba', 'acto1/rosalba-monte']) {
+  for (const nombre of [
+    'rosalba',
+    'acto1/rosalba-monte',
+    'acto2/rosalba-llano',
+  ]) {
     it(`${nombre}: ${ALTURA_DIBUJO_ROSALBA_PX} px de la coronilla a la suela`, () => {
       const frames = framesDeSvg(leer(nombre), nombre);
       const recorte = (id: string) => {
@@ -101,6 +126,9 @@ describe('la cinta roja de Rosalba se quita y se pone', () => {
     'rosalba',
     'acto1/rosalba-monte',
     'acto1/rosalba-agachada',
+    'acto2/rosalba-llano',
+    'acto2/rosalba-llano-agachada',
+    'acto2/rosalba-llano-corriendo',
   ]) {
     it(`${nombre}: cinta hija de la trenza`, () => {
       const frames = framesDeSvg(leer(nombre), nombre);
@@ -139,11 +167,29 @@ describe('Rosalba corre con las rodillas bajo la falda', () => {
     ).filter((f) => f.rodilla > 0);
     expect(fugas).toEqual([]);
   }, 60_000);
+  it('rosalba-llano-corriendo: sin rodilla a la vista con los dos brazos libres', () => {
+    const fugas = revisarRodillas(
+      leer('acto2/rosalba-llano-corriendo'),
+      'acto2/rosalba-llano-corriendo',
+      CARRERA_LLANO,
+      16,
+    ).filter((f) => f.rodilla > 0);
+    expect(fugas).toEqual([]);
+  }, 60_000);
 });
 
 // Guarda de las variantes por acto (paleta.md §5): cada acto tiene los dibujos que piden sus
 // poses y su retrato, y la cinta roja (partido) no cambia de color en ningún acto.
 describe('Rosalba tiene sus variantes por acto', () => {
+  const posesDe = (acto: ActoRosalba) => [
+    ...(acto === 'prologo' || acto === 'acto1'
+      ? Object.values(rosalbaMercado(acto))
+      : []),
+    ...(acto === 'prologo' ? [] : Object.values(rosalbaMonte(acto))),
+    ...(acto === 'prologo' || acto === 'acto1'
+      ? []
+      : Object.values(rosalbaLlano(acto))),
+  ];
   const actos: ActoRosalba[] = [
     'prologo',
     'acto1',
@@ -155,21 +201,40 @@ describe('Rosalba tiene sus variantes por acto', () => {
     existsSync(new URL(`../art/src/${frame}.svg`, import.meta.url));
   for (const acto of actos) {
     it(`${acto}: poses, cabezas y retrato`, () => {
-      const poses = [
-        ...(acto === 'prologo' || acto === 'acto1'
-          ? Object.values(rosalbaMercado(acto))
-          : []),
-        ...(acto === 'prologo' ? [] : Object.values(rosalbaMonte(acto))),
-      ];
+      const poses = posesDe(acto);
       expect(poses.length).toBeGreaterThan(0);
       for (const pose of poses) {
         expect(existe(pose.base), pose.base).toBe(true);
         if (pose.cabezas) expect(existe(pose.cabezas), pose.cabezas).toBe(true);
         expect(pose.base.startsWith(`${atlasRosalba(acto)}/`)).toBe(true);
+        // Cada pieza de la lista está dibujada y su padre va antes (armarRecorte lo exige).
+        const nombre = pose.base.slice('personajes/'.length);
+        const frames = framesDeSvg(leer(nombre), nombre);
+        const vistas = new Set<string>();
+        for (const id of pose.piezas) {
+          const frame = frames.find((f) => f.nombre === `${nombre}/${id}`);
+          expect(frame, `${nombre}/${id}`).toBeDefined();
+          if (frame?.padre)
+            expect(vistas.has(frame.padre), `${id} ← ${frame.padre}`).toBe(
+              true,
+            );
+          vistas.add(id);
+        }
       }
       expect(existe(retratoRosalba(acto))).toBe(true);
     });
   }
+  it('el Llano tiene retrato propio y la faja se puede quitar', () => {
+    for (const acto of ['acto2', 'acto3', 'epilogo'] as const) {
+      const nombre = `${acto}/rosalba-retrato`;
+      expect(framesDeSvg(leer(nombre), nombre).map((f) => f.nombre)).toContain(
+        `${nombre}/base-llano`,
+      );
+      for (const pose of Object.values(rosalbaLlano(acto))) {
+        expect(pose.piezas).toContain(PIEZA_FAJA);
+      }
+    }
+  });
   it('la cinta es del mismo rojo en el Prólogo y en el Epílogo', () => {
     const rojo = (svg: string) =>
       /<g id="cinta"[\s\S]*?fill="(#[0-9a-f]{6})"/.exec(svg)?.[1];

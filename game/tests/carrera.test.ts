@@ -86,3 +86,23 @@ describe('poseCarrera', () => {
     expect(v).toBeGreaterThan(400);
   });
 });
+
+describe('poseCarrera con los dos brazos libres', () => {
+  it('bracean en contrafase y el codo siempre queda doblado', () => {
+    for (let i = 0; i < 64; i++) {
+      const { angulos } = poseCarrera((i / 64) * TAU, { bracea: 'ambos' });
+      const izq = angulos['brazo-izq'] ?? 0;
+      const der = angulos['brazo-der'] ?? 0;
+      expect(izq + der).toBeCloseTo(20, 6);
+      expect(angulos['antebrazo-izq']).toBeLessThan(-60);
+      expect(angulos['antebrazo-der']).toBeLessThan(-60);
+    }
+  });
+
+  it('por defecto el brazo derecho recoge la falda y casi no se mueve', () => {
+    for (let i = 0; i < 64; i++) {
+      const { angulos } = poseCarrera((i / 64) * TAU);
+      expect(Math.abs(angulos['brazo-der'] ?? 0)).toBeLessThan(1);
+    }
+  });
+});
