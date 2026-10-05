@@ -26,6 +26,10 @@ const TINTE_NOCHE: Readonly<Record<string, number>> = {
   'casa-interior-acto1': 0xcbb9a0,
   'casa-exterior': 0x7a6a5c,
   'casa-exterior-acto1': 0x7a6a5c,
+  'huida-cultivos': 0x7a6a5c,
+  'huida-quebrada': 0x6e6052,
+  // al amanecer, solo la bruma
+  'huida-monte': 0xe2ddd2,
 };
 
 /** Tiñe todas las piezas menos la cinta: el rojo de partido va entero (paleta.md §6). */
