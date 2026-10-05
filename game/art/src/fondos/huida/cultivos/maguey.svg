@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="340" viewBox="0 0 520 340">
+  <!--
+    Huida de la M2 · cultivos · mata de fique en primer plano
+    Capa: frente (paralaje 1.3, 260 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Se coloca con la base por debajo del cuadro: solo asoman las puntas.
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (tinta), rojo y azul enteros.
+    GENERADO por game/art/gen/huida.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#1d1713" stroke-width="1.2"/></pattern>
+  </defs>
+<g data-p="mata de fique: por verificar"><path d="M228.3,340 Q119,318.3 15.8,296.7 Q141,326.3 256.3,340 Z" fill="#1d1713"/><path d="M242.3,330 Q129,322.3 15.8,296.7" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M229.9,340 Q134.7,286.3 45.4,232.6 Q156.7,294.3 257.9,340 Z" fill="#1d1713"/><path d="M243.9,330 Q144.7,290.3 45.4,232.6" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M233.3,340 Q168.6,264 109.8,188 Q190.6,272 261.3,340 Z" fill="#1d1713"/><path d="M247.3,330 Q178.6,268 109.8,188" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M236.3,340 Q168.8,220.1 107.3,100.2 Q190.8,228.1 264.3,340 Z" fill="#1d1713"/><path d="M250.3,330 Q178.8,224.1 107.3,100.2" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M241.4,340 Q208.9,194.6 182.4,49.2 Q230.9,202.6 269.4,340 Z" fill="#1d1713"/><path d="M255.4,330 Q218.9,198.6 182.4,49.2" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M245.3,340 Q245.3,221.6 251.3,103.3 Q267.3,229.6 273.3,340 Z" fill="#1d1713"/><path d="M259.3,330 Q255.3,225.6 251.3,103.3" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M250.4,340 Q277.7,237.9 311.1,135.8 Q299.7,245.9 278.4,340 Z" fill="#1d1713"/><path d="M264.4,330 Q287.7,241.9 311.1,135.8" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M254.4,340 Q313.6,227.1 378.8,114.2 Q335.6,235.1 282.4,340 Z" fill="#1d1713"/><path d="M268.4,330 Q323.6,231.1 378.8,114.2" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M258.9,340 Q351,248.7 449,157.3 Q373,256.7 286.9,340 Z" fill="#1d1713"/><path d="M272.9,330 Q361,252.7 449,157.3" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M262.8,340 Q403.3,283.2 549.9,226.4 Q425.3,291.2 290.8,340 Z" fill="#1d1713"/><path d="M276.8,330 Q413.3,287.2 549.9,226.4" stroke="#7c634e" stroke-width="1.4" fill="none"/><path d="M263.9,340 Q374.9,325.3 491.9,310.6 Q396.9,333.3 291.9,340 Z" fill="#1d1713"/><path d="M277.9,330 Q384.9,329.3 491.9,310.6" stroke="#7c634e" stroke-width="1.4" fill="none"/></g>
+</svg>

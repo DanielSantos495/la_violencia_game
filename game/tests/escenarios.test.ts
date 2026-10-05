@@ -25,6 +25,11 @@ import {
   yArriba,
   yColocacion,
 } from '../src/core/escenarios/escenario.ts';
+import {
+  HUIDA_CULTIVOS,
+  HUIDA_MONTE,
+  HUIDA_QUEBRADA,
+} from '../src/core/escenarios/huida.ts';
 import { PUENTE_ALTO } from '../src/core/escenarios/puente-alto.ts';
 
 const FUENTES = join(import.meta.dirname, '../art/src');
@@ -276,5 +281,31 @@ describe('Casa Insuasty', () => {
       ).sort();
       expect(acto1, lugar).toEqual(prologo);
     }
+  });
+});
+
+describe('Huida de la M2', () => {
+  it('cada tramo es del Acto I y su plano de juego cubre el nivel', () => {
+    for (const def of [HUIDA_CULTIVOS, HUIDA_QUEBRADA, HUIDA_MONTE]) {
+      expect(def.acto).toBe('acto1');
+      expect(cubren(tramos(def, 'juego'), 0, def.anchoNivel), def.atlas).toBe(
+        true,
+      );
+    }
+  });
+
+  it('el cielo asoma por encima de los cultivos y del monte: lo lejano y lo medio no tienen huecos', () => {
+    for (const def of [HUIDA_CULTIVOS, HUIDA_MONTE]) {
+      for (const capa of ['lejos', 'medio'] as const) {
+        const ancho = anchoCapa(def.anchoNivel, PARALAJE[capa]);
+        expect(
+          cubren(tramos(def, capa), 0, ancho),
+          `${def.atlas} ${capa}`,
+        ).toBe(true);
+      }
+    }
+    // en la quebrada, las paredes (capa media) encierran la vista de punta a punta
+    const ancho = anchoCapa(HUIDA_QUEBRADA.anchoNivel, PARALAJE.medio);
+    expect(cubren(tramos(HUIDA_QUEBRADA, 'medio'), 0, ancho)).toBe(true);
   });
 });

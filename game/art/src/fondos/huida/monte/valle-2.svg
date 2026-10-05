@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1108" height="380" viewBox="0 0 1108 380">
+  <!--
+    Huida de la M2 · monte · el valle de la vereda en la bruma
+    Capa: lejos (paralaje 0.15, 30 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Se coloca arriba en y=380 de la capa lejana, en x=1100.
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (grafito), rojo y azul enteros.
+    GENERADO por game/art/gen/huida.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#544f49" stroke-width="1.2"/></pattern>
+  </defs>
+<path d="M0,380 L0,190 Q277.0,150 554.0,180 T1108,170 L1108,380 Z" fill="#cdcec3" stroke="#aaa8a3" stroke-width="1.1"/><path d="M538.1,291.3 q75.9,-1.8 118.9,8.6" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M170,284.3 q67.4,-1.2 166.1,0" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M587,269.6 q63.8,4 166.6,11.9" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M893.4,254.1 q70.7,-3.5 155.1,-0.1" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M969.9,294.5 q68.1,2.1 166.2,8.3" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M606.3,230.2 q85.8,-1.8 173.6,8" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M283.1,263.2 q78.4,5.6 124.6,4.1" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M718.8,231.1 q55.4,-0.2 143.6,8.5" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M0,380 Q54.9,231.5 109.9,246.7 Q175.9,199.7 241.9,247.4 Q275.1,195.7 308.4,244.5 Q358.5,235.2 408.7,246.4 Q465.4,228.1 522,254.1 Q582,205.3 642,246.6 Q682.3,194.8 722.6,249.8 Q784.7,221.2 846.8,246.6 Q914.6,236 982.3,252.5 Q1033.4,221.1 1084.6,247 Q1139.2,192.9 1193.9,245 L1108,380 Z" fill="#dededa" fill-opacity="0.6"/>
+</svg>

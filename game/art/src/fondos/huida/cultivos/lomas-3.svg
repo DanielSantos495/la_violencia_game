@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="776" height="380" viewBox="0 0 776 380">
+  <!--
+    Huida de la M2 · cultivos · lomas de la vereda de noche, con alguna lámpara
+    Capa: lejos (paralaje 0.15, 30 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Se coloca arriba en y=380 (cubre el suelo lejano, y=628) y en x=1720.
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (grafito), rojo y azul enteros.
+    GENERADO por game/art/gen/huida.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#544f49" stroke-width="1.2"/></pattern>
+  </defs>
+<path d="M0,380 L0,148.1 L10,150.3 L20,148.4 L30,148.3 L40,147.9 L50,150.8 L60,154.1 L70,155.5 L80,154.9 L90,158.3 L100,161 L110,160.6 L120,160.7 L130,163.4 L140,167.1 L150,169.6 L160,171.5 L170,172.4 L180,170.9 L190,172.4 L200,172.7 L210,174.2 L220,174.6 L230,173.6 L240,176.5 L250,174 L260,173.9 L270,173.5 L280,175.9 L290,172.3 L300,171.4 L310,171.7 L320,168.9 L330,167.4 L340,162.4 L350,158.1 L360,153.5 L370,149 L380,144.6 L390,138.9 L400,138.4 L410,135.3 L420,131.6 L430,127.3 L440,121.8 L450,117.5 L460,117.7 L470,116.3 L480,113 L490,112.1 L500,112.4 L510,108 L520,107.2 L530,107.2 L540,107.3 L550,108.9 L560,109.2 L570,109.4 L580,114 L590,115.6 L600,119.4 L610,119.4 L620,121.5 L630,124.8 L640,125.6 L650,129.2 L660,131.3 L670,134.7 L680,137.2 L690,142.2 L700,144.6 L710,145.6 L720,148.6 L730,150.3 L740,150.5 L750,153.7 L760,154.7 L770,152.5 L776,380 Z" fill="#322d26" stroke="#251f1b" stroke-width="1.1"/>
+<clipPath id="r3"><path d="M0,380 L0,148.1 L10,150.3 L20,148.4 L30,148.3 L40,147.9 L50,150.8 L60,154.1 L70,155.5 L80,154.9 L90,158.3 L100,161 L110,160.6 L120,160.7 L130,163.4 L140,167.1 L150,169.6 L160,171.5 L170,172.4 L180,170.9 L190,172.4 L200,172.7 L210,174.2 L220,174.6 L230,173.6 L240,176.5 L250,174 L260,173.9 L270,173.5 L280,175.9 L290,172.3 L300,171.4 L310,171.7 L320,168.9 L330,167.4 L340,162.4 L350,158.1 L360,153.5 L370,149 L380,144.6 L390,138.9 L400,138.4 L410,135.3 L420,131.6 L430,127.3 L440,121.8 L450,117.5 L460,117.7 L470,116.3 L480,113 L490,112.1 L500,112.4 L510,108 L520,107.2 L530,107.2 L540,107.3 L550,108.9 L560,109.2 L570,109.4 L580,114 L590,115.6 L600,119.4 L610,119.4 L620,121.5 L630,124.8 L640,125.6 L650,129.2 L660,131.3 L670,134.7 L680,137.2 L690,142.2 L700,144.6 L710,145.6 L720,148.6 L730,150.3 L740,150.5 L750,153.7 L760,154.7 L770,152.5 L776,380 Z"/></clipPath><g clip-path="url(#r3)"><path d="M329.9,199.8 q65.2,13.3 169.6,21.8 M295.4,205.9 q69.4,5.9 158.7,0.7 M490.1,153.3 q65.2,13.5 153.5,20" stroke="#251f1b" stroke-width="0.7" fill="none"/></g>
+</svg>
