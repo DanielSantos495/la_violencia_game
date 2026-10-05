@@ -8,7 +8,9 @@ Color: paleta del juego (game/art/paleta.json; planeacion/arte/tomo1/paleta.md).
 
   python3 art/gen/puente_alto.py        (desde game/; sin dependencias)
 
-Edita este script, no los SVG generados.
+Edita este script, no los SVG generados. Otros escenarios importan de aquí el vocabulario de
+dibujo (casas, tejados, gente, objetos) y cambian ESCENA, GENERADOR, OUTDIR y el acto
+(usar_acto) antes de llamar a archivo().
 """
 import json
 import math
@@ -70,6 +72,18 @@ def _en_acto(c, acto):
 PALETA = {c['id']: _en_acto(c, next(a for a in _DATOS['guion'] if a['id'] == ACTO)) for c in _DATOS['colores']}
 ROJO, AZUL = PALETA['rojo-liberal'], PALETA['azul-conservador']
 PAPEL, TINTA, GRAFITO, GRIS_TRAMA = PALETA['papel'], PALETA['tinta'], PALETA['grafito'], PALETA['gris-trama']
+# Lo que va en la cabecera de cada SVG; otro escenario que importe este módulo los cambia.
+ESCENA, GENERADOR = 'Puente Alto', 'game/art/gen/puente_alto.py'
+
+
+def usar_acto(acto):
+    """Recalcula la paleta con el croma de otro acto del guion (paleta.md §5). Lo que no es
+    iluminacion (papel, tinta, partido) no cambia salvo en el epílogo, que desvae el partido."""
+    global ACTO, ROJO, AZUL
+    ACTO = acto
+    guion = next(a for a in _DATOS['guion'] if a['id'] == acto)
+    PALETA.update({c['id']: _en_acto(c, guion) for c in _DATOS['colores']})
+    ROJO, AZUL = PALETA['rojo-liberal'], PALETA['azul-conservador']
 
 
 def diluir(hexa, k):
@@ -141,13 +155,13 @@ def tramas(esc=1.0):
 def archivo(nombre, w, h, capa, titulo, cuerpo, notas='', esc_trama=1.0):
     contenido = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{f(w)}" height="{f(h)}" viewBox="0 0 {f(w)} {f(h)}">
   <!--
-    Puente Alto · {titulo}
+    {ESCENA} · {titulo}
     Capa: {capa} (paralaje {PARALAJE[capa]}, {f(ppm(capa))} px/m). La base del viewBox es el suelo de la capa
     salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
     {notas}
     Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
     línea ({'tinta' if LINEA[capa] == TINTA else 'grafito'}), rojo y azul enteros.
-    GENERADO por game/art/gen/puente_alto.py: edita el script, no este archivo.
+    GENERADO por {GENERADOR}: edita el script, no este archivo.
   -->{tramas(esc_trama)}
 {cuerpo}
 </svg>
@@ -412,8 +426,10 @@ def afiche(x0, y0, w, h, m, sw, rnd, color=ROJO, estrella=True):
 
 # ================================== capa juego (200 px/m) ==================================
 
-def fachada_con_corredor(W, rnd, color, pilares, huecos, notas_extra=''):
-    """Fachada de un nivel con corredor bajo el alero (doc 03 §3.1 [V]). Base del viewBox = suelo."""
+def fachada_con_corredor(W, rnd, color, pilares, huecos, notas_extra='', esquinas=(True, True)):
+    """Fachada de un nivel con corredor bajo el alero (doc 03 §3.1 [V]). Base del viewBox = suelo.
+    esquinas: si se dibuja la esquina del edificio a la izquierda y a la derecha (una fachada
+    larga partida en módulos no lleva esquina en los empalmes)."""
     m, sw = ppm('juego'), TRAZO['juego']
     H = 900
     y_piso = H - 0.25 * m           # piso del corredor, elevado sobre la plaza
@@ -443,8 +459,9 @@ def fachada_con_corredor(W, rnd, color, pilares, huecos, notas_extra=''):
     out.append(f'<path d="{" ".join(juntas)}" stroke="#000" stroke-width="{f(sw*0.5)}" fill="none"/>')
     out.append(f'<line x1="0" y1="{f(y_piso+0.07*m)}" x2="{f(W)}" y2="{f(y_piso+0.07*m)}" stroke="#000" stroke-width="{f(sw*0.5)}"/>')
     # esquinas del edificio
-    for xx in (0, W):
-        out.append(f'<line x1="{f(xx)}" y1="0" x2="{f(xx)}" y2="{f(H)}" stroke="#000" stroke-width="{f(sw*1.6)}"/>')
+    for xx, hay in zip((0, W), esquinas):
+        if hay:
+            out.append(f'<line x1="{f(xx)}" y1="0" x2="{f(xx)}" y2="{f(H)}" stroke="#000" stroke-width="{f(sw*1.6)}"/>')
     return '\n'.join(out)
 
 
@@ -1956,21 +1973,22 @@ def frente_toldo():
             notas='Se coloca arriba (y=0).')
 
 
-tienda_roja()
-casa_porton()
-empedrado()
-objetos_juego()
-cordillera()
-iglesia()
-mercado()
-frente_canastos()
-frente_costal()
-frente_toldo()
-suelo_plaza('suelo-medio', 'medio', 200, 34)
-lejos_oeste()
-lejos_este()
-tienda_azul()
-suelo_plaza('suelo-lejos', 'lejos', 110, 21)
-nube('nube-a', 620, 170, 3)
-nube('nube-b', 420, 120, 5)
-nube('nube-c', 260, 82, 8)
+if __name__ == '__main__':
+    tienda_roja()
+    casa_porton()
+    empedrado()
+    objetos_juego()
+    cordillera()
+    iglesia()
+    mercado()
+    frente_canastos()
+    frente_costal()
+    frente_toldo()
+    suelo_plaza('suelo-medio', 'medio', 200, 34)
+    lejos_oeste()
+    lejos_este()
+    tienda_azul()
+    suelo_plaza('suelo-lejos', 'lejos', 110, 21)
+    nube('nube-a', 620, 170, 3)
+    nube('nube-b', 420, 120, 5)
+    nube('nube-c', 260, 82, 8)

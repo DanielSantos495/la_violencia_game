@@ -1,10 +1,13 @@
 // Compone un escenario como lo verá la cámara, sin navegador (Daniel y Claude).
-//   node tools/art-escena.ts [escenario] [scrollX…]
+//   node tools/art-escena.ts [escenario] [scrollX…] [--tinta]
 //   p. ej. node tools/art-escena.ts puente-alto 0 1460 2900
+// Los nombres de escenario están en src/core/escenarios/catalogo.ts.
 // Usa los PNG recortados de art/build/png y sus recortes del atlas: corre antes `pnpm art:build`.
 // Salida en art/build/revision/: escena-<escenario>-<scrollX>.png (1920×1080, una por posición)
 // y escena-<escenario>.png (todas apiladas a 1/2). Las nubes salen en su x inicial.
 // La marca vertical en x=640 de pantalla mide 1,55 m (Rosalba) y es solo de revisión.
+// --tinta: con la noche de tinta entera (src/core/escenarios/noche.ts), como la pone NocheDeTinta;
+// los archivos llevan «-tinta» después del escenario.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
@@ -17,6 +20,7 @@ import {
   VIEWPORT,
   Y_SUELO,
 } from '../src/core/escena/escala.ts';
+import { ESCENARIOS } from '../src/core/escenarios/catalogo.ts';
 import {
   copiasMosaico,
   type DefinicionEscenario,
@@ -24,21 +28,26 @@ import {
   xEnPantalla,
   yArriba,
 } from '../src/core/escenarios/escenario.ts';
-import { PUENTE_ALTO } from '../src/core/escenarios/puente-alto.ts';
+import { hexARgb, matrizNocheDeTinta } from '../src/core/escenarios/noche.ts';
 import type { Atlas, FrameAtlas } from './art-build.ts';
 
-const ESCENARIOS: Record<string, DefinicionEscenario> = {
-  'puente-alto': PUENTE_ALTO,
-};
-
-/** Papel de la paleta (game/art/paleta.json): el fondo de cámara de las escenas. */
-const FONDO = (
-  JSON.parse(
-    readFileSync(resolve(import.meta.dirname, '../art/paleta.json'), 'utf8'),
-  ) as { colores: { id: string; hex: string }[] }
-).colores.find((c) => c.id === 'papel')?.hex;
-if (!FONDO) throw new Error('paleta.json sin el color papel');
+/** Colores de la paleta (game/art/paleta.json), para el fondo de cámara de cada escena. */
+const COLORES = new Map(
+  (
+    JSON.parse(
+      readFileSync(resolve(import.meta.dirname, '../art/paleta.json'), 'utf8'),
+    ) as { colores: { id: string; hex: string }[] }
+  ).colores.map((c) => [c.id, c.hex]),
+);
 const MARCA = '#d0006f';
+
+/** Fondo de cámara del escenario: papel, o el cielo de las escenas de noche. */
+function fondoDe(def: DefinicionEscenario): string {
+  const id = def.fondo ?? 'papel';
+  const hex = COLORES.get(id);
+  if (!hex) throw new Error(`paleta.json sin el color ${id}`);
+  return hex;
+}
 
 interface Pieza {
   id: string;
@@ -72,6 +81,24 @@ function cargarFrames(
     }
   }
   return { piezas, defs: `<defs>${defs.join('')}</defs>` };
+}
+
+/**
+ * La noche de tinta como filtro SVG: la misma matriz que el filtro de Phaser, sobre los valores
+ * sRGB como su shader (los desplazamientos van de 0 a 1 en vez de 0 a 255).
+ */
+function filtroNocheDeTinta(): string {
+  const hex = (id: string): string => {
+    const valor = COLORES.get(id);
+    if (!valor) throw new Error(`La paleta no tiene el color ${id}`);
+    return valor;
+  };
+  const matriz = matrizNocheDeTinta({
+    papel: hexARgb(hex('papel')),
+    tinta: hexARgb(hex('tinta')),
+  });
+  const valores = matriz.map((v, i) => (i % 5 === 4 ? v / 255 : v).toFixed(5));
+  return `<filter id="noche-de-tinta" filterUnits="userSpaceOnUse" x="0" y="0" width="${VIEWPORT.ancho}" height="${VIEWPORT.alto}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="${valores.join(' ')}"/></filter>`;
 }
 
 /** Una vista de 1920×1080 con la cámara en `scrollX` (sin las <defs>). */
@@ -123,12 +150,16 @@ function vista(
   usos.push(
     `<rect x="632" y="${Y_SUELO - alto}" width="16" height="${alto}" fill="none" stroke="${MARCA}" stroke-width="2" stroke-dasharray="8 5"/>`,
   );
-  return `<rect width="${VIEWPORT.ancho}" height="${VIEWPORT.alto}" fill="${FONDO}"/>${usos.join('')}`;
+  return `<rect width="${VIEWPORT.ancho}" height="${VIEWPORT.alto}" fill="${fondoDe(def)}"/>${usos.join('')}`;
 }
 
 if (import.meta.main) {
   const raiz = resolve(import.meta.dirname, '..');
-  const [nombre = 'puente-alto', ...posiciones] = process.argv.slice(2);
+  const argumentos = process.argv.slice(2);
+  const tinta = argumentos.includes('--tinta');
+  const [nombre = 'puente-alto', ...posiciones] = argumentos.filter(
+    (a) => !a.startsWith('--'),
+  );
   const def = ESCENARIOS[nombre];
   if (!def) {
     console.error(
@@ -142,20 +173,27 @@ if (import.meta.main) {
       ? posiciones.map(Number)
       : [0, 0.25, 0.5, 0.75, 1].map((t) => Math.round(t * maximo))
   ).map((s) => Math.min(maximo, Math.max(0, s)));
-  const { piezas, defs } = cargarFrames(raiz, def);
+  const cargados = cargarFrames(raiz, def);
+  const { piezas } = cargados;
+  const defs = tinta
+    ? cargados.defs.replace('</defs>', `${filtroNocheDeTinta()}</defs>`)
+    : cargados.defs;
+  const archivo = tinta ? `${nombre}-tinta` : nombre;
   const salida = join(raiz, 'art/build/revision');
   mkdirSync(salida, { recursive: true });
   const { ancho: w, alto: h } = VIEWPORT;
   const tiras: string[] = [];
   scrolls.forEach((s, i) => {
-    const cuerpo = vista(def, piezas, s);
+    const cuerpo = tinta
+      ? `<g filter="url(#noche-de-tinta)">${vista(def, piezas, s)}</g>`
+      : vista(def, piezas, s);
     const png = new Resvg(
       `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">${defs}${cuerpo}</svg>`,
       { font: { loadSystemFonts: false } },
     )
       .render()
       .asPng();
-    writeFileSync(join(salida, `escena-${nombre}-${s}.png`), png);
+    writeFileSync(join(salida, `escena-${archivo}-${s}.png`), png);
     tiras.push(
       `<g transform="translate(0 ${i * (h / 2 + 12)}) scale(0.5)"><svg width="${w}" height="${h}">${cuerpo}</svg></g>`,
     );
@@ -167,8 +205,8 @@ if (import.meta.main) {
   )
     .render()
     .asPng();
-  writeFileSync(join(salida, `escena-${nombre}.png`), hoja);
+  writeFileSync(join(salida, `escena-${archivo}.png`), hoja);
   console.log(
-    `✓ ${nombre}: cámara en ${scrolls.join(', ')} → art/build/revision/escena-${nombre}[-<scrollX>].png`,
+    `✓ ${nombre}: cámara en ${scrolls.join(', ')} → art/build/revision/escena-${archivo}[-<scrollX>].png`,
   );
 }

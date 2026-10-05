@@ -1,6 +1,7 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { color } from '../src/core/arte/paleta.ts';
 import {
   anchoCapa,
   type IdCapa,
@@ -12,29 +13,68 @@ import {
   ySueloCapa,
 } from '../src/core/escena/escala.ts';
 import {
+  casaInsuastyExterior,
+  casaInsuastyInterior,
+} from '../src/core/escenarios/casa-insuasty.ts';
+import { ESCENARIOS } from '../src/core/escenarios/catalogo.ts';
+import {
   copiasMosaico,
+  type DefinicionEscenario,
   envolver,
   xEnPantalla,
   yArriba,
   yColocacion,
 } from '../src/core/escenarios/escenario.ts';
+import {
+  HUIDA_CULTIVOS,
+  HUIDA_MONTE,
+  HUIDA_QUEBRADA,
+} from '../src/core/escenarios/huida.ts';
 import { PUENTE_ALTO } from '../src/core/escenarios/puente-alto.ts';
 
 const FUENTES = join(import.meta.dirname, '../art/src');
 
 /** Tamaño del viewBox del SVG fuente de un módulo (1 unidad = 1 px a @1x). */
-function tamano(modulo: string): { w: number; h: number } {
-  const ruta = join(FUENTES, PUENTE_ALTO.atlas, `${modulo}.svg`);
+function tamano(
+  def: DefinicionEscenario,
+  modulo: string,
+): { w: number; h: number } {
+  const ruta = join(FUENTES, def.atlas, `${modulo}.svg`);
   expect(existsSync(ruta), `falta ${ruta}`).toBe(true);
   const m = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(readFileSync(ruta, 'utf8'));
   if (!m) throw new Error(`${modulo}: sin viewBox`);
   return { w: Number(m[1]), h: Number(m[2]) };
 }
 
-const capas = ORDEN_CAPAS.flatMap((id) => {
-  const datos = PUENTE_ALTO.capas[id];
-  return datos ? [{ id, datos }] : [];
-});
+function capasDe(def: DefinicionEscenario) {
+  return ORDEN_CAPAS.flatMap((id) => {
+    const datos = def.capas[id];
+    return datos ? [{ id, datos }] : [];
+  });
+}
+
+/** Tramos [desde, hasta) que cubren los módulos colocados de una capa, ordenados. */
+function tramos(def: DefinicionEscenario, capa: IdCapa) {
+  return (def.capas[capa]?.colocaciones ?? [])
+    .map((c) => [c.x, c.x + tamano(def, c.modulo).w] as const)
+    .sort((a, b) => a[0] - b[0]);
+}
+
+/** ¿Los tramos cubren [desde, hasta] sin huecos? */
+function cubren(
+  t: readonly (readonly [number, number])[],
+  desde: number,
+  hasta: number,
+): boolean {
+  let cubierto = desde;
+  for (const [a, b] of t) {
+    if (a > cubierto) break;
+    cubierto = Math.max(cubierto, b);
+  }
+  return cubierto >= hasta;
+}
+
+const capas = capasDe(PUENTE_ALTO);
 
 describe('ayudas de escenario', () => {
   it('el ancla suelo apoya en el suelo de la capa; arriba, en y=0', () => {
@@ -64,15 +104,15 @@ describe('ayudas de escenario', () => {
   });
 });
 
-describe('Puente Alto', () => {
+describe.each(Object.entries(ESCENARIOS))('escenario %s', (_nombre, def) => {
   it('cada módulo existe y no pasa del lado máximo', () => {
-    for (const { datos } of capas) {
+    for (const { datos } of capasDe(def)) {
       const modulos = [
         ...(datos.mosaicos ?? []).map((m) => m.modulo),
         ...datos.colocaciones.map((c) => c.modulo),
       ];
       for (const modulo of modulos) {
-        const { w, h } = tamano(modulo);
+        const { w, h } = tamano(def, modulo);
         expect(w, modulo).toBeLessThanOrEqual(LADO_MAXIMO_MODULO);
         expect(h, modulo).toBeLessThanOrEqual(LADO_MAXIMO_MODULO);
       }
@@ -80,22 +120,42 @@ describe('Puente Alto', () => {
   });
 
   it('todo queda dentro del ancho de su capa', () => {
-    for (const { id, datos } of capas) {
-      const ancho = anchoCapa(PUENTE_ALTO.anchoNivel, PARALAJE[id]);
+    for (const { id, datos } of capasDe(def)) {
+      const ancho = anchoCapa(def.anchoNivel, PARALAJE[id]);
       for (const col of datos.colocaciones) {
-        const { w } = tamano(col.modulo);
+        const { w } = tamano(def, col.modulo);
         expect(col.x, `${id}/${col.modulo}`).toBeGreaterThanOrEqual(0);
         expect(col.x + w, `${id}/${col.modulo}`).toBeLessThanOrEqual(ancho);
       }
     }
   });
 
+  it('el fondo de cámara es un color de la paleta y solo derivan las nubes', () => {
+    expect(() => color(def.fondo ?? 'papel')).not.toThrow();
+    for (const { id, datos } of capasDe(def)) {
+      for (const col of datos.colocaciones) {
+        if (col.deriva) expect(id).toBe<IdCapa>('cielo');
+      }
+    }
+  });
+
+  it('el primer plano no tapa el cuerpo del personaje (queda bajo su suelo o arriba del todo)', () => {
+    for (const col of def.capas.frente?.colocaciones ?? []) {
+      const { h } = tamano(def, col.modulo);
+      const arriba = yArriba(col, 'frente', h);
+      if (col.ancla === 'arriba') expect(arriba + h).toBeLessThanOrEqual(300);
+      else expect(arriba).toBeGreaterThanOrEqual(Y_SUELO);
+    }
+  });
+});
+
+describe('Puente Alto', () => {
   it('los suelos empiezan en el suelo de su capa y la cubren entera', () => {
     for (const { id, datos } of capas) {
       const ancho = anchoCapa(PUENTE_ALTO.anchoNivel, PARALAJE[id]);
       for (const mosaico of datos.mosaicos ?? []) {
         expect(mosaico.y, mosaico.modulo).toBe(ySueloCapa(PARALAJE[id]));
-        const { w } = tamano(mosaico.modulo);
+        const { w } = tamano(PUENTE_ALTO, mosaico.modulo);
         const copias = copiasMosaico(w, ancho);
         expect((copias.at(-1) ?? 0) + w).toBeGreaterThanOrEqual(ancho);
       }
@@ -104,23 +164,12 @@ describe('Puente Alto', () => {
 
   it('el otro lado de la plaza es una hilera continua de 0 al final de la capa', () => {
     const ancho = anchoCapa(PUENTE_ALTO.anchoNivel, PARALAJE.lejos);
-    const tramos = (PUENTE_ALTO.capas.lejos?.colocaciones ?? [])
-      .map((c) => [c.x, c.x + tamano(c.modulo).w] as const)
-      .sort((a, b) => a[0] - b[0]);
-    let cubierto = 0;
-    for (const [desde, hasta] of tramos) {
-      expect(desde).toBeLessThanOrEqual(cubierto);
-      cubierto = Math.max(cubierto, hasta);
-    }
-    expect(cubierto).toBeGreaterThanOrEqual(ancho);
+    expect(cubren(tramos(PUENTE_ALTO, 'lejos'), 0, ancho)).toBe(true);
   });
 
-  it('solo derivan las nubes del cielo, y el plano de juego apoya en su suelo', () => {
-    for (const { id, datos } of capas) {
-      for (const col of datos.colocaciones) {
-        if (col.deriva) expect(id).toBe<IdCapa>('cielo');
-        if (id === 'juego') expect(yColocacion(col, id)).toBe(Y_SUELO);
-      }
+  it('el plano de juego apoya en su suelo', () => {
+    for (const col of PUENTE_ALTO.capas.juego?.colocaciones ?? []) {
+      expect(yColocacion(col, 'juego')).toBe(Y_SUELO);
     }
   });
 
@@ -134,7 +183,11 @@ describe('Puente Alto', () => {
         (c) => c.modulo === modulo,
       );
       if (!col) throw new Error(`falta ${modulo} en ${capa}`);
-      return { capa, desde: col.x, hasta: col.x + tamano(modulo).w };
+      return {
+        capa,
+        desde: col.x,
+        hasta: col.x + tamano(PUENTE_ALTO, modulo).w,
+      };
     };
     const enPantalla = (
       t: ReturnType<typeof tramo>,
@@ -163,13 +216,96 @@ describe('Puente Alto', () => {
     // y en algún momento se ven las dos a la vez: el jugador elige cuál entra
     expect(juntas).toBeGreaterThan(0);
   });
+});
 
-  it('el primer plano no tapa el cuerpo del personaje (queda bajo su suelo o arriba del todo)', () => {
-    for (const col of PUENTE_ALTO.capas.frente?.colocaciones ?? []) {
-      const { h } = tamano(col.modulo);
-      const arriba = yArriba(col, 'frente', h);
-      if (col.ancla === 'arriba') expect(arriba + h).toBeLessThanOrEqual(300);
-      else expect(arriba).toBeGreaterThanOrEqual(Y_SUELO);
+describe('Casa Insuasty', () => {
+  const interior = casaInsuastyInterior('prologo');
+  const exterior = casaInsuastyExterior('prologo');
+
+  it('el interior es una fila de viñetas y muros cortados, sin huecos', () => {
+    expect(cubren(tramos(interior, 'juego'), 0, interior.anchoNivel)).toBe(
+      true,
+    );
+    // cada cuarto queda entre dos muros que montan sobre sus bordes
+    const muros = tramos(interior, 'juego').filter(([a, b]) => b - a <= 120);
+    for (const cuarto of ['alcoba', 'sala', 'cocina']) {
+      const col = interior.capas.juego?.colocaciones.find(
+        (c) => c.modulo === cuarto,
+      );
+      if (!col) throw new Error(`falta ${cuarto}`);
+      const fin = col.x + tamano(interior, cuarto).w;
+      expect(
+        muros.some(([a, b]) => a < col.x && b > col.x),
+        cuarto,
+      ).toBe(true);
+      expect(
+        muros.some(([a, b]) => a < fin && b > fin),
+        cuarto,
+      ).toBe(true);
     }
+  });
+
+  it('por fuera, el plano de juego cubre el nivel y lo lejano cubre lo que se ve por los extremos', () => {
+    expect(cubren(tramos(exterior, 'juego'), 0, exterior.anchoNivel)).toBe(
+      true,
+    );
+    // Solo el solar y el patio dejan ver el cielo; la casa tapa hasta arriba.
+    const conCielo = (exterior.capas.juego?.colocaciones ?? []).filter((c) =>
+      ['solar', 'patio'].includes(c.modulo),
+    );
+    const maximo = exterior.anchoNivel - VIEWPORT.ancho;
+    for (let s = 0; s <= maximo; s += 20) {
+      for (const col of conCielo) {
+        const w = tamano(exterior, col.modulo).w;
+        const desde = Math.max(0, col.x - s);
+        const hasta = Math.min(VIEWPORT.ancho, col.x + w - s);
+        if (hasta <= desde) continue;
+        for (const capa of ['lejos', 'medio'] as const) {
+          const f = PARALAJE[capa];
+          expect(
+            cubren(tramos(exterior, capa), desde + s * f, hasta + s * f),
+            `${capa} con la cámara en ${s}`,
+          ).toBe(true);
+        }
+      }
+    }
+  });
+
+  it('cada acto tiene los mismos módulos', () => {
+    for (const lugar of ['interior', 'exterior']) {
+      const prologo = readdirSync(
+        join(FUENTES, `fondos/casa-insuasty/${lugar}-prologo`),
+      ).sort();
+      const acto1 = readdirSync(
+        join(FUENTES, `fondos/casa-insuasty/${lugar}-acto1`),
+      ).sort();
+      expect(acto1, lugar).toEqual(prologo);
+    }
+  });
+});
+
+describe('Huida de la M2', () => {
+  it('cada tramo es del Acto I y su plano de juego cubre el nivel', () => {
+    for (const def of [HUIDA_CULTIVOS, HUIDA_QUEBRADA, HUIDA_MONTE]) {
+      expect(def.acto).toBe('acto1');
+      expect(cubren(tramos(def, 'juego'), 0, def.anchoNivel), def.atlas).toBe(
+        true,
+      );
+    }
+  });
+
+  it('el cielo asoma por encima de los cultivos y del monte: lo lejano y lo medio no tienen huecos', () => {
+    for (const def of [HUIDA_CULTIVOS, HUIDA_MONTE]) {
+      for (const capa of ['lejos', 'medio'] as const) {
+        const ancho = anchoCapa(def.anchoNivel, PARALAJE[capa]);
+        expect(
+          cubren(tramos(def, capa), 0, ancho),
+          `${def.atlas} ${capa}`,
+        ).toBe(true);
+      }
+    }
+    // en la quebrada, las paredes (capa media) encierran la vista de punta a punta
+    const ancho = anchoCapa(HUIDA_QUEBRADA.anchoNivel, PARALAJE.medio);
+    expect(cubren(tramos(HUIDA_QUEBRADA, 'medio'), 0, ancho)).toBe(true);
   });
 });

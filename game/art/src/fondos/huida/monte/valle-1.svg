@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1150" height="380" viewBox="0 0 1150 380">
+  <!--
+    Huida de la M2 · monte · el valle de la vereda en la bruma, con un hilo de humo
+    Capa: lejos (paralaje 0.15, 30 px/m). La base del viewBox es el suelo de la capa
+    salvo que el módulo se coloque por arriba (cielo, mosaicos de suelo).
+    Se coloca arriba en y=380 de la capa lejana, en x=0. El humo es el de la casa: lo que ya no está.
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md): lavados bajo la
+    línea (grafito), rojo y azul enteros.
+    GENERADO por game/art/gen/huida.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#544f49" stroke-width="1.2"/></pattern>
+  </defs>
+<path d="M0,380 L0,190 Q287.5,150 575.0,180 T1150,170 L1150,380 Z" fill="#cdcec3" stroke="#aaa8a3" stroke-width="1.1"/><path d="M987.8,261.3 q85,-0.1 113.2,9.3" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M433.8,261.7 q81.2,-3.5 174.4,-3.1" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M955.8,297.4 q80.9,-5.3 116,7" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M732.6,266.1 q68.9,-5.6 166.5,3.9" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M240.5,224.2 q85,0.6 152.9,10.3" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M243.6,230.8 q76.5,-1.8 134.3,9.5" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M897.5,293.4 q66,5.6 124.5,8.5" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M264.4,237.8 q53.8,0.1 128.4,13.6" stroke="#aaa8a3" stroke-width="0.7" fill="none"/><path d="M420,200 q-10,-40 6,-80 q14,-40 -2,-90 q-10,-30 10,-60" stroke="#7d7a75" stroke-width="7" stroke-opacity="0.45" fill="none" stroke-linecap="round"/><path d="M0,380 Q48.9,238.4 97.8,246.6 Q133,239.9 168.1,253.7 Q199.5,194.9 230.8,253.5 Q267.4,248.6 304,253.9 Q342.8,207.6 381.7,246.7 Q442.2,200.9 502.6,247.4 Q569.7,193.9 636.8,251.3 Q666.8,228.8 696.8,245.1 Q758.7,216.8 820.6,251.3 Q876.2,209.8 931.8,255.7 Q972.3,173.7 1012.9,249.1 Q1079.5,227.8 1146.1,255.2 Q1176.2,181.8 1206.3,247.3 L1150,380 Z" fill="#dededa" fill-opacity="0.6"/>
+</svg>
