@@ -30,9 +30,9 @@
 
 ## 3. Luz
 
-- **Noche:** es el estilo de noche de la casa (`usar_noche`, `casa-insuasty.md` §7); cambia a la vez
-  cuando Daniel elija. El fuego va encima de la noche, en `llama`, `llama-nucleo` y `brasa`, con un
-  charco plano de luz en el suelo.
+- **Noche:** la misma de la casa, la sepia (C), elegida por Daniel el 05-oct-2026
+  (`casa-insuasty.md` §7). El fuego va encima de la noche, en `llama`, `llama-nucleo` y `brasa`,
+  con un charco plano de luz en el suelo.
 - **Alba:** cada capa se mezcla con `niebla` según su distancia: 62 % el valle, 42 % el monte medio
   y 10–14 % el plano de juego. Sobre el horizonte hay una franja de `llama` y `llama-nucleo` (el
   amanecer va en ocre, nunca en rojo ni en azul) y encima bancos de niebla planos. El fondo de
@@ -57,4 +57,3 @@ Lo demás termina antes del borde: matorrales, cercas y árboles de la capa medi
   que pintarlo delante (o una franja de matas delante) en la escena del juego.
 - Fondos para lo que la escena muestre en primer plano de la quema (si la hay) y para el
   encuentro con los desplazados (personajes).
-- Estilo de noche definitivo (`casa-insuasty.md` §7).

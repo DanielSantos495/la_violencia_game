@@ -53,7 +53,9 @@ ESTILOS_NOCHE = {
     'luna': {'adentro': (0.8, 0.58, 0.32), 'nucleo': 0.35, 'afuera': 0.7, 'lejos': 0.74,
              'sepia': False, 'luna': True, 'halo': 1.0},
 }
-NOCHE = dict(ESTILOS_NOCHE['escalonada'])
+# Daniel eligió C (sepia) como noche base el 05-oct-2026; B (tinta) queda para el momento en que
+# llama la Seccional o llega la partida, como filtro en vivo de la escena (casa-insuasty.md §7).
+NOCHE = dict(ESTILOS_NOCHE['sepia'])
 
 
 def usar_noche(nombre):
