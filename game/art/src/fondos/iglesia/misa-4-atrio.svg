@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="608" height="494" viewBox="0 0 608 494">
+  <!--
+    Iglesia de Puente Alto · Viñeta 4: el atrio
+    Viñeta de la página de la misa (Prólogo b3), 608×494 px. En la página va en x=1268, y=542
+    (iglesia.md §2); el marco y los globos los pone la página.
+    Alzado a 80 px/m de la portada de la plaza (puente_alto.py `iglesia`): la misma puerta, de cerca.
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md), croma del
+    Prólogo. Lo [P] va marcado con data-p; las figuras grises de borde discontinuo son provisionales.
+    GENERADO por game/art/gen/iglesia.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#1d1713" stroke-width="1.2"/></pattern>
+  </defs>
+<clipPath id="cuadro-misa-4-atrio"><rect width="608" height="494"/></clipPath>
+<g clip-path="url(#cuadro-misa-4-atrio)">
+<g data-p="portada de piedra y atrio: la misma iglesia de la plaza (puente_alto.py), por verificar">
+<rect x="-10" y="-10" width="628" height="442" fill="#f1ede1" stroke="#1d1713" stroke-width="1.3"/><line x1="300.9" y1="364" x2="335.4" y2="363.2" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="368.8" y1="364" x2="411.8" y2="362.7" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="541.3" y1="296" x2="586.1" y2="296.1" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="206.2" y1="296" x2="257.7" y2="294.8" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="544" y1="228" x2="577.1" y2="227.5" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="89.1" y1="228" x2="147.8" y2="228.7" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="543.1" y1="160" x2="605.1" y2="159.8" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="438" y1="160" x2="493.3" y2="158.5" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="322.4" y1="92" x2="393.2" y2="90.4" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="252.3" y1="92" x2="303.1" y2="92.9" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="326.6" y1="24" x2="382.6" y2="22.4" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><line x1="32.6" y1="24" x2="73.9" y2="23.7" stroke="#1d1713" stroke-width="0.3" opacity="0.6"/><path d="M276,191.4 L273.6,200 L269.5,207.8 L275.4,213.4 L270.9,220.4" stroke="#1d1713" stroke-width="0.4" fill="none"/><path d="M64.1,28.2 L60,38.9 L61.4,51.2 L56.2,57.3 L51,66.2" stroke="#1d1713" stroke-width="0.4" fill="none"/><path d="M93.9,40.5 L91.4,52.1 L88.4,61 L85.3,70.8 L88.8,81.8" stroke="#1d1713" stroke-width="0.4" fill="none"/><polygon points="267.6,33.8 270.1,36.3 266,37.3 262.4,36.8 259.2,36.9 254.1,36.5 252.1,33.8 257.4,32.3 256.9,28.6 262.4,28 267.8,28.6 269.3,31.6" fill="#c9b8a2" stroke="#1d1713" stroke-width="0.4"/><polygon points="267.6,33.8 270.1,36.3 266,37.3 262.4,36.8 259.2,36.9 254.1,36.5 252.1,33.8 257.4,32.3 256.9,28.6 262.4,28 267.8,28.6 269.3,31.6" fill="#1d1713" fill-opacity="0.1"/><polygon points="179.9,373 175.2,374.5 173.5,375.8 170.5,378.8 167.5,375.8 162.1,375.6 160.2,373 166.4,371.7 165.1,367.9 170.5,370.4 176,367.7 178.2,370.5" fill="#c9b8a2" stroke="#1d1713" stroke-width="0.4"/><polygon points="179.9,373 175.2,374.5 173.5,375.8 170.5,378.8 167.5,375.8 162.1,375.6 160.2,373 166.4,371.7 165.1,367.9 170.5,370.4 176,367.7 178.2,370.5" fill="#1d1713" fill-opacity="0.1"/><polygon points="51.7,190.3 47.6,191.3 48.3,193.9 44.5,193.3 43.1,191.7 40.5,191.6 40,190.3 38.3,188.3 42.5,188.3 44.5,186.7 47.1,187.9 51.2,188.2" fill="#c9b8a2" stroke="#1d1713" stroke-width="0.4"/><polygon points="51.7,190.3 47.6,191.3 48.3,193.9 44.5,193.3 43.1,191.7 40.5,191.6 40,190.3 38.3,188.3 42.5,188.3 44.5,186.7 47.1,187.9 51.2,188.2" fill="#1d1713" fill-opacity="0.1"/>
+<rect x="542" y="-10" width="76" height="442" fill="#f2f0e7" stroke="#1d1713" stroke-width="2.2"/><rect x="542" y="-10" width="24" height="442" fill="#1d1713" fill-opacity="0.18"/>
+<rect x="-18" y="-10" width="416" height="442" fill="#b8b3a6"/>
+<rect x="32.4" y="-10" width="36" height="442" fill="#a7a297" stroke="#1d1713" stroke-width="1.8"/><rect x="56.4" y="-10" width="12" height="442" fill="#1d1713" fill-opacity="0.1"/>
+<rect x="312.4" y="-10" width="36" height="442" fill="#a7a297" stroke="#1d1713" stroke-width="1.8"/><rect x="336.4" y="-10" width="12" height="442" fill="#1d1713" fill-opacity="0.1"/>
+<path d="M94,432 L94,192 A96,96 0 0 1 286,192 L286,432 Z" fill="#1d1713"/>
+<ellipse cx="156.4" cy="348" rx="1.6" ry="3" fill="#e8b45e"/>
+<ellipse cx="170" cy="348" rx="1.6" ry="3" fill="#e8b45e"/>
+<ellipse cx="183.6" cy="348" rx="1.6" ry="3" fill="#e8b45e"/>
+<ellipse cx="197.2" cy="348" rx="1.6" ry="3" fill="#e8b45e"/>
+<ellipse cx="210.8" cy="348" rx="1.6" ry="3" fill="#e8b45e"/>
+<ellipse cx="224.4" cy="348" rx="1.6" ry="3" fill="#e8b45e"/>
+<rect x="94" y="192" width="28" height="240" fill="#584330" stroke="#1d1713" stroke-width="1.3"/><rect x="94" y="192" width="28" height="240" fill="#1d1713" fill-opacity="0.18"/>
+<rect x="258" y="192" width="28" height="240" fill="#584330" stroke="#1d1713" stroke-width="1.3"/><rect x="258" y="192" width="28" height="240" fill="#1d1713" fill-opacity="0.18"/>
+<path d="M62,192 A128,128 0 0 1 318,192 L286,192 A96,96 0 0 0 94,192 Z" fill="#a7a297" stroke="#1d1713" stroke-width="1.8"/>
+<path d="M99.8,159.2 L69.7,148.2 M116.5,130.3 L91.9,109.7 M142,108.9 L126,81.1 M173.3,97.5 L167.8,65.9 M206.7,97.5 L212.2,65.9 M238,108.9 L254,81.1 M263.5,130.3 L288.1,109.7 M280.2,159.2 L310.3,148.2" stroke="#1d1713" stroke-width="1.1"/>
+<path d="M94,432 L94,192 A96,96 0 0 1 286,192 L286,432 Z" fill="none" stroke="#1d1713" stroke-width="2.2"/>
+<path d="M94,432 L94,192 L62,192 L62,432 Z" fill="#a7a297" stroke="#1d1713" stroke-width="1.3"/>
+<path d="M286,432 L286,192 L318,192 L318,432 Z" fill="#a7a297" stroke="#1d1713" stroke-width="1.3"/>
+</g>
+<g data-p="atrio de piedra con gradas, por verificar">
+<rect x="-10" y="432" width="628" height="72" fill="#a39e94" stroke="#1d1713" stroke-width="2.2"/>
+<path d="M2.8,434 L-3.2,448 M88.5,434 L82.5,448 M158.7,434 L152.7,448 M233.5,434 L227.5,448 M307.9,434 L301.9,448 M423.4,434 L417.4,448 M528.4,434 L522.4,448 M-10,448 L618,448 M47.5,450 L41.5,470 M157.8,450 L151.8,470 M264.4,450 L258.4,470 M352.9,450 L346.9,470 M471.8,450 L465.8,470 M562.3,450 L556.3,470 M-10,470 L618,470" stroke="#1d1713" stroke-width="0.9" opacity="0.6"/>
+<rect x="-10" y="480" width="628" height="24" fill="#a39e94" stroke="#1d1713" stroke-width="2.2"/><rect x="-10" y="480" width="628" height="24" fill="#1d1713" fill-opacity="0.26"/>
+</g>
+<ellipse cx="384" cy="458" rx="36" ry="5" fill="#1d1713" fill-opacity="0.18"/>
+<g data-p="figura provisional: Rosalba (su figura la pone su área: personajes/rosalba.md)"><path d="M349.6,348.8 Q340,351.9 338.4,364.4 L334.4,391.7 L332,454.8 L381.6,454.8 L375.2,391.7 L372,362.8 Q368.8,351.1 360.8,348.8 Z M337.6,453.2 L345.6,453.2 L344,458 L334.4,458 Z M371.2,453.2 L380.8,453.2 L384,458 L371.2,458 Z M349.6,341.8 A8,9.2 0 1 0 365.6,341.8 A8,9.2 0 1 0 349.6,341.8 Z" fill="#c1bdb5" stroke="#1d1713" stroke-width="1.6" stroke-dasharray="4.8 3.2" stroke-linejoin="round"/></g>
+<ellipse cx="474" cy="458" rx="36" ry="5" fill="#1d1713" fill-opacity="0.18"/>
+<g data-p="figura provisional: Efraín Insuasty (doc 01), sin hoja de personaje"><path d="M439.6,340.4 Q426.8,343.8 422,358.9 L417.2,392.5 L478,390.8 L465.2,355.5 Q460.4,342.9 450.8,340.4 Z M439.6,390.8 L423.6,458 L433.2,458 L450.8,407.6 L471.6,458 L482.8,458 L457.2,390.8 Z M439.6,332.8 A8,9.2 0 1 0 455.6,332.8 A8,9.2 0 1 0 439.6,332.8 Z" fill="#c1bdb5" stroke="#1d1713" stroke-width="1.6" stroke-dasharray="4.8 3.2" stroke-linejoin="round"/></g>
+</g>
+</svg>

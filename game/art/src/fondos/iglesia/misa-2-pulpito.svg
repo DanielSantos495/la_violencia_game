@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1244" height="470" viewBox="0 0 1244 470">
+  <!--
+    Iglesia de Puente Alto · Viñeta 2: el padre en el púlpito
+    Viñeta de la página de la misa (Prólogo b3), 1244×470 px. En la página va en x=632, y=44
+    (iglesia.md §2); el marco y los globos los pone la página.
+    Alzado a 190 px/m: la copa (cortada abajo), el respaldo y la panza del tornavoz (cortada arriba).
+    Colores: paleta del juego (game/art/paleta.json, planeacion/arte/tomo1/paleta.md), croma del
+    Prólogo. Lo [P] va marcado con data-p; las figuras grises de borde discontinuo son provisionales.
+    GENERADO por game/art/gen/iglesia.py: edita el script, no este archivo.
+  -->
+  <defs>
+    <pattern id="rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#1d1713" stroke-width="1.2"/></pattern>
+  </defs>
+<clipPath id="cuadro-misa-2-pulpito"><rect width="1244" height="470"/></clipPath>
+<g clip-path="url(#cuadro-misa-2-pulpito)">
+<g data-p="púlpito y muro de la nave; talla, tornavoz y ventana por verificar">
+<rect x="-10" y="-10" width="1264" height="490" fill="#f2f0e7" stroke="#1d1713" stroke-width="1.5"/><line x1="803.2" y1="318.5" x2="932" y2="315.2" stroke="#1d1713" stroke-width="0.4" opacity="0.6"/><line x1="384" y1="157" x2="521.7" y2="155.9" stroke="#1d1713" stroke-width="0.4" opacity="0.6"/><path d="M451.7,221.9 L453.3,240.5 L460.4,253.9 L469.6,276.8 L455.9,300.7" stroke="#1d1713" stroke-width="0.4" fill="none"/><path d="M906,289.3 L896.8,312.2 L905.3,327 L916.3,352.1 L919.2,370.3" stroke="#1d1713" stroke-width="0.4" fill="none"/><path d="M349.7,309.5 L355.8,321.7 L366.9,338.5 L367.6,363.3 L369.5,383.8" stroke="#1d1713" stroke-width="0.4" fill="none"/><polygon points="162.6,86.2 155.7,89.1 151.2,90.8 146.4,93.6 141.2,91.1 136.4,89.3 133.1,86.2 140.6,84.3 140.7,80.8 146.4,77.5 150.7,82 159.5,82" fill="#bca891" stroke="#1d1713" stroke-width="0.4"/><polygon points="162.6,86.2 155.7,89.1 151.2,90.8 146.4,93.6 141.2,91.1 136.4,89.3 133.1,86.2 140.6,84.3 140.7,80.8 146.4,77.5 150.7,82 159.5,82" fill="#1d1713" fill-opacity="0.1"/><polygon points="116.3,220.6 115.8,223.8 113.4,228 105.6,227.9 98.3,227.5 97.8,223 93.3,220.6 93.4,216.7 101.1,216.3 105.6,214.4 110.5,215.9 112.8,218.3" fill="#bca891" stroke="#1d1713" stroke-width="0.4"/><polygon points="116.3,220.6 115.8,223.8 113.4,228 105.6,227.9 98.3,227.5 97.8,223 93.3,220.6 93.4,216.7 101.1,216.3 105.6,214.4 110.5,215.9 112.8,218.3" fill="#1d1713" fill-opacity="0.1"/>
+<rect width="1244" height="470" fill="#1d1713" fill-opacity="0.18"/>
+<path d="M640,90 L860,40 L980,470 L700,470 Z" fill="#eee6d2" fill-opacity="0.45"/>
+<path d="M1000,438 L1000,281.0 A75,75 0 0 1 1150,281.0 L1150,438 Z" fill="#f2f0e7" stroke="#1d1713" stroke-width="2.1"/><path d="M1000,438 L1000,281.0 A75,75 0 0 1 1150,281.0 L1150,438 Z" fill="#1d1713" fill-opacity="0.1"/>
+<path d="M1030,416 L1030,281.0 A45,45 0 0 1 1120,281.0 L1120,416 Z" fill="#eee6d2" stroke="#1d1713" stroke-width="2.4"/>
+<path d="M1075.0,236 L1075.0,416 M1030,331 L1120,331" stroke="#584330" stroke-width="4.2"/>
+</g>
+<g data-p="púlpito: copa poligonal de madera con tableros, respaldo y tornavoz; por verificar">
+<rect x="240" y="40" width="240" height="260" fill="#6d5946" stroke="#1d1713" stroke-width="3"/><rect x="240" y="40" width="240" height="260" fill="#1d1713" fill-opacity="0.26"/><rect x="268" y="66" width="184" height="208" fill="none" stroke="#1d1713" stroke-width="1.5"/><rect x="430" y="40" width="50" height="260" fill="#1d1713" fill-opacity="0.18"/>
+<path d="M145,318 L200,318 L200,480 L145,480 Z" fill="#5f4a37" stroke="#1d1713" stroke-width="3"/><path d="M145,318 L200,318 L200,480 L145,480 Z" fill="#1d1713" fill-opacity="0.4"/>
+<rect x="153.8" y="348" width="37.400000000000006" height="140" fill="none" stroke="#1d1713" stroke-width="1.7"/>
+<path d="M200,318 L520,318 L520,480 L200,480 Z" fill="#5f4a37" stroke="#1d1713" stroke-width="3"/><path d="M200,318 L520,318 L520,480 L200,480 Z" fill="#1d1713" fill-opacity="0.1"/>
+<rect x="251.2" y="348" width="217.60000000000002" height="140" fill="none" stroke="#1d1713" stroke-width="1.7"/>
+<path d="M520,318 L575,318 L575,480 L520,480 Z" fill="#5f4a37" stroke="#1d1713" stroke-width="3"/><path d="M520,318 L575,318 L575,480 L520,480 Z" fill="#1d1713" fill-opacity="0.26"/>
+<rect x="528.8" y="348" width="37.400000000000006" height="140" fill="none" stroke="#1d1713" stroke-width="1.7"/>
+<path d="M128,300 L592,300 L586,320 L134,320 Z" fill="#74614d" stroke="#1d1713" stroke-width="3"/><path d="M134,312 L586,312 L586,320 L134,320 Z" fill="#1d1713" fill-opacity="0.26"/>
+</g>
+<g data-p="figura provisional: padre Evaristo Rincón (doc 01), sin hoja de personaje"><path d="M303,300 L310.6,201.2 Q350.5,182.2 390.4,201.2 L477.8,94.8 L493,111.9 L411.3,243 L417,300 Z M331,163.2 A19,23.8 0 1 0 369,163.2 A19,23.8 0 1 0 331,163.2 Z" fill="#c1bdb5" stroke="#1d1713" stroke-width="2.4" stroke-dasharray="7.2 4.8" stroke-linejoin="round"/></g>
+<g data-p="tornavoz por verificar">
+<path d="M110,-10 L610,-10 L610,34 L110,34 Z" fill="#66523f" stroke="#1d1713" stroke-width="3"/>
+<path d="M110,34 Q135,60 160,34 Q185,60 210,34 Q235,60 260,34 Q285,60 310,34 Q335,60 360,34 Q385,60 410,34 Q435,60 460,34 Q485,60 510,34 Q535,60 560,34 Q585,60 610,34 Z" fill="#66523f" stroke="#1d1713" stroke-width="2.4"/><path d="M110,34 Q135,60 160,34 Q185,60 210,34 Q235,60 260,34 Q285,60 310,34 Q335,60 360,34 Q385,60 410,34 Q435,60 460,34 Q485,60 510,34 Q535,60 560,34 Q585,60 610,34 Z" fill="#1d1713" fill-opacity="0.18"/><path d="M110,-10 L610,-10 L610,34 L110,34 Z" fill="#1d1713" fill-opacity="0.1"/>
+</g>
+</g>
+</svg>
