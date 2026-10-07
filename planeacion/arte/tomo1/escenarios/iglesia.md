@@ -5,7 +5,7 @@
 > abran la puerta de noche», que Heliodoro repite esa noche (P29).
 > Daniel decidió el 05-oct-2026 hacerla como página de cómic y no como escena: con la escala del
 > juego solo se ven 4,5 m de alto y se perdería la altura de la nave. Aprobó el formato de cuatro
-> viñetas.
+> viñetas y, el 06-oct-2026, la página: encuadres, composición y lugar de los globos.
 > Dibujo: `game/art/gen/iglesia.py` → `game/art/src/fondos/iglesia/misa-*.svg` (atlas
 > `fondos/iglesia`). Página de revisión: `game/art/build/revision/pagina-misa.svg` (no va al atlas).
 
@@ -75,9 +75,9 @@ doc 04 §4; los globos van en el DOM).
 
 ## 5. Pendientes
 
-- Que Daniel apruebe la página (composición, encuadres y lugar de los globos).
-- `PaginaComic` (doc 00, Sprint 1): quién la arma y con qué datos (frames, posiciones, orden y
-  globos desde Ink). No es del área de fondos.
+- `PaginaComic` (doc 00, Sprint 1): la arma una sesión especialista aparte (`paginas-comic`, creada
+  el 06-oct-2026 y a la espera de la orden de Daniel). Fondos le da las viñetas y esta hoja; el
+  formato de los datos (frames, posiciones, orden y globos desde Ink) lo propone esa sesión.
 - Hojas del padre Evaristo y de Efraín. Cuando existan, se redibujan las viñetas con ellos y con
   Rosalba.
 - Verificar con fotos de los años 40 lo [P] de §1, sobre todo el púlpito, el coro, las bancas y el
